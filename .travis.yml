@@ -1,0 +1,36 @@
+sudo: false
+language: python
+cache: pip
+python:
+    - "3.5"
+addons:
+    postgresql: "9.6"
+services:
+    - postgresql
+branches:
+    only:
+        - master
+        - parkstay
+        - parkstay_rebase
+env:
+    global:
+        - SECRET_KEY=SecretKeyForTravis
+        - DATABASE_URL="postgis://postgres@localhost:5432/travis_ci_test"
+        - PRODUCTION_EMAIL=False
+        - EMAIL_INSTANCE="TEST"
+        - NON_PROD_EMAIL="travis@dpaw.wa.gov.au"
+        - BPAY_ALLOWED=True
+        - EMAIL_FROM="no-reply@dbca.wa.gov.au" 
+sudo: true
+install:
+    - sudo apt-get install postgresql-9.6-postgis-2.4 -y -q
+    - pip install pip --upgrade
+    - pip install -r requirements.txt
+before_script:
+    - psql -c 'create database travis_ci_test;' -U postgres
+    - python manage_ledgergw.py migrate --noinput
+script:
+    - COVERAGE_FILE=.coverage_ledger coverage run --source="." manage_ledgergw.py test --noinput ledger
+    - coverage combine .coverage_ledger
+after_success:
+    - coveralls
