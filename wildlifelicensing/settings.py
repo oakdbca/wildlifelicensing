@@ -29,6 +29,7 @@ INSTALLED_APPS += [
 
 WSGI_APPLICATION = 'wildlifelicensing.wsgi.application'
 
+TEMPLATES[0]['DIRS'].insert(0, os.path.join(BASE_DIR, 'templates')) # used to override payment_details.html template in ledger
 TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'wildlifelicensing', 'templates'))
 
 BOOTSTRAP3 = {
