@@ -29,7 +29,7 @@ RUN apt-get clean \
   libldap2-dev libssl-dev wget build-essential \
   libmagic-dev binutils libproj-dev gunicorn tzdata \
   postgresql-client mtr \
-  cron rsyslog
+  cron rsyslog iproute2
 RUN pip install --upgrade pip
 RUN apt-get install -yq vim
 # Install Python libs from requirements.txt.

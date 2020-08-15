@@ -79,7 +79,7 @@
                                         <p class="no-margin">
                                             {{ payment_status }}
                                             {% if payment_status == 'Awaiting Payment' %}
-                                                <a class="left-buffer pull-right" href="{% url 'payments:invoice-pdf' application.invoice_reference %}" target="_blank">
+                                                <a class="left-buffer pull-right" href="{% url 'wl_payments:invoice-pdf' application.invoice_reference %}" target="_blank">
                                                     Invoice
                                                     <img height="20px" src="{% static 'wl/img/pdf.png' %}"/>
                                                 </a>

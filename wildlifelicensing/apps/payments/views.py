@@ -76,11 +76,11 @@ class ManualPaymentView(LoginRequiredMixin, RedirectView):
 
         #url = reverse('payments:invoice-payment', args=(application.invoice_reference,))
         url = '{}?invoice={}'.format(reverse('payments:invoice-payment'),application.invoice_reference)
- 
+
         params = {
             'redirect_url': request.GET.get('redirect_url', reverse('wl_home'))
         }
- 
+
         return redirect('{}&{}'.format(url, urlencode(params)))
 
 
@@ -133,3 +133,20 @@ class PaymentsReportView(LoginRequiredMixin, View):
         else:
             messages.error(request, form.errors)
             return redirect(self.error_url)
+
+from django.views import generic
+from wildlifelicensing.apps.payments.pdf import create_invoice_pdf_bytes
+from ledger.payments.models import Invoice
+from ledger.payments.mixins import InvoiceOwnerMixin
+class InvoicePDFView(InvoiceOwnerMixin,generic.View):
+    def get(self, request, *args, **kwargs):
+        invoice = get_object_or_404(Invoice, reference=self.kwargs['reference'])
+        response = HttpResponse(content_type='application/pdf')
+        response.write(create_invoice_pdf_bytes('invoice.pdf',invoice))
+
+        return response
+
+    def get_object(self):
+        invoice = get_object_or_404(Invoice, reference=self.kwargs['reference'])
+        return invoice
+
