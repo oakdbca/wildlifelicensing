@@ -118,6 +118,8 @@
             </div>
         {% endblock %}
 
+         {% is_deprecated as deprecated %}
+         {% if deprecated %}
         <div class="alert alert-warning">
             <strong>
                 <p>DBCA Wildlife Licensing is in the process of transitioning to an updated online system.</p>
@@ -127,6 +129,7 @@
                 <p>We apologise for this inconvenience.</p>
             </strong>
         </div>
+        {% endif %}
 
         {% block breadcrumbs %}
         {% endblock %}

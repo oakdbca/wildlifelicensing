@@ -116,7 +116,7 @@ class Remittance(Flowable):
         bpay_logo = ImageReader(BPAY_LOGO)
         #current_y -= 40
         # Pay By Cheque
-        cheque_x = current_x + 4 * inch
+        cheque_x = current_x + 3 * inch
         cheque_y = current_y -30
         canvas.setFont(BOLD_FONTNAME, MEDIUM_FONTSIZE)
         canvas.drawString(cheque_x, cheque_y, 'Pay By Cheque:')
@@ -211,7 +211,7 @@ def _create_header(canvas, doc, draw_page_number=True):
     canvas.drawString(current_x, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER) * 2,invoice.owner.username)
     current_x += 452
     #write Invoice details
-    canvas.drawString(current_x, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER),'Date1')
+    canvas.drawString(current_x, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER),'Date')
     canvas.drawString(current_x + invoice_details_offset, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER),invoice.created.strftime(DATE_FORMAT))
     canvas.drawString(current_x, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER) * 2, 'Page')
     canvas.drawString(current_x + invoice_details_offset, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER) * 2, str(canvas.getPageNumber()))

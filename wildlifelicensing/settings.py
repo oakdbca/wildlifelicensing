@@ -12,6 +12,7 @@ SITE_ID = 1
 DEPT_DOMAINS = env('DEPT_DOMAINS', ['dpaw.wa.gov.au', 'dbca.wa.gov.au'])
 SUPERVISOR_STOP_CMD = env('SUPERVISOR_STOP_CMD')
 SYSTEM_MAINTENANCE_WARNING = env('SYSTEM_MAINTENANCE_WARNING', 24) # hours
+DEPRECATED = env('DEPRECATED', False) # hours
 
 ROOT_URLCONF = 'wildlifelicensing.urls'
 SITE_ID = 1
@@ -29,7 +30,9 @@ INSTALLED_APPS += [
 
 WSGI_APPLICATION = 'wildlifelicensing.wsgi.application'
 
-TEMPLATES[0]['DIRS'].insert(0, os.path.join(BASE_DIR, 'templates')) # used to override payment_details.html template in ledger
+if DEPRECATED:
+    # used to override payment_details.html template in ledger
+    TEMPLATES[0]['DIRS'].insert(0, os.path.join(BASE_DIR, 'templates'))
 TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'wildlifelicensing', 'templates'))
 
 BOOTSTRAP3 = {
