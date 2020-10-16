@@ -85,17 +85,20 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
             #'application': serialize(application, posthook=format_application),
             #'application': serialize(application,posthook=format_application,
             #'application': serialize(application,posthook=format_application, exclude=['previous_application', 'licence'],
-            'application': serialize(application,posthook=format_application, exclude=['previous_application', 'licence', 'assigned_officer', 'applicant_profile', 'applicant'],
+            #'application': serialize(application,posthook=format_application, exclude=['previous_application', 'licence', 'assigned_officer', 'applicant_profile', 'applicant'],
+            'application': serialize(application,posthook=format_application,
                                         related={
                                             'applicant': {'exclude': ['residential_address','postal_address','billing_address']},
+                                            'proxy_applicant': {'exclude': ['residential_address','postal_address','billing_address']},
+                                            'assigned_officer': {'exclude': ['residential_address','postal_address','billing_address']},
                                             'applicant_profile':{'fields':['email','id','institution','name']},
                                             'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence']},
                                             'licence':{'related':{
-                                               'holder':{'exclude': ['residential_address','postal_address','billing_address']},
-                                               'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
-                                               'profile':{'related': {'user': {'exclude': ['residential_address','postal_address','billing_address']}},
-                                                   'exclude': ['postal_address']}
-                                               },'exclude':['holder','issuer','profile','licence_ptr']}
+                                                'holder':{'exclude': ['residential_address','postal_address','billing_address']},
+                                                'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
+                                                'profile':{'related': {'user': {'exclude': ['residential_address','postal_address','billing_address']}},
+                                                    'exclude': ['postal_address']}
+                                            },'exclude':['holder','issuer','profile','licence_ptr', 'replaced_by']}
                                         }),
             'form_structure': application.licence_type.application_schema,
             'officers': officers,
