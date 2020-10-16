@@ -83,7 +83,9 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
         data = {
             'user': serialize(request.user, exclude='residential_address'),
             #'application': serialize(application, posthook=format_application),
-            'application': serialize(application,posthook=format_application,
+            #'application': serialize(application,posthook=format_application,
+            #'application': serialize(application,posthook=format_application, exclude=['previous_application', 'licence'],
+            'application': serialize(application,posthook=format_application, exclude=['previous_application', 'licence', 'assigned_officer', 'applicant_profile', 'applicant'],
                                         related={
                                             'applicant': {'exclude': ['residential_address','postal_address','billing_address']},
                                             'applicant_profile':{'fields':['email','id','institution','name']},
