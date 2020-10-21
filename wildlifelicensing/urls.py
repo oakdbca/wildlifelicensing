@@ -1,12 +1,14 @@
 from django.conf.urls import url, include, static
 from django.conf import settings
+from django.contrib import admin
 
 from wildlifelicensing.admin import wildlife_licensing_admin_site
 from wildlifelicensing.apps.dashboard.views.base import DashBoardRoutingView
 from ledger.urls import urlpatterns as ledger_patterns
 
 urlpatterns = [
-    url(r'^admin/', wildlife_licensing_admin_site.urls),
+    #url(r'^admin/', wildlife_licensing_admin_site.urls),
+    url(r'^ledger/admin/', admin.site.urls, name='ledger_admin'),
     url(r'^$', DashBoardRoutingView.as_view(), name='wl_home'),
     url(r'', include('wildlifelicensing.apps.main.urls', namespace='wl_main')),
     url(r'', include('wildlifelicensing.apps.dashboard.urls', namespace='wl_dashboard')),

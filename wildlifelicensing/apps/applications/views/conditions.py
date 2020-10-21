@@ -41,14 +41,16 @@ class EnterConditionsView(OfficerRequiredMixin, TemplateView):
         kwargs['application'] = serialize(application,posthook=format_application,
                                             related={
                                                 'applicant': {'exclude': ['residential_address','postal_address','billing_address']},
+                                                'proxy_applicant': {'exclude': ['residential_address','postal_address','billing_address']},
+                                                'assigned_officer': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'applicant_profile':{'fields':['email','id','institution','name']},
                                                 'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence']},
                                                 'licence':{'related':{
                                                    'holder':{'exclude': ['residential_address','postal_address','billing_address']},
                                                    'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
                                                    'profile':{'related': {'user': {'exclude': ['residential_address','postal_address','billing_address']}},
-						       'exclude': ['postal_address']}
-                                                   },'exclude':['holder','issuer','profile','licence_ptr']}
+                                                       'exclude': ['postal_address']}
+                                                },'exclude':['holder','issuer','profile','licence_ptr', 'replaced_by']}
                                             })
         kwargs['form_structure'] = application.licence_type.application_schema
         kwargs['assessments'] = serialize(Assessment.objects.filter(application=application),
