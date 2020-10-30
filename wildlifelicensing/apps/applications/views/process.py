@@ -92,7 +92,7 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
                                             'proxy_applicant': {'exclude': ['residential_address','postal_address','billing_address']},
                                             'assigned_officer': {'exclude': ['residential_address','postal_address','billing_address']},
                                             'applicant_profile':{'fields':['email','id','institution','name']},
-                                            'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence']},
+                                            'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence','proxy_applicant','assigned_officer']},
                                             'licence':{'related':{
                                                 'holder':{'exclude': ['residential_address','postal_address','billing_address']},
                                                 'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
@@ -103,13 +103,15 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
             'form_structure': application.licence_type.application_schema,
             'officers': officers,
             'amendment_requests': serialize(AmendmentRequest.objects.filter(application=application),
-                                            posthook=format_amendment_request),
+                                            posthook=format_amendment_request,
+                                            related=self.amendment_requests_filter),
+
             'assessor_groups': ass_groups,
             'assessments': serialize(Assessment.objects.filter(application=application),
                                      posthook=format_assessment,exclude=['application','applicationrequest_ptr'],
-                                     related={'assessor_group':{'related':{'members':{'exclude':['residential_address']}}},
-                                         'officer':{'exclude':['residential_address']},
-                                         'assigned_assessor':{'exclude':['residential_address']}}),
+                                     related={'assessor_group':{'related':{'members':{'exclude':['residential_address','postal_address','billing_address']}}},
+                                         'officer':{'exclude':['residential_address','postal_address','billing_address']},
+                                         'assigned_assessor':{'exclude':['residential_address','postal_address','billing_address']}}),
             'previous_versions': serialize(previous_lodgements),
             'returns_outstanding': previous_application_returns_outstanding,
             'payment_status': payment_utils.PAYMENT_STATUSES.get(payment_utils.
@@ -119,6 +121,7 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
 
         return data
 
+        
     def _process_decline(self, application):
         request = self.request
         mutable = request.POST._mutable
@@ -177,6 +180,192 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
         else:
             return redirect('wl_applications:process', application.pk, **kwargs)
 
+    @property
+    def amendment_requests_filter(self):
+	return {
+	  "application": {
+	    "related": {
+	      "applicant": {
+		"exclude": [
+		  "residential_address",
+		  "postal_address",
+		  "billing_address"
+		]
+	      },
+	      "applicant_profile": {
+		"fields": [
+		  "email",
+		  "id",
+		  "institution",
+		  "name"
+		]
+	      },
+	      "assigned_officer": {
+		"exclude": [
+		  "residential_address",
+		  "postal_address",
+		  "billing_address"
+		]
+	      },
+	      "licence": {
+		"exclude": [
+		  "holder",
+		  "issuer",
+		  "profile",
+		  "licence_ptr",
+		  "replaced_by"
+		],
+		"related": {
+		  "holder": {
+		    "exclude": [
+		      "residential_address",
+		      "postal_address",
+		      "billing_address"
+		    ]
+		  },
+		  "issuer": {
+		    "exclude": [
+		      "residential_address",
+		      "postal_address",
+		      "billing_address"
+		    ]
+		  },
+		  "profile": {
+		    "exclude": [
+		      "postal_address"
+		    ],
+		    "related": {
+		      "user": {
+			"exclude": [
+			  "residential_address",
+			  "postal_address",
+			  "billing_address"
+			]
+		      }
+		    }
+		  }
+		}
+	      },
+	      "previous_application": {
+		"exclude": [
+		  "applicant",
+		  "applicant_profile",
+		  "previous_application",
+		  "licence",
+		  "proxy_applicant",
+		  "assigned_officer"
+		]
+	      },
+	      "proxy_applicant": {
+		"exclude": [
+		  "residential_address",
+		  "postal_address",
+		  "billing_address"
+		]
+	      }
+	    }
+	  },
+	  "applicationrequest_ptr": {
+	    "related": {
+	      "application": {
+		"related": {
+		  "applicant": {
+		    "exclude": [
+		      "residential_address",
+		      "postal_address",
+		      "billing_address"
+		    ]
+		  },
+		  "applicant_profile": {
+		    "fields": [
+		      "email",
+		      "id",
+		      "institution",
+		      "name"
+		    ]
+		  },
+		  "assigned_officer": {
+		    "exclude": [
+		      "residential_address",
+		      "postal_address",
+		      "billing_address"
+		    ]
+		  },
+		  "licence": {
+		    "exclude": [
+		      "holder",
+		      "issuer",
+		      "profile",
+		      "licence_ptr",
+		      "replaced_by"
+		    ],
+		    "related": {
+		      "holder": {
+			"exclude": [
+			  "residential_address",
+			  "postal_address",
+			  "billing_address"
+			]
+		      },
+		      "issuer": {
+			"exclude": [
+			  "residential_address",
+			  "postal_address",
+			  "billing_address"
+			]
+		      },
+		      "profile": {
+			"exclude": [
+			  "postal_address"
+			],
+			"related": {
+			  "user": {
+			    "exclude": [
+			      "residential_address",
+			      "postal_address",
+			      "billing_address"
+			    ]
+			  }
+			}
+		      }
+		    }
+		  },
+		  "previous_application": {
+		    "exclude": [
+		      "applicant",
+		      "applicant_profile",
+		      "previous_application",
+		      "licence",
+		      "proxy_applicant",
+		      "assigned_officer"
+		    ]
+		  },
+		  "proxy_applicant": {
+		    "exclude": [
+		      "residential_address",
+		      "postal_address",
+		      "billing_address"
+		    ]
+		  }
+		}
+	      },
+	      "officer": {
+		"exclude": [
+		  "residential_address",
+		  "postal_address",
+		  "billing_address"
+		]
+	      }
+	    }
+	  },
+	  "officer": {
+	    "exclude": [
+	      "residential_address",
+	      "postal_address",
+	      "billing_address"
+	    ]
+	  }
+	}
 
 class AssignOfficerView(OfficerRequiredMixin, View):
     def post(self, request, *args, **kwargs):

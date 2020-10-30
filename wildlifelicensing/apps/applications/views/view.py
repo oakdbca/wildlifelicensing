@@ -39,7 +39,7 @@ class ViewReadonlyView(UserCanViewApplicationMixin, TemplateView):
                                                 'proxy_applicant': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'assigned_officer': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'applicant_profile':{'fields':['email','id','institution','name']},
-                                                'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence']},
+                                                'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence','proxy_applicant','assigned_officer']},
                                                 'licence':{'related':{
                                                    'holder':{'exclude': ['residential_address','postal_address','billing_address']},
                                                    'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
@@ -97,7 +97,7 @@ class ViewReadonlyOfficerView(UserCanViewApplicationMixin, TemplateView):
                                                 'proxy_applicant': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'assigned_officer': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'applicant_profile':{'fields':['email','id','institution','name']},
-                                                'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence']},
+                                                'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence','proxy_applicant','assigned_officer']},
                                                 'licence':{'related':{
                                                    'holder':{'exclude': ['residential_address','postal_address','billing_address']},
                                                    'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
@@ -145,7 +145,7 @@ class ViewReadonlyAssessorView(CanPerformAssessmentMixin, TemplateView):
                                                 'proxy_applicant': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'assigned_officer': {'exclude': ['residential_address','postal_address','billing_address']},
                                                 'applicant_profile':{'fields':['email','id','institution','name']},
-                                                'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence']},
+                                                'previous_application':{'exclude':['applicant','applicant_profile','previous_application','licence','proxy_applicant','assigned_officer']},
                                                 'licence':{'related':{
                                                    'holder':{'exclude': ['residential_address','postal_address','billing_address']},
                                                    'issuer':{'exclude': ['residential_address','postal_address','billing_address']},
