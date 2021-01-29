@@ -31,8 +31,8 @@ class Command(BaseCommand):
             except Exception, e:
                 if 'residential_address' in str(e) and str(e).split()[0] not in errors:
                     errors.append(str(e).split()[0])
-                    print idx, a.id, e, errors
+                    print(idx, a.id, e, errors)
                     print
 
-        print 'Total Errors: {}'.format(errors)
+        print('Total Errors: {}'.format(errors))
         print

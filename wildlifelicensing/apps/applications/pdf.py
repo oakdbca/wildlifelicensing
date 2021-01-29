@@ -53,7 +53,7 @@ def _create_application(application_buffer, application):
 
     elements = []
 
-    elements.append(Paragraph(application.licence_type.name.encode('UTF-8'), styles['ApplicationTitle']))
+    elements.append(Paragraph(application.licence_type.name, styles['ApplicationTitle']))
 
     # cannot use licence get_title_with_variants because licence isn't saved yet so can't get variants
     if application.variants.exists():

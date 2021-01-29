@@ -182,190 +182,190 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
 
     @property
     def amendment_requests_filter(self):
-	return {
-	  "application": {
-	    "related": {
-	      "applicant": {
-		"exclude": [
-		  "residential_address",
-		  "postal_address",
-		  "billing_address"
-		]
-	      },
-	      "applicant_profile": {
-		"fields": [
-		  "email",
-		  "id",
-		  "institution",
-		  "name"
-		]
-	      },
-	      "assigned_officer": {
-		"exclude": [
-		  "residential_address",
-		  "postal_address",
-		  "billing_address"
-		]
-	      },
-	      "licence": {
-		"exclude": [
-		  "holder",
-		  "issuer",
-		  "profile",
-		  "licence_ptr",
-		  "replaced_by"
-		],
-		"related": {
-		  "holder": {
-		    "exclude": [
-		      "residential_address",
-		      "postal_address",
-		      "billing_address"
-		    ]
-		  },
-		  "issuer": {
-		    "exclude": [
-		      "residential_address",
-		      "postal_address",
-		      "billing_address"
-		    ]
-		  },
-		  "profile": {
-		    "exclude": [
-		      "postal_address"
-		    ],
-		    "related": {
-		      "user": {
-			"exclude": [
-			  "residential_address",
-			  "postal_address",
-			  "billing_address"
-			]
-		      }
-		    }
-		  }
-		}
-	      },
-	      "previous_application": {
-		"exclude": [
-		  "applicant",
-		  "applicant_profile",
-		  "previous_application",
-		  "licence",
-		  "proxy_applicant",
-		  "assigned_officer"
-		]
-	      },
-	      "proxy_applicant": {
-		"exclude": [
-		  "residential_address",
-		  "postal_address",
-		  "billing_address"
-		]
-	      }
-	    }
-	  },
-	  "applicationrequest_ptr": {
-	    "related": {
-	      "application": {
-		"related": {
-		  "applicant": {
-		    "exclude": [
-		      "residential_address",
-		      "postal_address",
-		      "billing_address"
-		    ]
-		  },
-		  "applicant_profile": {
-		    "fields": [
-		      "email",
-		      "id",
-		      "institution",
-		      "name"
-		    ]
-		  },
-		  "assigned_officer": {
-		    "exclude": [
-		      "residential_address",
-		      "postal_address",
-		      "billing_address"
-		    ]
-		  },
-		  "licence": {
-		    "exclude": [
-		      "holder",
-		      "issuer",
-		      "profile",
-		      "licence_ptr",
-		      "replaced_by"
-		    ],
-		    "related": {
-		      "holder": {
-			"exclude": [
-			  "residential_address",
-			  "postal_address",
-			  "billing_address"
-			]
-		      },
-		      "issuer": {
-			"exclude": [
-			  "residential_address",
-			  "postal_address",
-			  "billing_address"
-			]
-		      },
-		      "profile": {
-			"exclude": [
-			  "postal_address"
-			],
-			"related": {
-			  "user": {
-			    "exclude": [
-			      "residential_address",
-			      "postal_address",
-			      "billing_address"
-			    ]
-			  }
-			}
-		      }
-		    }
-		  },
-		  "previous_application": {
-		    "exclude": [
-		      "applicant",
-		      "applicant_profile",
-		      "previous_application",
-		      "licence",
-		      "proxy_applicant",
-		      "assigned_officer"
-		    ]
-		  },
-		  "proxy_applicant": {
-		    "exclude": [
-		      "residential_address",
-		      "postal_address",
-		      "billing_address"
-		    ]
-		  }
-		}
-	      },
-	      "officer": {
-		"exclude": [
-		  "residential_address",
-		  "postal_address",
-		  "billing_address"
-		]
-	      }
-	    }
-	  },
-	  "officer": {
-	    "exclude": [
-	      "residential_address",
-	      "postal_address",
-	      "billing_address"
-	    ]
-	  }
-	}
+        return {
+          "application": {
+            "related": {
+              "applicant": {
+                "exclude": [
+                  "residential_address",
+                  "postal_address",
+                  "billing_address"
+                ]
+              },
+              "applicant_profile": {
+                "fields": [
+                  "email",
+                  "id",
+                  "institution",
+                  "name"
+                ]
+              },
+              "assigned_officer": {
+                "exclude": [
+                  "residential_address",
+                  "postal_address",
+                  "billing_address"
+                ]
+              },
+              "licence": {
+                "exclude": [
+                  "holder",
+                  "issuer",
+                  "profile",
+                  "licence_ptr",
+                  "replaced_by"
+                ],
+                "related": {
+                  "holder": {
+                    "exclude": [
+                      "residential_address",
+                      "postal_address",
+                      "billing_address"
+                    ]
+                  },
+                  "issuer": {
+                    "exclude": [
+                      "residential_address",
+                      "postal_address",
+                      "billing_address"
+                    ]
+                  },
+                  "profile": {
+                    "exclude": [
+                      "postal_address"
+                    ],
+                    "related": {
+                      "user": {
+                        "exclude": [
+                          "residential_address",
+                          "postal_address",
+                          "billing_address"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "previous_application": {
+                "exclude": [
+                  "applicant",
+                  "applicant_profile",
+                  "previous_application",
+                  "licence",
+                  "proxy_applicant",
+                  "assigned_officer"
+                ]
+              },
+              "proxy_applicant": {
+                "exclude": [
+                  "residential_address",
+                  "postal_address",
+                  "billing_address"
+                ]
+              }
+            }
+          },
+          "applicationrequest_ptr": {
+            "related": {
+              "application": {
+                "related": {
+                  "applicant": {
+                    "exclude": [
+                      "residential_address",
+                      "postal_address",
+                      "billing_address"
+                    ]
+                  },
+                  "applicant_profile": {
+                    "fields": [
+                      "email",
+                      "id",
+                      "institution",
+                      "name"
+                    ]
+                  },
+                  "assigned_officer": {
+                    "exclude": [
+                      "residential_address",
+                      "postal_address",
+                      "billing_address"
+                    ]
+                  },
+                  "licence": {
+                    "exclude": [
+                      "holder",
+                      "issuer",
+                      "profile",
+                      "licence_ptr",
+                      "replaced_by"
+                    ],
+                    "related": {
+                      "holder": {
+                        "exclude": [
+                          "residential_address",
+                          "postal_address",
+                          "billing_address"
+                        ]
+                      },
+                      "issuer": {
+                        "exclude": [
+                          "residential_address",
+                          "postal_address",
+                          "billing_address"
+                        ]
+                      },
+                      "profile": {
+                        "exclude": [
+                          "postal_address"
+                        ],
+                        "related": {
+                          "user": {
+                            "exclude": [
+                              "residential_address",
+                              "postal_address",
+                              "billing_address"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "previous_application": {
+                    "exclude": [
+                      "applicant",
+                      "applicant_profile",
+                      "previous_application",
+                      "licence",
+                      "proxy_applicant",
+                      "assigned_officer"
+                    ]
+                  },
+                  "proxy_applicant": {
+                    "exclude": [
+                      "residential_address",
+                      "postal_address",
+                      "billing_address"
+                    ]
+                  }
+                }
+              },
+              "officer": {
+                "exclude": [
+                  "residential_address",
+                  "postal_address",
+                  "billing_address"
+                ]
+              }
+            }
+          },
+          "officer": {
+            "exclude": [
+              "residential_address",
+              "postal_address",
+              "billing_address"
+            ]
+          }
+        }
 
 class AssignOfficerView(OfficerRequiredMixin, View):
     def post(self, request, *args, **kwargs):
