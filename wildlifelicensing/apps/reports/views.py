@@ -18,8 +18,6 @@ from wildlifelicensing.apps.payments.forms import PaymentsReportForm
 
 
 def to_string(obj):
-    if isinstance(obj,unicode):
-        return str(obj) if obj else ''
     return str(obj) if obj else ''
 
 

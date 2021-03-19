@@ -51,7 +51,7 @@ def _create_data_from_item(item, post_data, file_data, repetition, suffix):
                 item_data[item['name']] = post_data.get(extended_item_name)
     else:
         item_data_list = []
-        for rep in xrange(0, int(post_data.get(extended_item_name, 1))):
+        for rep in range(0, int(post_data.get(extended_item_name, 1))):
             child_data = {}
             for child_item in item.get('children'):
                 child_data.update(_create_data_from_item(child_item, post_data, file_data, 0,
@@ -222,7 +222,7 @@ def convert_documents_to_url(data, document_queryset, suffix):
     else:
         for item, value in data.items():
             if isinstance(value, list):
-                for rep in xrange(0, len(value)):
+                for rep in range(0, len(value)):
                     convert_documents_to_url(value[rep], document_queryset, '{}-{}'.format(suffix, rep))
             else:
                 try:
