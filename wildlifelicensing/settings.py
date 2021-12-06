@@ -13,6 +13,7 @@ DEPT_DOMAINS = env('DEPT_DOMAINS', ['dpaw.wa.gov.au', 'dbca.wa.gov.au'])
 SUPERVISOR_STOP_CMD = env('SUPERVISOR_STOP_CMD')
 SYSTEM_MAINTENANCE_WARNING = env('SYSTEM_MAINTENANCE_WARNING', 24) # hours
 DEPRECATED = env('DEPRECATED', False) # hours
+REPORTS_EMAIL = env('REPORTS_EMAIL', 'jawaid.mushtaq@dbca.wa.gov.au')
 
 ROOT_URLCONF = 'wildlifelicensing.urls'
 SITE_ID = 1
