@@ -41,25 +41,25 @@ class Command(BaseCommand):
 
                         f.write(line)
 
-
-        with ZipFile(f'returns_reports_{datetime.datetime.now().strftime("%Y%m%d")}.zip', 'w') as zipObj:
+        filename_zip = f'returns_reports_{datetime.datetime.now().strftime("%Y%m%d")}.zip'
+        with ZipFile(filename_zip, 'w') as zipObj:
             # Add multiple files to the zip
             zipObj.write(filename1)
             zipObj.write(filename2)
 
-#        email = EmailMessage()
-#        email.subject = 'Wildlife Licensing Returns Report'
-#        email.body = 'Wildlife Licensing Returns Report'
-#        email.from_email = settings.EMAIL_FROM 
-#        email.to = settings.REPORTS_EMAIL if isinstance(settings.REPORTS_EMAIL, list) else [settings.REPORTS_EMAIL]
-#        email.attach_file('returns_reports.zip')
-#
-#        res = email.send()
-#
-#        # cleanup
-#        os.remove(filename1)
-#        os.remove(filename2)
-#        os.remove('returns_reports.zip')
+        email = EmailMessage()
+        email.subject = 'Wildlife Licensing Returns Report'
+        email.body = 'Wildlife Licensing Returns Report'
+        email.from_email = settings.EMAIL_FROM 
+        email.to = settings.REPORTS_EMAIL if isinstance(settings.REPORTS_EMAIL, list) else [settings.REPORTS_EMAIL]
+        email.attach_file(filename_zip)
+
+        res = email.send()
+
+        # cleanup
+        os.remove(filename1)
+        os.remove(filename2)
+        os.remove(filename_zip)
 
 
 
