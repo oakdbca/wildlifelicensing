@@ -8,7 +8,7 @@ from django.views.generic.base import View, TemplateView
 
 from preserialize.serialize import serialize
 
-from ledger.accounts.models import Profile, Document, EmailUser
+from ledger.accounts.models import Profile, Document, EmailUser, PrivateDocument
 from ledger.accounts.forms import AddressForm, ProfileForm, EmailUserForm
 
 from wildlifelicensing.apps.main.models import CommunicationsLogEntry,\
@@ -20,6 +20,10 @@ from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.main.utils import format_communications_log_entry
 from wildlifelicensing.apps.main.pdf import create_licence_renewal_pdf_bytes, bulk_licence_renewal_pdf_bytes
 from wildlifelicensing.apps.applications.models import Application
+
+from django.conf import settings
+import os
+import mimetypes
 
 
 class SearchCustomersView(OfficerRequiredMixin, View):
@@ -146,8 +150,10 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         if 'form_id' not in kwargs:
             kwargs['form_id'] = IdentificationForm()
-        if self.request.user.identification:
-            kwargs['existing_id_image_url'] = self.request.user.identification.file.url
+        #if self.request.user.identification:
+        if self.request.user.identification2:
+            #kwargs['existing_id_image_url'] = self.request.user.identification.file.url
+            kwargs['existing_id_image_url'] = self.request.user.identification2.upload.url
 
         if self.request.user.is_senior:
             if 'form_senior' not in kwargs:
@@ -165,8 +171,10 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
             form = IdentificationForm(request.POST, files=request.FILES)
             ctx['form_id'] = form
             if form.is_valid():
-                previous_id = self.request.user.identification
-                self.request.user.identification = Document.objects.create(file=self.request.FILES['identification_file'])
+                #previous_id = self.request.user.identification
+                previous_id = self.request.user.identification2
+                #self.request.user.identification = Document.objects.create(file=self.request.FILES['identification_file'])
+                self.request.user.identification2 = PrivateDocument.objects.create(upload=self.request.FILES['identification_file'])
                 self.request.user.save()
                 if bool(previous_id):
                     previous_id.delete()
@@ -339,3 +347,27 @@ class AddCommunicationsLogEntryView(OfficerRequiredMixin, View):
                     ]
                 },
                 safe=False, encoder=WildlifeLicensingJSONEncoder, status_code=422)
+
+def getPrivateFile(request):
+    allow_access = False
+    # Add permission rules
+    allow_access = True
+    ####
+
+    #if request.user.is_superuser:
+    if allow_access == True:
+        file_name_path =  request.path 
+        full_file_path= settings.BASE_DIR+file_name_path
+        if os.path.isfile(full_file_path) is True:
+                extension = file_name_path[-3:] 
+                the_file = open(full_file_path, 'rb')
+                the_data = the_file.read()
+                the_file.close()
+                if extension == 'msg':
+                    return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+                if extension == 'eml':
+                    return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+
+                return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension)])
+    else:
+                return

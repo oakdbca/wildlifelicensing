@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView, RedirectView
 
 from wildlifelicensing.apps.main.views import ListProfilesView, CreateProfilesView, EditProfilesView, \
     IdentificationView, EditAccountView, SearchCustomersView, LicenceRenewalPDFView, \
-    CommunicationsLogListView, AddCommunicationsLogEntryView
+    CommunicationsLogListView, AddCommunicationsLogEntryView, getPrivateFile
 
 urlpatterns = [
     url(r'contact-us/$', TemplateView.as_view(template_name="wl/contact_us.html"), name='contact_us'),
@@ -24,5 +24,7 @@ urlpatterns = [
 
     # general communications log
     url('^add-log-entry/([0-9]+)/$', AddCommunicationsLogEntryView.as_view(), name='add_log_entry'),
-    url('^log-list/([0-9]+)/$', CommunicationsLogListView.as_view(), name='log_list')
+    url('^log-list/([0-9]+)/$', CommunicationsLogListView.as_view(), name='log_list'),
+
+    url(r'^private-media/', getPrivateFile, name='view_private_file'),
 ]
