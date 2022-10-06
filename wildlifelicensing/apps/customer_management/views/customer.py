@@ -10,7 +10,7 @@ from wildlifelicensing.apps.main.mixins import OfficerRequiredMixin
 from wildlifelicensing.apps.main.signals import identification_uploaded
 from wildlifelicensing.apps.customer_management.forms import CustomerDetailsForm
 
-from ledger.accounts.models import EmailUser, Profile, Document
+from ledger.accounts.models import EmailUser, Profile, Document, PrivateDocument
 from ledger.accounts.forms import ProfileForm, AddressForm
 from wildlifelicensing.apps.main.forms import CommunicationsLogEntryForm
 
@@ -256,8 +256,9 @@ class EditDetailsView(OfficerRequiredMixin, TemplateView):
 
         # if 'form_id' not in kwargs:
         #     kwargs['form_id'] = IdentificationForm()
-        if 'id_url' not in kwargs and bool(customer.identification):
-            kwargs['id_url'] = customer.identification.file.url
+        if 'id_url' not in kwargs and bool(customer.identification2):
+            #kwargs['id_url'] = customer.identification.file.url
+            kwargs['id_url'] = customer.identification2.upload.url
 
         if 'senior_card_url' not in kwargs and bool(customer.senior_card):
             kwargs['senior_card_url'] = customer.senior_card.file.url
@@ -284,29 +285,37 @@ class EditDetailsView(OfficerRequiredMixin, TemplateView):
                 return self.get(request, **ctx)
 
         if 'id' in self.request.FILES:
-            previous_id = customer.identification
-            customer.identification = Document.objects.create(file=self.request.FILES['id'])
+            #previous_id = customer.identification
+            previous_id = customer.identification2
+            #customer.identification = Document.objects.create(file=self.request.FILES['id'])
+            customer.identification2 = PrivateDocument.objects.create(upload=self.request.FILES['id'])
             customer.save()
             if bool(previous_id):
                 previous_id.delete()
-            ctx['id_url'] = customer.identification.file.url
+            #ctx['id_url'] = customer.identification.file.url
+            ctx['id_url'] = customer.identification2.upload.url
             identification_uploaded.send(sender=self.__class__, request=self.request)
 
         if 'delete_id' in request.POST:
-            if bool(customer.identification):
-                customer.identification.delete()
+            if bool(customer.identification2):
+                customer.identification2.delete()
 
         if 'senior_card' in self.request.FILES:
-            previous = customer.senior_card
-            customer.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
+            #previous = customer.senior_card
+            previous = customer.senior_card2
+            #customer.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
+            customer.senior_card2 = PrivateDocument.objects.create(upload=self.request.FILES['senior_card'])
             customer.save()
             if bool(previous):
                 previous.delete()
-            ctx['senior_card_url'] = customer.senior_card.file.url
+            #ctx['senior_card_url'] = customer.senior_card.file.url
+            ctx['senior_card_url'] = customer.senior_card2.upload.url
 
         if 'delete_senior_card' in request.POST:
-            if bool(customer.senior_card):
-                customer.senior_card.delete()
+            # if bool(customer.senior_card):
+            #     customer.senior_card.delete()
+            if bool(customer.senior_card2):
+                customer.senior_card2.delete()
 
         return self.get(request, **ctx)
 
