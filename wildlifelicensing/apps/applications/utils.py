@@ -377,7 +377,6 @@ def format_application(instance, attrs):
     if instance.applicant.senior_card2 is not None and instance.applicant.senior_card2.upload is not None: 
         attrs['applicant']['senior_card2']['url'] = instance.applicant.senior_card2.upload.url
 
-    print(attrs['applicant']['senior_card2']['url'])
 
     return attrs
 

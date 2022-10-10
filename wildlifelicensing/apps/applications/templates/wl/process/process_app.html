@@ -75,14 +75,14 @@
                                         <p>
                                             {{ applicant.user.first_name }} {{ applicant.user.last_name }}
                                             <span class="pull-right">
-                                                {% if applicant.user.identification %}
+                                                {% if applicant.user.identification2 %}
                                                     <a data-toggle="modal" data-target="#idModal">
                                                         Show ID
                                                     </a>
                                                 {% else %}
                                                     ID Unavailable
                                                 {% endif %}
-                                                {% if applicant.user.senior_card %}
+                                                {% if applicant.user.senior_card2 %}
                                                     /
                                                     <a data-toggle="modal" data-target="#seniorCardModal">
                                                         Senior Card
@@ -362,7 +362,7 @@
     </div>
     {% block modals %}
         {% with user=data.application.applicant %}
-            {% if user.identification %}
+            {% if user.identification2 %}
                 <div class="modal fade" id="idModal" tabindex="-1">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -372,12 +372,12 @@
                                     {{ user.last_name }}</h4>
                             </div>
                             <div class="modal-body center">
-                                <a href="{{ user.identification.url }}" target="_blank">
-                                    {% if user.identification.url|lower|slice:'-3:' == 'pdf' %}
+                                <a href="{{ user.identification2.url }}" target="_blank">
+                                    {% if user.identification2.url|lower|slice:'-3:' == 'pdf' %}
                                         <img src="{% static 'wl/img/pdf.png' %}">
                                         <p>View PDF</p>
                                     {% else %}
-                                        <img width="100%" src="{{ user.identification.url }}"/>
+                                        <img width="100%" src="{{ user.identification2.url }}"/>
                                     {% endif %}
                                 </a>
                             </div>
@@ -388,7 +388,7 @@
                     </div>
                 </div>
             {% endif %}
-            {% if user.senior_card %}
+            {% if user.senior_card2 %}
                 <div class="modal fade" id="seniorCardModal" tabindex="-1">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -398,13 +398,13 @@
                                     {{ user.last_name }}</h4>
                             </div>
                             <div class="modal-body center">
-                                {% if user.senior_card.url|lower|slice:'-3:' == 'pdf' %}
-                                    <a href="{{ user.senior_card.url }}" target="_blank">
+                                {% if user.senior_card2.url|lower|slice:'-3:' == 'pdf' %}
+                                    <a href="{{ user.senior_card2.url }}" target="_blank">
                                         <img src="{% static 'wl/img/pdf.png' %}">
                                         <p>View PDF</p>
                                     </a>
                                 {% else %}
-                                    <img width="100%" src="{{ user.senior_card.url }}"/>
+                                    <img width="100%" src="{{ user.senior_card2.url }}"/>
                                 {% endif %}
                             </div>
                             <div class="modal-footer">
