@@ -7,7 +7,7 @@ from django.test import TestCase, TransactionTestCase
 
 from dateutil.relativedelta import relativedelta
 
-from ledger.accounts.models import EmailUser, Document, Address, Profile
+from ledger.accounts.models import EmailUser, Document, Address, Profile, PrivateDocument
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.applications.tests import helpers
 from wildlifelicensing.apps.main.models import WildlifeLicenceType
@@ -35,8 +35,8 @@ class ApplicationEntryTestCase(TestCase):
     def tearDown(self):
         self.client.logout()
         # clean id file
-        if self.customer.identification:
-            os.remove(self.customer.identification.path)
+        if self.customer.identification2:
+            os.remove(self.customer.identification2.upload.path)
 
     def test_new_application(self):
         """
@@ -220,8 +220,10 @@ class ApplicationEntryTestCase(TestCase):
         self.client.get(reverse('wl_applications:check_identification'))
 
         with open(TEST_ID_PATH, 'rb') as fp:
-            self.customer.identification = Document.objects.create(name='test_id')
-            self.customer.identification.file.save('test_id.jpg', File(fp), save=True)
+            # self.customer.identification = Document.objects.create(name='test_id')
+            # self.customer.identification.file.save('test_id.jpg', File(fp), save=True)
+            self.customer.identification2 = PrivateDocument.objects.create(name='test_id')
+            self.customer.identification2.upload.save('test_id.jpg', File(fp), save=True)
             self.customer.save()
 
         # check that client is redirected to profile creation / selection page

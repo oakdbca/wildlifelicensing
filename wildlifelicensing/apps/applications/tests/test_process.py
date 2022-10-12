@@ -64,13 +64,13 @@ class TestStatusLifeCycle(TestCase):
 
         # now user upload ID
         self.client.logout()
-        self.assertIsNone(self.user.identification)
+        self.assertIsNone(self.user.identification2)
         self.client.login(self.user.email)
         self.assertTrue(is_client_authenticated(self.client))
         self.client.get(reverse('wl_main:identification'))
         upload_id(self.user)
         self.user.refresh_from_db()
-        self.assertIsNotNone(self.user.identification)
+        self.assertIsNotNone(self.user.identification2)
         application.refresh_from_db()
         self.assertEqual('updated', application.id_check_status)
         self.assertEqual('under_review', application.customer_status)

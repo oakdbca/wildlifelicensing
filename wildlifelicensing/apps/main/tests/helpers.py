@@ -206,8 +206,8 @@ def upload_id(user):
 
 
 def clear_id_file(user):
-    if user.identification:
-        os.remove(user.identification.path)
+    if user.identification2:
+        os.remove(user.identification2.upload.path)
 
 
 def clear_all_id_files():
