@@ -260,8 +260,9 @@ class EditDetailsView(OfficerRequiredMixin, TemplateView):
             #kwargs['id_url'] = customer.identification.file.url
             kwargs['id_url'] = customer.identification2.upload.url
 
-        if 'senior_card_url' not in kwargs and bool(customer.senior_card):
-            kwargs['senior_card_url'] = customer.senior_card.file.url
+        if 'senior_card_url' not in kwargs and bool(customer.senior_card2):
+            #kwargs['senior_card_url'] = customer.senior_card.file.url
+            kwargs['senior_card_url'] = customer.senior_card2.upload.url
 
         return super(EditDetailsView, self).get_context_data(**kwargs)
 

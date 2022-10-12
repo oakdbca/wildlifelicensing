@@ -144,7 +144,7 @@ class Application(RevisionedMixin):
     def is_senior_offer_applicable(self):
         return self.licence_type.senior_applicable and \
             self.applicant.is_senior and \
-            bool(self.applicant.senior_card)
+            bool(self.applicant.senior_card2)
 
     @property
     def is_discardable(self):

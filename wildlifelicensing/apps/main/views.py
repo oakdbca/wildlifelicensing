@@ -158,8 +158,10 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
         if self.request.user.is_senior:
             if 'form_senior' not in kwargs:
                 kwargs['form_senior'] = SeniorCardForm()
-            if self.request.user.senior_card:
-                kwargs['existing_senior_card_image_url'] = self.request.user.senior_card.file.url
+            # if self.request.user.senior_card:
+            #     kwargs['existing_senior_card_image_url'] = self.request.user.senior_card.file.url
+            if self.request.user.senior_card2:
+                kwargs['existing_senior_card_image_url'] = self.request.user.senior_card2.upload.url
 
         if 'file_types' not in kwargs:
             kwargs['file_types'] = ', '.join(['.' + file_ext for file_ext in IdentificationForm.VALID_FILE_TYPES])
@@ -185,8 +187,9 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
             form = SeniorCardForm(request.POST, files=request.FILES)
             ctx['form_senior'] = form
             if form.is_valid():
-                previous_senior_card = self.request.user.senior_card
-                self.request.user.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
+                # previous_senior_card = self.request.user.senior_card
+                previous_senior_card = self.request.user.senior_card2
+                self.request.user.senior_card2 = PrivateDocument.objects.create(upload=self.request.FILES['senior_card'])
                 self.request.user.save()
                 if bool(previous_senior_card):
                     previous_senior_card.delete()
