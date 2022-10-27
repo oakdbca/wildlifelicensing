@@ -154,6 +154,7 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
         if self.request.user.identification2:
             #kwargs['existing_id_image_url'] = self.request.user.identification.file.url
             kwargs['existing_id_image_url'] = self.request.user.identification2.upload.url
+            kwargs['existing_id_image_link'] = "/ledger-private/identification/{}/".format(self.request.user.id)
 
         if self.request.user.is_senior:
             if 'form_senior' not in kwargs:
@@ -162,6 +163,7 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
             #     kwargs['existing_senior_card_image_url'] = self.request.user.senior_card.file.url
             if self.request.user.senior_card2:
                 kwargs['existing_senior_card_image_url'] = self.request.user.senior_card2.upload.url
+                kwargs['existing_senior_card_image_link'] = "/ledger-private/senior-card/{}/".format(self.request.user.id)
 
         if 'file_types' not in kwargs:
             kwargs['file_types'] = ', '.join(['.' + file_ext for file_ext in IdentificationForm.VALID_FILE_TYPES])
@@ -374,3 +376,86 @@ def getPrivateFile(request):
                 return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension)])
     else:
                 return
+
+def getLedgerIdentificationFile(request, emailuser_id):
+    allow_access = False
+    # Add permission rules
+    #allow_access = True
+    ####
+    try:
+        user= EmailUser.objects.get(id=emailuser_id)
+        if request.user == user or request.user.is_staff is True or request.user.is_superuser is True:
+            allow_access=True
+        user_id=user.identification2
+        id_path=user_id.upload.path
+
+        extension = ""
+
+        if id_path[-5:-4] == '.':
+            extension = id_path[-4:]
+        if id_path[-4:-3] == '.':
+            extension = id_path[-3:]
+
+
+
+        #if request.user.is_superuser:
+        if allow_access == True:
+            file_name_path =  id_path 
+            full_file_path= id_path
+            if os.path.isfile(full_file_path) is True:
+                    #extension = file_name_path[-3:] 
+                    the_file = open(full_file_path, 'rb')
+                    the_data = the_file.read()
+                    the_file.close()
+                    if extension == 'msg':
+                        return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+                    if extension == 'eml':
+                        return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+                    return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension)])
+        else:
+                messages.error(request, 'Unable to find the document')
+                return redirect('wc_home')
+    except:
+        messages.error(request, 'Unable to find the document')
+        return redirect('wc_home')
+
+def getLedgerSeniorCardFile(request, emailuser_id):
+    allow_access = False
+    # Add permission rules
+    #allow_access = True
+    ####
+    try:
+        user= EmailUser.objects.get(id=emailuser_id)
+        if request.user == user or request.user.is_staff is True or request.user.is_superuser is True:
+            allow_access=True
+        user_senior_card=user.senior_card2
+        senior_card_path=user_senior_card.upload.path
+
+        extension = ""
+
+        if senior_card_path[-5:-4] == '.':
+            extension = senior_card_path[-4:]
+        if senior_card_path[-4:-3] == '.':
+            extension = senior_card_path[-3:]
+
+
+        if allow_access == True:
+            file_name_path =  senior_card_path 
+            full_file_path= senior_card_path
+            if os.path.isfile(full_file_path) is True:
+                    #extension = file_name_path[-3:] 
+                    the_file = open(full_file_path, 'rb')
+                    the_data = the_file.read()
+                    the_file.close()
+                    if extension == 'msg':
+                        return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+                    if extension == 'eml':
+                        return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+
+                    return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension)])
+        else:
+                messages.error(request, 'Unable to find the document')
+                return redirect('wc_home')
+    except:
+        messages.error(request, 'Unable to find the document')
+        return redirect('wc_home')

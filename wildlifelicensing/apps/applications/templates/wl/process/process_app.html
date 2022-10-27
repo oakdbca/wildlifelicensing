@@ -372,12 +372,12 @@
                                     {{ user.last_name }}</h4>
                             </div>
                             <div class="modal-body center">
-                                <a href="{{ user.identification2.url }}" target="_blank">
+                                <a href="/ledger-private/identification/{{ user.id }}/" target="_blank">
                                     {% if user.identification2.url|lower|slice:'-3:' == 'pdf' %}
                                         <img src="{% static 'wl/img/pdf.png' %}">
                                         <p>View PDF</p>
                                     {% else %}
-                                        <img width="100%" src="{{ user.identification2.url }}"/>
+                                        <img width="100%" src="/ledger-private/identification/{{ user.id }}/"/>
                                     {% endif %}
                                 </a>
                             </div>
@@ -399,12 +399,12 @@
                             </div>
                             <div class="modal-body center">
                                 {% if user.senior_card2.url|lower|slice:'-3:' == 'pdf' %}
-                                    <a href="{{ user.senior_card2.url }}" target="_blank">
+                                    <a href="/ledger-private/senior-card/{{ user.id }}/" target="_blank">
                                         <img src="{% static 'wl/img/pdf.png' %}">
                                         <p>View PDF</p>
                                     </a>
                                 {% else %}
-                                    <img width="100%" src="{{ user.senior_card2.url }}"/>
+                                    <img width="100%" src="/ledger-private/senior-card/{{ user.id }}/"/>
                                 {% endif %}
                             </div>
                             <div class="modal-footer">

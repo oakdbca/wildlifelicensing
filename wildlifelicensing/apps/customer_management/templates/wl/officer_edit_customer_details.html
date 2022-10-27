@@ -48,13 +48,13 @@
                 <div class="col-md-6">
                     {% if id_url %}
                         {% if id_url|slice:'-3:' == 'pdf' %}
-                            <a href="{{ id_url }}" target="_blank">
+                            <a href="/ledger-private/identification/{{ customer.id }}/" target="_blank">
                                 <img src="{% static 'wl/img/pdf.png' %}">
                                 <p>View PDF</p>
                             </a>
                         {% else %}
                             <div class="thumbnail">
-                                <img src="{{ id_url }}"/>
+                                <img src="/ledger-private/identification/{{ customer.id }}/"/>
                             </div>
                         {% endif %}
                     {% else %}
@@ -79,13 +79,13 @@
                     <div class="col-md-6">
                         {% if senior_card_url %}
                             {% if senior_card_url|slice:'-3:' == 'pdf' %}
-                                <a href="{{ senior_card_url }}" target="_blank">
+                                <a href="/ledger-private/senior-card/{{ customer.id }}/" target="_blank">
                                     <img src="{% static 'wl/img/pdf.png' %}">
                                     <p>View PDF</p>
                                 </a>
                             {% else %}
                                 <div class="thumbnail">
-                                    <img src="{{ senior_card_url }}"/>
+                                    <img src="/ledger-private/senior-card/{{ customer.id }}/"/>
                                 </div>
                             {% endif %}
                         {% else %}

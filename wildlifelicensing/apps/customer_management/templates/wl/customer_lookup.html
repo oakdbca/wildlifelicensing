@@ -150,7 +150,7 @@
                                 {% if customer.identification2.upload.url %}
                                     <div class="row details-row-buffer">
                                         <div class="col-md-12">
-                                            <img src="{{ customer.identification2.upload.url }}" width="100%"/>
+                                            <img src="/ledger-private/identification/{{ customer.id }}/" width="100%"/>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -169,7 +169,7 @@
                                 {% if customer.senior_card2.upload.url %}
                                     <div class="row details-row-buffer">
                                         <div class="col-md-12">
-                                            <img src="{{ customer.senior_card2.upload.url }}" width="100%"/>
+                                            <img src="/ledger-private/senior-card/{{ customer.id }}/" width="100%"/>
                                         </div>
                                     </div>
                                 {% endif %}
