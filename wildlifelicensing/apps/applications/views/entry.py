@@ -9,7 +9,7 @@ from django.http.response import HttpResponse, HttpResponseForbidden
 from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 
-from ledger.accounts.models import EmailUser, Document
+from ledger.accounts.models import EmailUser, Document, PrivateDocument
 from ledger.accounts.forms import EmailUserForm, AddressForm, ProfileForm
 
 from wildlifelicensing.apps.main.models import WildlifeLicenceType, \
@@ -335,7 +335,8 @@ class CheckIdentificationRequiredView(LoginRequiredMixin, ApplicationEntryBaseVi
     def get(self, *args, **kwargs):
         application = utils.get_session_application(self.request.session)
 
-        if application.licence_type.identification_required and application.applicant.identification is None:
+        #if application.licence_type.identification_required and application.applicant.identification is None:
+        if application.licence_type.identification_required and application.applicant.identification2 is None:
             return super(CheckIdentificationRequiredView, self).get(*args, **kwargs)
         else:
             return redirect('wl_applications:check_senior_card')
@@ -352,10 +353,13 @@ class CheckIdentificationRequiredView(LoginRequiredMixin, ApplicationEntryBaseVi
     def form_valid(self, form):
         application = utils.get_session_application(self.request.session)
 
-        if application.applicant.identification is not None:
-            application.applicant.identification.delete()
+        # if application.applicant.identification is not None:
+        #     application.applicant.identification.delete()
+        if application.applicant.identification2 is not None:
+            application.applicant.identification2.delete()
 
-        application.applicant.identification = Document.objects.create(file=self.request.FILES['identification_file'])
+        #application.applicant.identification = Document.objects.create(file=self.request.FILES['identification_file'])
+        application.applicant.identification2 = PrivateDocument.objects.create(upload=self.request.FILES['identification_file'])
         application.applicant.save()
 
         # update any other applications for this user that are awaiting ID upload
@@ -374,9 +378,12 @@ class CheckSeniorCardView(LoginRequiredMixin, ApplicationEntryBaseView, FormView
     def get(self, *args, **kwargs):
         application = utils.get_session_application(self.request.session)
 
+        # if application.licence_type.senior_applicable \
+        #         and application.applicant.is_senior \
+        #         and application.applicant.senior_card is None:
         if application.licence_type.senior_applicable \
                 and application.applicant.is_senior \
-                and application.applicant.senior_card is None:
+                and application.applicant.senior_card2 is None:
             return super(CheckSeniorCardView, self).get(*args, **kwargs)
         else:
             return redirect('wl_applications:create_select_profile')
@@ -390,10 +397,13 @@ class CheckSeniorCardView(LoginRequiredMixin, ApplicationEntryBaseView, FormView
     def form_valid(self, form):
         application = utils.get_session_application(self.request.session)
 
-        if application.applicant.senior_card is not None:
-            application.applicant.senior_card.delete()
+        # if application.applicant.senior_card is not None:
+        #     application.applicant.senior_card.delete()
+        if application.applicant.senior_card2 is not None:
+            application.applicant.senior_card2.delete()
 
-        application.applicant.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
+        #application.applicant.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
+        application.applicant.senior_card2 = PrivateDocument.objects.create(upload=self.request.FILES['senior_card'])
         application.applicant.save()
 
         return redirect('wl_applications:create_select_profile')

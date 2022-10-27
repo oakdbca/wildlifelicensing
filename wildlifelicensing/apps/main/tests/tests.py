@@ -26,8 +26,8 @@ class AccountsTestCase(TestCase):
     def tearDown(self):
         self.client.logout()
         # clean id file
-        if self.customer.identification:
-            os.remove(self.customer.identification.path)
+        if self.customer.identification2:
+            os.remove(self.customer.identification2.upload.path)
 
     def test_profile_list(self):
         """Testing that a user can display the profile list if they are a customer"""
@@ -132,7 +132,7 @@ class AccountsTestCase(TestCase):
     def test_upload_id(self):
         """Testing that a user can upload an ID image"""
         self.client.login(self.customer.email)
-        self.assertIsNone(self.customer.identification)
+        self.assertIsNone(self.customer.identification2)
         response = self.client.get(reverse('wl_main:identification'))
         self.assertEqual(200, response.status_code)
         response = upload_id(self.customer)
@@ -141,7 +141,7 @@ class AccountsTestCase(TestCase):
         # update customer
         self.customer.refresh_from_db()
 
-        self.assertIsNotNone(self.customer.identification)
+        self.assertIsNotNone(self.customer.identification2)
 
 
 class SearchCustomerTestCase(BasePermissionViewTestCase):

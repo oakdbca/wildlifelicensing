@@ -142,15 +142,15 @@
                                 <div class="row details-row-buffer">
                                     <div class="col-md-12">
                                         <strong>Identification:</strong>
-                                        {% if not customer.identification.file.url %}
+                                        {% if not customer.identification2.upload.url %}
                                             Not available
                                         {% endif %}
                                     </div>
                                 </div>
-                                {% if customer.identification.file.url %}
+                                {% if customer.identification2.upload.url %}
                                     <div class="row details-row-buffer">
                                         <div class="col-md-12">
-                                            <img src="{{ customer.identification.file.url }}" width="100%"/>
+                                            <img src="/ledger-private/identification/{{ customer.id }}/" width="100%"/>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -160,16 +160,16 @@
                                 {%  if customer.is_senior %}
                                     <div class="col-md-12">
                                         <strong>Senior Card:</strong>
-                                        {% if not customer.senior_card.file.url %}
+                                        {% if not customer.senior_card2.upload.url %}
                                             Not available
                                         {% endif %}
                                     </div>
                                 {%  endif %}
                                 </div>
-                                {% if customer.senior_card.file.url %}
+                                {% if customer.senior_card2.upload.url %}
                                     <div class="row details-row-buffer">
                                         <div class="col-md-12">
-                                            <img src="{{ customer.senior_card.file.url }}" width="100%"/>
+                                            <img src="/ledger-private/senior-card/{{ customer.id }}/" width="100%"/>
                                         </div>
                                     </div>
                                 {% endif %}
