@@ -19,8 +19,8 @@ class Command(BaseCommand):
         TEMP_DIR ='/temp'
 
         import os
-        from wildlifelicensing.settings import BASE_DIR
-        save_dir =BASE_DIR + TEMP_DIR
+        from wildlifelicensing.settings import MEDIA_ROOT
+        save_dir =MEDIA_ROOT + TEMP_DIR
 
         logger.info('Running command {}'.format(__name__))
 
