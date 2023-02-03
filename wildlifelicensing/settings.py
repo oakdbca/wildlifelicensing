@@ -81,3 +81,9 @@ EMAIL_FROM = env('EMAIL_FROM', ADMINS[0])
 DEFAULT_FROM_EMAIL = EMAIL_FROM
 TIME_ZONE = 'Australia/Perth'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'wildlifelicensing', 'cache'),
+    }
+}
