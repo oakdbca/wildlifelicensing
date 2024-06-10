@@ -26,7 +26,8 @@ INSTALLED_APPS += [
     'wildlifelicensing.apps.returns',
     'wildlifelicensing.apps.customer_management',
     'wildlifelicensing.apps.reports',
-    'wildlifelicensing.apps.payments'
+    'wildlifelicensing.apps.payments',
+    'appmonitor_client',
 ]
 
 WSGI_APPLICATION = 'wildlifelicensing.wsgi.application'
@@ -56,6 +57,7 @@ STATICFILES_DIRS.append(os.path.join(os.path.join(BASE_DIR, 'wildlifelicensing',
 CRON_CLASSES = [
     #'wildlifelicensing.apps.main.cron.CheckLicenceRenewalsCronJob',
     #'wildlifelicensing.apps.returns.cron.CheckOverdueReturnsCronJob',
+    'appmonitor_client.cron.CronJobAppMonitorClient',
 ]
 
 
