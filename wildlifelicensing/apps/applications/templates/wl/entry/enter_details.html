@@ -99,6 +99,7 @@
                         </h4>
                         {%  for amendment in amendments %}
                             <div class="alert alert-warning">
+                                <div style="margin-bottom:1em;"><strong>{{amendment.get_reason_display}}</strong></div>
                                 {{ amendment.text }}
                             </div>
                         {% endfor %}
