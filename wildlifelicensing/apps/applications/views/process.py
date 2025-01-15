@@ -529,24 +529,29 @@ class SetReviewStatusView(OfficerRequiredMixin, View):
 class AmendmentRequestView(OfficerRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         amendment_request_form = AmendmentRequestForm(request.POST)
-        if amendment_request_form.is_valid():
-            amendment_request = amendment_request_form.save()
-
-            application = amendment_request.application
-            application.review_status = 'awaiting_amendments'
-            application.customer_status = determine_customer_status(application)
-            application.processing_status = determine_processing_status(application)
-            application.save()
-            application.log_user_action(ApplicationUserAction.ACTION_ID_REQUEST_AMENDMENTS, request)
-            send_amendment_requested_email(amendment_request, request=request)
-
-            response = {'review_status': REVIEW_STATUSES[application.review_status],
-                        'processing_status': PROCESSING_STATUSES[application.processing_status],
-                        'amendment_request': serialize(amendment_request, posthook=format_amendment_request)}
-
-            return JsonResponse(response, safe=False, encoder=WildlifeLicensingJSONEncoder)
-        else:
+        if not amendment_request_form.is_valid():
             return JsonResponse(amendment_request_form.errors, safe=False, encoder=WildlifeLicensingJSONEncoder)
+        
+        amendment_request = amendment_request_form.save()
+
+        application = amendment_request.application
+        application.review_status = 'awaiting_amendments'
+        application.customer_status = determine_customer_status(application)
+        application.processing_status = determine_processing_status(application)
+        application.save()
+        application.log_user_action(ApplicationUserAction.ACTION_ID_REQUEST_AMENDMENTS, request)
+        send_amendment_requested_email(amendment_request, request=request)
+        
+        amendment_request_attrs = vars(amendment_request)
+        amendment_request_obj = {k: amendment_request_attrs[k] for k in amendment_request_attrs if not k.startswith('_')}
+        amendment_request_obj["creator"] = {'id': amendment_request.creator.id, 'text': render_user_name(amendment_request.creator)}
+
+        response = {'review_status': REVIEW_STATUSES[application.review_status],
+                    'processing_status': PROCESSING_STATUSES[application.processing_status],
+                    'amendment_request': serialize(amendment_request_obj, posthook=format_amendment_request)}
+
+        return JsonResponse(response, safe=False, encoder=WildlifeLicensingJSONEncoder)
+            
 
 
 class SendForAssessmentView(OfficerRequiredMixin, View):
