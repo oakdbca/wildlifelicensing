@@ -371,10 +371,8 @@ class AssignOfficerView(OfficerRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         application = get_object_or_404(Application, pk=request.POST['applicationID'])
 
-        try:
-            application.assigned_officer = EmailUser.objects.get(pk=request.POST['userID'])
-        except EmailUser.DoesNotExist:
-            application.assigned_officer = None
+        user_id = request.POST.get('userID', None) or request.user.id
+        application.assigned_officer = EmailUser.objects.get(pk=user_id)
 
         application.processing_status = determine_processing_status(application)
         application.save()
