@@ -1,0 +1,11 @@
+// "settings.json"
+
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter", // For Black
+        "editor.formatOnSave": true, // For Black
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always" // For Isort
+        }
+    }
+}
