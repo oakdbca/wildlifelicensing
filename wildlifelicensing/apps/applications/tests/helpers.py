@@ -1,36 +1,45 @@
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 
 from django.test import TestCase
+from django.urls import reverse, reverse_lazy
 from django_dynamic_fixture import G
+from ledger_api_client.ledger_models import Address
 
-from django.core.urlresolvers import reverse, reverse_lazy
-
-from ledger.accounts.models import Profile, Address
-
-from wildlifelicensing.apps.applications.views.entry import LICENCE_TYPE_NUM_CHARS, LODGEMENT_NUMBER_NUM_CHARS
-from wildlifelicensing.apps.applications.models import Application, Assessment, Condition
-from wildlifelicensing.apps.main.tests.helpers import create_random_customer, get_or_create_licence_type, \
-    SocialClient, get_or_create_default_assessor_group, get_or_create_default_officer, create_default_country
-from wildlifelicensing.apps.main.models import Region
+from wildlifelicensing.apps.applications.models import (
+    Application,
+    Assessment,
+    Condition,
+)
+from wildlifelicensing.apps.applications.views.entry import (
+    LICENCE_TYPE_NUM_CHARS,
+    LODGEMENT_NUMBER_NUM_CHARS,
+)
+from wildlifelicensing.apps.main.models import Profile, Region
+from wildlifelicensing.apps.main.tests.helpers import (
+    SocialClient,
+    create_random_customer,
+    get_or_create_default_assessor_group,
+    get_or_create_default_officer,
+    get_or_create_licence_type,
+)
 
 
 def create_profile(user):
-    create_default_country()
-    address = G(Address, user=user, country='AU')
+    address = G(Address, user=user, country="AU")
     return G(Profile, adress=address, user=user)
 
 
 def create_application(user=None, **kwargs):
     if user is None:
         user = create_random_customer()
-    if 'applicant' not in kwargs:
-        kwargs['applicant'] = user
-    if 'applicant_profile' not in kwargs:
-        kwargs['applicant_profile'] = create_profile(user)
-    if 'licence_type' not in kwargs:
-        kwargs['licence_type'] = get_or_create_licence_type()
-    if 'data' not in kwargs:
-        kwargs['data'] = {}
+    if "applicant" not in kwargs:
+        kwargs["applicant"] = user
+    if "applicant_profile" not in kwargs:
+        kwargs["applicant_profile"] = create_profile(user)
+    if "licence_type" not in kwargs:
+        kwargs["licence_type"] = get_or_create_licence_type()
+    if "data" not in kwargs:
+        kwargs["data"] = {}
     application = G(Application, **kwargs)
     return application
 
@@ -41,8 +50,8 @@ def lodge_application(application):
     """
     client = SocialClient()
     client.login(application.applicant.email)
-    client.get(reverse('wl_applications:edit_application', args=[application.pk]))
-    url = reverse_lazy('wl_applications:preview')
+    client.get(reverse("wl_applications:edit_application", args=[application.pk]))
+    url = reverse_lazy("wl_applications:preview")
     client.post(url)
     application.refresh_from_db()
     client.logout()
@@ -51,12 +60,14 @@ def lodge_application(application):
 
 def create_and_lodge_application(user=None, **kwargs):
     application = create_application(user, **kwargs)
-    application.processing_status = 'new'
-    application.customer_status = 'under_review'
+    application.processing_status = "new"
+    application.customer_status = "under_review"
     application.lodgement_sequence += 1
     application.lodgement_date = datetime.now().date()
-    application.lodgement_number = '%s-%s' % (str(application.licence_type.pk).zfill(LICENCE_TYPE_NUM_CHARS),
-                                              str(application.pk).zfill(LODGEMENT_NUMBER_NUM_CHARS))
+    application.lodgement_number = "{}-{}".format(
+        str(application.licence_type.pk).zfill(LICENCE_TYPE_NUM_CHARS),
+        str(application.pk).zfill(LODGEMENT_NUMBER_NUM_CHARS),
+    )
     application.save()
 
     return application
@@ -73,7 +84,7 @@ def issue_licence(application=None, user=None, licence_data=None):
         licence_data = {}
     data = get_minimum_data_for_issuing_licence()
     data.update(licence_data)
-    url = reverse('wl_applications:issue_licence', args=[application.pk])
+    url = reverse("wl_applications:issue_licence", args=[application.pk])
     client.post(url, data=data, follow=True)
     client.logout()
     application.refresh_from_db()
@@ -90,8 +101,11 @@ def get_or_create_assessment(application):
     group = get_or_create_default_assessor_group()
     assessment = Assessment.objects.filter(application=application).first()
     if assessment is None:
-        assessment = Assessment.objects.create(application=application, assessor_group=group,
-                                               officer=get_or_create_default_officer())
+        assessment = Assessment.objects.create(
+            application=application,
+            assessor_group=group,
+            officer=get_or_create_default_officer(),
+        )
     return assessment
 
 
@@ -101,13 +115,13 @@ def get_or_create_condition(code, defaults):
 
 def set_application_session(client, application):
     session = client.session
-    session['application_id'] = application.pk
+    session["application_id"] = application.pk
     session.save()
 
 
 def delete_application_session(client):
     session = client.session
-    del session['application_id']
+    del session["application_id"]
     session.save()
 
 
@@ -115,11 +129,11 @@ def get_minimum_data_for_issuing_licence():
     today = date.today()
     tomorrow = today + timedelta(days=1)
     return {
-        'regions': [G(Region).pk],
-        'return_frequency': -1,
-        'issue_date': str(today),
-        'start_date': str(today),
-        'end_date': str(tomorrow)
+        "regions": [G(Region).pk],
+        "return_frequency": -1,
+        "issue_date": str(today),
+        "start_date": str(today),
+        "end_date": str(tomorrow),
     }
 
 
@@ -127,29 +141,23 @@ def get_communication_log(application):
     client = SocialClient()
     officer = get_or_create_default_officer()
     client.login(officer.email)
-    url = reverse('wl_applications:log_list', args=[application.pk])
+    url = reverse("wl_applications:log_list", args=[application.pk])
     resp = client.get(url)
     client.logout()
-    return resp.json()['data']
+    return resp.json()["data"]
 
 
 def get_action_log(application):
     client = SocialClient()
     officer = get_or_create_default_officer()
     client.login(officer.email)
-    url = reverse('wl_applications:action_list', args=[application.pk])
+    url = reverse("wl_applications:action_list", args=[application.pk])
     resp = client.get(url)
     client.logout()
-    return resp.json()['data']
+    return resp.json()["data"]
 
 
 class HelpersTest(TestCase):
-    def test_create_profile(self):
-        user = create_random_customer()
-        profile = create_profile(user)
-        self.assertIsNotNone(profile)
-        self.assertEquals(user, profile.user)
-        self.assertEquals(profile, user.profiles.first())
 
     def test_create_application(self):
         application = create_application()

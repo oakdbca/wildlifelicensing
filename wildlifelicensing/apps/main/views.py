@@ -1,38 +1,43 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+import mimetypes
+import os
+
+from django.conf import settings
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.base import View, TemplateView
-
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic.base import TemplateView, View
+from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from preserialize.serialize import serialize
 
-from ledger.accounts.models import Profile, Document, EmailUser, PrivateDocument
-from ledger.accounts.forms import AddressForm, ProfileForm, EmailUserLegacyForm as EmailUserForm
-
-from wildlifelicensing.apps.main.models import CommunicationsLogEntry, WildlifeLicence
+from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main.forms import (
-    IdentificationForm,
+    AddressForm,
     CommunicationsLogEntryForm,
+    EmailUserForm,
+    IdentificationForm,
+    ProfileForm,
     SeniorCardForm,
 )
 from wildlifelicensing.apps.main.mixins import (
     CustomerRequiredMixin,
     OfficerRequiredMixin,
 )
-from wildlifelicensing.apps.main.signals import identification_uploaded
-from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
-from wildlifelicensing.apps.main.utils import format_communications_log_entry
-from wildlifelicensing.apps.main.pdf import (
-    create_licence_renewal_pdf_bytes,
-    bulk_licence_renewal_pdf_bytes,
+from wildlifelicensing.apps.main.models import (
+    CommunicationsLogEntry,
+    Document,
+    Profile,
+    WildlifeLicence,
 )
-from wildlifelicensing.apps.applications.models import Application
-
-from django.conf import settings
-import os
-import mimetypes
+from wildlifelicensing.apps.main.pdf import (
+    bulk_licence_renewal_pdf_bytes,
+    create_licence_renewal_pdf_bytes,
+)
+from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
+from wildlifelicensing.apps.main.signals import identification_uploaded
+from wildlifelicensing.apps.main.utils import format_communications_log_entry
 
 
 class SearchCustomersView(OfficerRequiredMixin, View):
@@ -68,7 +73,7 @@ class ListProfilesView(CustomerRequiredMixin, TemplateView):
     login_url = "/"
 
     def get_context_data(self, **kwargs):
-        context = super(ListProfilesView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         def posthook(instance, attr):
             attr["auth_identity"] = instance.auth_identity
@@ -200,7 +205,7 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
                 self.request.user.identification2.upload.url
             )
             kwargs["existing_id_image_link"] = (
-                "/ledger-private/identification/{}/".format(self.request.user.id)
+                f"/ledger-private/identification/{self.request.user.id}/"
             )
 
         if self.request.user.is_senior:
@@ -213,14 +218,14 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
                     self.request.user.senior_card2.upload.url
                 )
                 kwargs["existing_senior_card_image_link"] = (
-                    "/ledger-private/senior-card/{}/".format(self.request.user.id)
+                    f"/ledger-private/senior-card/{self.request.user.id}/"
                 )
 
         if "file_types" not in kwargs:
             kwargs["file_types"] = ", ".join(
                 ["." + file_ext for file_ext in IdentificationForm.VALID_FILE_TYPES]
             )
-        return super(IdentificationView, self).get_context_data(**kwargs)
+        return super().get_context_data(**kwargs)
 
     def post(self, request, *args, **kwargs):
         ctx = {}
@@ -230,8 +235,9 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 # previous_id = self.request.user.identification
                 previous_id = self.request.user.identification2
-                # self.request.user.identification = Document.objects.create(file=self.request.FILES['identification_file'])
-                self.request.user.identification2 = PrivateDocument.objects.create(
+                # self.request.user.identification =
+                # Document.objects.create(file=self.request.FILES['identification_file'])
+                self.request.user.identification2 = Document.objects.create(
                     upload=self.request.FILES["identification_file"]
                 )
                 self.request.user.save()
@@ -248,7 +254,7 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 # previous_senior_card = self.request.user.senior_card
                 previous_senior_card = self.request.user.senior_card2
-                self.request.user.senior_card2 = PrivateDocument.objects.create(
+                self.request.user.senior_card2 = Document.objects.create(
                     upload=self.request.FILES["senior_card"]
                 )
                 self.request.user.save()
@@ -310,8 +316,12 @@ class EditAccountView(LoginRequiredMixin, TemplateView):
                 )
                 emailuser.save()
                 if new_user and not unique:
-                    message = """This combination of given name(s), last name and date of birth is not unique.
-                    If you already have a Parks and Wildlife customer account under another email address, please discontinue this registration and sign in with your existing account and add any additional email addresses as new profiles."""
+                    message = """This combination of given name(s), last name and date
+                    of birth is not unique.
+                    If you already have a Parks and Wildlife customer account under
+                    another email address, please discontinue this registration and
+                    sign in with your existing account and add any additional email
+                    addresses as new profiles."""
                     messages.error(request, message)
                     allow_discontinue = True
                 else:
@@ -346,7 +356,7 @@ class ListDocumentView(CustomerRequiredMixin, TemplateView):
     login_url = "/"
 
     def get_context_data(self, **kwargs):
-        context = super(ListDocumentView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         context["data"] = serialize(self.request.user.documents.all())
 
@@ -381,7 +391,6 @@ class BulkLicenceRenewalPDFView(OfficerRequiredMixin, View):
         licences = []
         if query:
             licences = WildlifeLicence.objects.filter(query)
-        filename = "bulk-renewals.pdf"
         response = HttpResponse(content_type="application/pdf")
         response.write(
             bulk_licence_renewal_pdf_bytes(
@@ -406,7 +415,7 @@ class CommunicationsLogListView(OfficerRequiredMixin, View):
 
         data = serialize(
             CommunicationsLogEntry.objects.filter(q).order_by("created"),
-            **self.serial_template
+            **self.serial_template,
         )
 
         return JsonResponse(
@@ -456,7 +465,7 @@ def getPrivateFile(request):
     ####
 
     # if request.user.is_superuser:
-    if allow_access == True:
+    if allow_access:
         file_name_path = request.path
         full_file_path = settings.BASE_DIR + file_name_path
         if os.path.isfile(full_file_path) is True:
@@ -500,8 +509,7 @@ def getLedgerIdentificationFile(request, emailuser_id):
             extension = id_path[-3:]
 
         # if request.user.is_superuser:
-        if allow_access == True:
-            file_name_path = id_path
+        if allow_access:
             full_file_path = id_path
             if os.path.isfile(full_file_path) is True:
                 # extension = file_name_path[-3:]
@@ -522,7 +530,7 @@ def getLedgerIdentificationFile(request, emailuser_id):
         else:
             messages.error(request, "Unable to find the document")
             return redirect("wc_home")
-    except:
+    except EmailUser.DoesNotExist:
         messages.error(request, "Unable to find the document")
         return redirect("wc_home")
 
@@ -550,8 +558,7 @@ def getLedgerSeniorCardFile(request, emailuser_id):
         if senior_card_path[-4:-3] == ".":
             extension = senior_card_path[-3:]
 
-        if allow_access == True:
-            file_name_path = senior_card_path
+        if allow_access:
             full_file_path = senior_card_path
             if os.path.isfile(full_file_path) is True:
                 # extension = file_name_path[-3:]
@@ -573,6 +580,6 @@ def getLedgerSeniorCardFile(request, emailuser_id):
         else:
             messages.error(request, "Unable to find the document")
             return redirect("wc_home")
-    except:
+    except EmailUser.DoesNotExist:
         messages.error(request, "Unable to find the document")
         return redirect("wc_home")

@@ -1,16 +1,15 @@
-import unicodecsv as csv
-
 from collections import OrderedDict
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, Http404, JsonResponse
+import unicodecsv as csv
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from django.views.generic import View
+from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
+from django.views.generic import View
 
 from wildlifelicensing.apps.returns.api.mixins import APIUserRequiredMixin
-from wildlifelicensing.apps.returns.models import ReturnType, ReturnRow
+from wildlifelicensing.apps.returns.models import ReturnRow, ReturnType
 from wildlifelicensing.apps.returns.utils_schema import Schema
 
 API_SESSION_TIMEOUT = 100 * 24 * 3600  # 100 days
@@ -33,43 +32,45 @@ class ExplorerView(APIUserRequiredMixin, View):
         set_api_session_timeout(request)
         sessionid = self.request.session.session_key
         payload = OrderedDict()
-        payload['auth'] = {
+        payload["auth"] = {
             "sessionId": sessionid,
-            "expires": timezone.localtime(self.request.session.get_expiry_date())
+            "expires": timezone.localtime(self.request.session.get_expiry_date()),
         }
         data = []
         for rt in queryset:
-            return_obj = OrderedDict({'id': rt.id})
+            return_obj = OrderedDict({"id": rt.id})
             licence_type = {
-                'display_name': rt.licence_type.display_name,
-                'code': rt.licence_type.code
+                "display_name": rt.licence_type.display_name,
+                "code": rt.licence_type.code,
             }
-            return_obj['license_type'] = licence_type
+            return_obj["license_type"] = licence_type
             # resources
             resources = []
             for idx, resource in enumerate(rt.resources):
-                url = request.build_absolute_uri(reverse('wl_returns:api:data', kwargs={
-                    'return_type_pk': rt.pk,
-                    'resource_number': idx
-                }))
+                url = request.build_absolute_uri(
+                    reverse(
+                        "wl_returns:api:data",
+                        kwargs={"return_type_pk": rt.pk, "resource_number": idx},
+                    )
+                )
                 resource_obj = OrderedDict()
-                resource_obj['name'] = resource.get('name', '')
-                resource_obj['data'] = url
-                resource_obj['python'] = "requests.get('{0}', cookies={{'sessionid':'{1}'}}, verify=False).content".format(
-                    url,
-                    sessionid
+                resource_obj["name"] = resource.get("name", "")
+                resource_obj["data"] = url
+                resource_obj["python"] = (
+                    "requests.get('{0}', cookies={{'sessionid':'{1}'}}, verify=False).content".format(
+                        url, sessionid
+                    )
                 )
-                resource_obj['shell'] = "curl {0} --cookie 'sessionid={1}'".format(
-                    url,
-                    sessionid
+                resource_obj["shell"] = "curl {} --cookie 'sessionid={}'".format(
+                    url, sessionid
                 )
-                resource_obj['schema'] = resource.get('schema', {})
+                resource_obj["schema"] = resource.get("schema", {})
                 resources.append(resource_obj)
 
-            return_obj['resources'] = resources
+            return_obj["resources"] = resources
             data.append(return_obj)
-        payload['data'] = data
-        return JsonResponse(payload, json_dumps_params={'indent': 2}, safe=False)
+        payload["data"] = data
+        return JsonResponse(payload, json_dumps_params={"indent": 2}, safe=False)
 
 
 class ReturnsDataView(APIUserRequiredMixin, View):
@@ -78,31 +79,33 @@ class ReturnsDataView(APIUserRequiredMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        return_type = get_object_or_404(ReturnType, pk=kwargs.get('return_type_pk'))
+        return_type = get_object_or_404(ReturnType, pk=kwargs.get("return_type_pk"))
         # for API purpose, increase the session timeout
         set_api_session_timeout(request)
-        resource_number = kwargs.get('resource_number')
+        resource_number = kwargs.get("resource_number")
         if not resource_number:
             resource_number = 0
         else:
             resource_number = int(resource_number)
         all_resources = return_type.resources
         if resource_number >= len(all_resources):
-            raise Http404("Invalid resource number {}. The Return Type {} has only {} resources".format(
-                resource_number, return_type.licence_type, len(all_resources))
+            raise Http404(
+                "Invalid resource number {}. The Return Type {} has only {} resources".format(
+                    resource_number, return_type.licence_type, len(all_resources)
+                )
             )
 
         resource_name = return_type.get_resources_names()[resource_number]
         qs = ReturnRow.objects.filter(return_table__name=resource_name)
         schema = Schema(return_type.get_schema_by_name(resource_name))
-        response = HttpResponse(content_type='text/csv')
-        file_name = 'wl_returns_{}.csv'.format(resource_name)
-        response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+        response = HttpResponse(content_type="text/csv")
+        file_name = f"wl_returns_{resource_name}.csv"
+        response["Content-Disposition"] = f"attachment; filename={file_name}"
         writer = csv.writer(response)
         writer.writerow(schema.headers)
         for ret_row in qs:
             row = []
             for field in schema.field_names:
-                row.append(smart_text(ret_row.data.get(field, ''), errors='replace'))
+                row.append(smart_str(ret_row.data.get(field, ""), errors="replace"))
             writer.writerow(row)
         return response

@@ -1,5 +1,4 @@
-from __future__ import unicode_literals
-from ledger.accounts.models import EmailUser
+from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 
 
 def belongs_to(user, group_name):
@@ -20,7 +19,7 @@ def is_customer(user):
     :param user:
     :return:
     """
-    return user.is_authenticated() and not is_officer(user) and not is_assessor(user)
+    return user.is_authenticated and not is_officer(user) and not is_assessor(user)
 
 
 def is_officer(user):
@@ -31,7 +30,7 @@ def is_officer(user):
     :param user:
     :return:
     """
-    return belongs_to(user, 'Officers')
+    return belongs_to(user, "Officers")
 
 
 def is_assessor(user):
@@ -42,19 +41,20 @@ def is_assessor(user):
     :param user:
     :return:
     """
-    return belongs_to(user, 'Assessors')
+    return belongs_to(user, "Assessors")
 
 
 def get_all_officers():
-    return EmailUser.objects.filter(groups__name='Officers')
+    return EmailUser.objects.filter(groups__name="Officers")
 
 
 def get_all_assessors():
-    return EmailUser.objects.filter(groups__name='Assessors')
+    return EmailUser.objects.filter(groups__name="Assessors")
 
 
 def get_user_assessor_groups(user):
     return user.assessorgroup_set.all()
+
 
 def render_user_name(user, first_name_first=True):
     """
@@ -63,16 +63,11 @@ def render_user_name(user, first_name_first=True):
     :param user:
     :return:
     """
-    result = ''
+    result = ""
     if user is not None:
         if user.last_name or user.first_name:
-            format_ = u'{first} {last}' if first_name_first else '{last}, {first}'
-            result = format_.format(
-                first=user.first_name,
-                last=user.last_name
-            )
+            format_ = "{first} {last}" if first_name_first else "{last}, {first}"
+            result = format_.format(first=user.first_name, last=user.last_name)
         else:
-            result = '{email}'.format(
-                email=user.email
-            )
+            result = f"{user.email}"
     return result

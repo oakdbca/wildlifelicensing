@@ -1,11 +1,10 @@
-from collections import defaultdict, OrderedDict
-from openpyxl import load_workbook
-from openpyxl.worksheet.datavalidation import DataValidation
-from openpyxl.utils import get_column_letter
+from collections import OrderedDict, defaultdict
 
-from django.utils import six
-from django.utils.text import Truncator
 from django.http import HttpResponse
+from django.utils.text import Truncator
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.datavalidation import DataValidation
 
 
 def load_workbook_content(filename):
@@ -23,7 +22,9 @@ def get_sheet_titles(wb):
 def get_sheet(wb, title, case_insensitive=True):
     titles = get_sheet_titles(wb)
     for ws_title in titles:
-        match = ws_title.lower() == title.lower() if case_insensitive else ws_title == title
+        match = (
+            ws_title.lower() == title.lower() if case_insensitive else ws_title == title
+        )
         if match:
             return wb.get_sheet_by_name(ws_title)
     return None
@@ -45,17 +46,19 @@ def find_cell_by_value(ws, value):
     return None
 
 
-def get_cell_neighbour(cell, direction='down'):
-    if direction == 'down':
+def get_cell_neighbour(cell, direction="down"):
+    if direction == "down":
         return cell.offset(row=1)
-    elif direction == 'up':
+    elif direction == "up":
         return cell.offset(row=-1)
-    elif direction == 'right':
+    elif direction == "right":
         return cell.offset(column=1)
-    elif direction == 'left':
+    elif direction == "left":
         return cell.offset(column=-1)
     else:
-        raise Exception("Invalid Direction: " + direction + ". Should be [down|up|right|left]")
+        raise Exception(
+            "Invalid Direction: " + direction + ". Should be [down|up|right|left]"
+        )
 
 
 def is_blank_value(value):
@@ -63,7 +66,7 @@ def is_blank_value(value):
 
 
 def is_empty_string(value):
-    return isinstance(value, six.string_types) and len(value.strip()) == 0
+    return isinstance(value, str) and len(value.strip()) == 0
 
 
 def is_cell_blank(cell):
@@ -75,10 +78,10 @@ def is_all_blanks(cells):
 
 
 def strip(value):
-    return value.strip() if isinstance(value, six.string_types) else value
+    return value.strip() if isinstance(value, str) else value
 
 
-def get_value_for_key(ws, key, direction='down'):
+def get_value_for_key(ws, key, direction="down"):
     result = None
     key_cell = find_cell_by_value(ws, key)
     if key_cell is not None:
@@ -86,13 +89,15 @@ def get_value_for_key(ws, key, direction='down'):
     return result
 
 
-def write_values(ws, top_left_row, top_left_column, values, direction='right', font=None):
+def write_values(
+    ws, top_left_row, top_left_column, values, direction="right", font=None
+):
     top_cell = ws.cell(row=top_left_row, column=top_left_column)
     write_values_from_cell(top_cell, values, direction, font)
     return ws
 
 
-def write_values_from_cell(top_cell, values, direction='right', font=None):
+def write_values_from_cell(top_cell, values, direction="right", font=None):
     cell = top_cell
     for value in values:
         if font is not None:
@@ -112,28 +117,29 @@ def append_column(ws, values):
     # find first empty col
     top_cell = ws.cell(row=1, column=1)
     while not is_cell_blank(top_cell):
-        top_cell = get_cell_neighbour(top_cell, 'right')
+        top_cell = get_cell_neighbour(top_cell, "right")
     # write values
-    write_values_from_cell(top_cell=top_cell, values=values, direction='down')
+    write_values_from_cell(top_cell=top_cell, values=values, direction="down")
     # build the range string
     top = top_cell.coordinate
-    bottom = "{col}{row}".format(col=top_cell.column, row=(len(values)))
-    return "{}:{}".format(top, bottom)
+    bottom = f"{top_cell.column}{(len(values))}"
+    return f"{top}:{bottom}"
 
 
 def create_list_validation(value, strict=True, allow_blank=True):
-    if type(value) == list:
+    if value is list:
         formula = _build_list_formula(value)
     else:
         formula = value
-    dv = DataValidation(type="list", formula1=formula, showErrorMessage=strict,
-                        allow_blank=allow_blank)
+    dv = DataValidation(
+        type="list", formula1=formula, showErrorMessage=strict, allow_blank=allow_blank
+    )
     if strict:
-        dv.promptTitle = 'Strict Selection'
-        dv.prompt = 'You must select a value from the list'
+        dv.promptTitle = "Strict Selection"
+        dv.prompt = "You must select a value from the list"
     else:
-        dv.promptTitle = 'Proposed Selection'
-        dv.prompt = 'You may select a value from the list or enter your own'
+        dv.promptTitle = "Proposed Selection"
+        dv.prompt = "You may select a value from the list or enter your own"
     if allow_blank:
         dv.promptTitle += " (blank allowed)"
     return dv
@@ -145,7 +151,7 @@ def _build_list_formula(values):
     WARNING: there's a 255 characters limit for a formula literal in Excel.
     """
     csv_values = Truncator(",".join(values)).chars(255)
-    return '"{}"'.format(csv_values)
+    return f'"{csv_values}"'
 
 
 class TableData:
@@ -159,7 +165,15 @@ class TableData:
     :param transpose: if true the the table is a transposed one. Columns are rows and rows are columns
     """
 
-    def __init__(self, worksheet, top_left_row=1, top_left_column=1, nb_cols=None, nb_rows=None, transpose=False):
+    def __init__(
+        self,
+        worksheet,
+        top_left_row=1,
+        top_left_column=1,
+        nb_cols=None,
+        nb_rows=None,
+        transpose=False,
+    ):
         self.worksheet = worksheet
         self.top_left_row = top_left_row
         self.top_left_column = top_left_column
@@ -203,10 +217,10 @@ class TableData:
                 else:
                     # if they are two columns with the same header we store it with with a appended _i
                     count = 1
-                    key = col_header + '_' + str(count)
+                    key = col_header + "_" + str(count)
                     while key in data:
                         count += 1
-                        key = col_header + '_' + str(count)
+                        key = col_header + "_" + str(count)
                     data[key] = row[i]
             yield data
 
@@ -230,7 +244,7 @@ class TableData:
         cell = self.top_left_cell
         while not is_cell_blank(cell):
             headers.append(strip(cell.value))
-            direction = 'down' if self.transpose else 'right'
+            direction = "down" if self.transpose else "right"
             cell = get_cell_neighbour(cell, direction)
         return headers
 
@@ -271,19 +285,21 @@ class TableData:
 
 class ExcelFileResponse(HttpResponse):
     def __init__(self, content, file_name=None):
-        content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        content_disposition = 'attachment;'
+        content_type = (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        content_disposition = "attachment;"
 
         if file_name is not None:
-            if not file_name.lower().endswith('.xlsx'):
-                file_name += '.xlsx'
-            content_disposition += ' filename=' + file_name
+            if not file_name.lower().endswith(".xlsx"):
+                file_name += ".xlsx"
+            content_disposition += " filename=" + file_name
 
-        super(ExcelFileResponse, self).__init__(content, content_type=content_type)
-        self['Content-Disposition'] = content_disposition
+        super().__init__(content, content_type=content_type)
+        self["Content-Disposition"] = content_disposition
 
 
 class WorkbookResponse(ExcelFileResponse):
     def __init__(self, wb, file_name=None):
-        super(WorkbookResponse, self).__init__([], file_name=file_name)
+        super().__init__([], file_name=file_name)
         wb.save(self)
