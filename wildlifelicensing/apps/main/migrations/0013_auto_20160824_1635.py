@@ -14,7 +14,7 @@ def migrate_comm_log_document(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('accounts', '0001_initial'),
+        #('accounts', '0001_initial'),
         ('wl_main', '0012_auto_20160824_1614'),
     ]
 
