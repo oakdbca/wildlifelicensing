@@ -12,7 +12,7 @@ from wildlifelicensing.apps.applications.views.process import (
     determine_customer_status,
     determine_processing_status,
 )
-from wildlifelicensing.apps.main.models import LedgerLicence
+from wildlifelicensing.apps.main.models import BaseLicence
 from wildlifelicensing.apps.main.signals import identification_uploaded
 from wildlifelicensing.apps.returns.models import Return
 from wildlifelicensing.apps.returns.signals import return_submitted
@@ -21,7 +21,7 @@ from wildlifelicensing.apps.returns.signals import return_submitted
 @receiver(name_changed)
 def name_changed_callback(sender, **kwargs):
     if "user" in kwargs:
-        for licence in LedgerLicence.objects.filter(
+        for licence in BaseLicence.objects.filter(
             holder=kwargs.get("user"), end_date__gt=date.today()
         ):
             send_user_name_change_notification_email(licence)

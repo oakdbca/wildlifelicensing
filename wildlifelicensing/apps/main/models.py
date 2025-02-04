@@ -89,12 +89,13 @@ class WildlifeLicenceType(BaseLicenceType):
     default_period = models.PositiveIntegerField(
         "Default Licence Period (days)", blank=True, null=True
     )
-    # default_conditions = models.ManyToManyField(Condition, through='DefaultCondition', blank=True)
+    default_conditions = models.ManyToManyField(
+        Condition, through="DefaultCondition", blank=True
+    )
     application_schema = JSONField(blank=True, null=True)
     category = models.ForeignKey(WildlifeLicenceCategory, null=True, blank=True)
     variant_group = models.ForeignKey("VariantGroup", null=True, blank=True)
     help_text = models.TextField(blank=True)
-    licencetype_ptr_store = models.IntegerField(blank=True, null=True)
 
     def clean(self):
         """
