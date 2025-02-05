@@ -3,8 +3,9 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
-from ledger.accounts.models import Profile, RevisionedMixin
+from ledger.accounts.models import Profile
 
+from wildlifelicensing.apps.main.mixins import RevisionedMixin
 from wildlifelicensing.apps.main.models import (
     AssessorGroup,
     CommunicationsLogEntry,

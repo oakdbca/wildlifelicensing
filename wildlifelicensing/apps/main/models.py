@@ -9,8 +9,9 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from dpaw_utils.models import ActiveMixin
-from ledger.accounts.models import EmailUser, Profile, RevisionedMixin
+from ledger.accounts.models import EmailUser, Profile
 
+from wildlifelicensing.apps.main.mixins import RevisionedMixin
 from wildlifelicensing.apps.payments import utils as payment_utils
 
 

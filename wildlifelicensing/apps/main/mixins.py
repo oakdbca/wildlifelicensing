@@ -1,9 +1,10 @@
-from __future__ import unicode_literals
-
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
+from django.db import models
+from reversion import revisions
+from reversion.models import Version
 
-from wildlifelicensing.apps.main.helpers import is_customer, is_officer, is_assessor
+from wildlifelicensing.apps.main.helpers import is_assessor, is_customer, is_officer
 
 
 class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -12,7 +13,8 @@ class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
     If the user is authenticated it should throw a PermissionDenied (status 403), but if the user is not authenticated
     it should return to the login page.
     """
-    login_url = reverse_lazy('home')
+
+    login_url = reverse_lazy("home")
     permission_denied_message = "You don't have the permission to access this resource."
     raise_exception = True
 
@@ -20,7 +22,7 @@ class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
         user = self.request.user
         if not user.is_authenticated():
             self.raise_exception = False
-        return super(BaseAccessMixin, self).handle_no_permission()
+        return super().handle_no_permission()
 
     def test_func(self):
         """
@@ -80,3 +82,31 @@ class OfficerOrAssessorRequiredMixin(BaseAccessMixin):
     def test_func(self):
         user = self.request.user
         return is_officer(user) or is_assessor(user)
+
+
+class RevisionedMixin(models.Model):
+    """
+    A model tracked by reversion through the save method.
+    """
+
+    def save(self, **kwargs):
+        if kwargs.pop("no_revision", False):
+            super().save(**kwargs)
+        else:
+            with revisions.create_revision():
+                if "version_user" in kwargs:
+                    revisions.set_user(kwargs.pop("version_user", None))
+                if "version_comment" in kwargs:
+                    revisions.set_comment(kwargs.pop("version_comment", ""))
+                super().save(**kwargs)
+
+    @property
+    def created_date(self):
+        return Version.objects.get_for_object(self).last().revision.date_created
+
+    @property
+    def modified_date(self):
+        return Version.objects.get_for_object(self).first().revision.date_created
+
+    class Meta:
+        abstract = True
