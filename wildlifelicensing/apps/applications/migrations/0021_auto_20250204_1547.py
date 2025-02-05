@@ -10,17 +10,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wl_applications', '0020_auto_20250204_1223'),
+        ('wl_main', '0045_auto_20250204_1549')
     ]
 
     operations = [
         migrations.AlterField(
             model_name='application',
             name='licence',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicenceClone'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicence'),
         ),
         migrations.AlterField(
             model_name='application',
             name='licence_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicenceTypeClone'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicenceType'),
         ),
     ]
