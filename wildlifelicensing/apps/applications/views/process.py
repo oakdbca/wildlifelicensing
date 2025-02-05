@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.context_processors import csrf
 from django.utils import formats
 from django.views.generic import TemplateView, View
-from ledger.accounts.models import Document, EmailUser
+from ledger.accounts.models import EmailUser
 from preserialize.serialize import serialize
 from reversion.models import Version
 
@@ -30,6 +30,7 @@ from wildlifelicensing.apps.applications.models import (
     Application,
     ApplicationUserAction,
     Assessment,
+    LocalDocument,
 )
 from wildlifelicensing.apps.applications.utils import (
     CHARACTER_CHECK_STATUSES,
@@ -98,7 +99,7 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
 
             # reversion won't reference the previous many-to-many sets,
             # only the latest one, so need to get documents as per below
-            previous_lodgement_documents = Document.objects.filter(
+            previous_lodgement_documents = LocalDocument.objects.filter(
                 pk__in=revision.field_dict["documents"]
             )
 

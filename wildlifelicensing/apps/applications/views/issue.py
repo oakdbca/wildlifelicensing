@@ -10,7 +10,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import TemplateView, View
-from ledger.accounts.models import Document
 from preserialize.serialize import serialize
 from PyPDF2 import PdfFileMerger, PdfFileReader
 
@@ -30,6 +29,7 @@ from wildlifelicensing.apps.applications.utils import (
 from wildlifelicensing.apps.main.forms import IssueLicenceForm
 from wildlifelicensing.apps.main.mixins import OfficerRequiredMixin
 from wildlifelicensing.apps.main.models import (
+    LocalDocument,
     WildlifeLicence,
     WildlifeLicenceVariantLink,
 )
@@ -141,7 +141,7 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
         attachments = []
         if request.FILES and "attachments" in request.FILES:
             for _file in request.FILES.getlist("attachments"):
-                doc = Document.objects.create(file=_file, name=_file.name)
+                doc = LocalDocument.objects.create(file=_file, name=_file.name)
                 attachments.append(doc)
 
         # Merge documents
@@ -169,7 +169,7 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
             # Delete old document
             current_attachment.delete()
             # Attach new document
-            new_doc = Document.objects.create(name=licence_filename)
+            new_doc = LocalDocument.objects.create(name=licence_filename)
             new_doc.file.save(licence_filename, File(output), save=True)
             licence.licence_document = new_doc
             licence.save()
