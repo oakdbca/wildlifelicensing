@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wl_main', '0051_auto_20250205_1050'),
+        ('wl_main', '0050_localdocument'),
         ('wl_applications', '0021_auto_20250204_1547'),
     ]
 
