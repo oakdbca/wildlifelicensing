@@ -37,8 +37,8 @@ class LocalDocument(models.Model):
 
 
 upload_storage = FileSystemStorage(
-    location=settings.LEDGER_PRIVATE_MEDIA_ROOT,
-    base_url=settings.LEDGER_PRIVATE_MEDIA_URL,
+    location=settings.PRIVATE_MEDIA_ROOT,
+    base_url=settings.PRIVATE_MEDIA_URL,
 )
 
 
