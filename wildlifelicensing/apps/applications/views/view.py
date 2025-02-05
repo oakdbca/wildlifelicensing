@@ -26,7 +26,7 @@ from wildlifelicensing.apps.applications.utils import (
 )
 from wildlifelicensing.apps.main.helpers import is_officer, render_user_name
 from wildlifelicensing.apps.main.mixins import OfficerOrAssessorRequiredMixin
-from wildlifelicensing.apps.main.models import LocalDocument
+from wildlifelicensing.apps.main.models import Document
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.main.utils import format_communications_log_entry
 from wildlifelicensing.apps.payments import utils as payment_utils
@@ -468,9 +468,7 @@ class AddApplicationLogEntryView(OfficerOrAssessorRequiredMixin, View):
 
             entry = ApplicationLogEntry.objects.create(**kwargs)
             if request.FILES and "attachment" in request.FILES:
-                document = LocalDocument.objects.create(
-                    file=request.FILES["attachment"]
-                )
+                document = Document.objects.create(file=request.FILES["attachment"])
                 entry.documents.add(document)
 
             return JsonResponse("ok", safe=False, encoder=WildlifeLicensingJSONEncoder)

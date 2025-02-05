@@ -15,7 +15,7 @@ from wildlifelicensing.apps.payments import utils as payment_utils
 
 
 @python_2_unicode_compatible
-class LocalDocument(models.Model):
+class Document(models.Model):
     name = models.CharField(
         max_length=100, blank=True, verbose_name="name", help_text=""
     )
@@ -209,10 +209,10 @@ class WildlifeLicence(BaseLicence):
     cover_letter_message = models.TextField(blank=True)
     additional_information = models.TextField(blank=True)
     licence_document = models.ForeignKey(
-        LocalDocument, blank=True, null=True, related_name="licence_document"
+        Document, blank=True, null=True, related_name="licence_document"
     )
     cover_letter_document = models.ForeignKey(
-        LocalDocument, blank=True, null=True, related_name="cover_letter_document"
+        Document, blank=True, null=True, related_name="cover_letter_document"
     )
     return_frequency = models.IntegerField(
         choices=MONTH_FREQUENCY_CHOICES, default=DEFAULT_FREQUENCY
@@ -344,7 +344,7 @@ class CommunicationsLogEntry(models.Model):
         max_length=200, blank=True, verbose_name="Subject / Description"
     )
     text = models.TextField(blank=True)
-    documents = models.ManyToManyField(LocalDocument, blank=True)
+    documents = models.ManyToManyField(Document, blank=True)
 
     customer = models.ForeignKey(EmailUser, null=True, related_name="customer")
     staff = models.ForeignKey(EmailUser, null=True, related_name="staff")

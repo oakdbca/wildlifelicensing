@@ -9,7 +9,7 @@ from wildlifelicensing.apps.main.models import (
     AssessorGroup,
     CommunicationsLogEntry,
     Condition,
-    LocalDocument,
+    Document,
     UserAction,
     Variant,
     WildlifeLicence,
@@ -117,9 +117,9 @@ class Application(RevisionedMixin):
         default=CUSTOMER_STATUS_CHOICES[0][0],
     )
     data = JSONField(blank=True, null=True)
-    documents = models.ManyToManyField(LocalDocument)
+    documents = models.ManyToManyField(Document)
     hard_copy = models.ForeignKey(
-        LocalDocument, blank=True, null=True, related_name="hard_copy"
+        Document, blank=True, null=True, related_name="hard_copy"
     )
     correctness_disclaimer = models.BooleanField(default=False)
     further_information_disclaimer = models.BooleanField(default=False)
