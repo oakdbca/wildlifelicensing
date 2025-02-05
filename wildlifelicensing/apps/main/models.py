@@ -208,14 +208,12 @@ class WildlifeLicence(BaseLicence):
     locations = models.TextField(blank=True)
     cover_letter_message = models.TextField(blank=True)
     additional_information = models.TextField(blank=True)
-    licence_document = models.IntegerField(blank=True, null=True)  # models.ForeignKey(
-    # Document, blank=True, null=True, related_name="licence_document"
-    # )
-    cover_letter_document = models.IntegerField(
-        blank=True, null=True
-    )  # models.ForeignKey(
-    # Document, blank=True, null=True, related_name="cover_letter_document"
-    # )
+    licence_document = models.ForeignKey(
+        LocalDocument, blank=True, null=True, related_name="licence_document"
+    )
+    cover_letter_document = models.ForeignKey(
+        LocalDocument, blank=True, null=True, related_name="cover_letter_document"
+    )
     return_frequency = models.IntegerField(
         choices=MONTH_FREQUENCY_CHOICES, default=DEFAULT_FREQUENCY
     )
