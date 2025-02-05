@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
-from ledger.accounts.models import Document, EmailUser, Profile, RevisionedMixin
+from ledger.accounts.models import EmailUser, Profile, RevisionedMixin
 
 from wildlifelicensing.apps.main.models import (
     AssessorGroup,
@@ -118,7 +118,6 @@ class Application(RevisionedMixin):
     )
     data = JSONField(blank=True, null=True)
     application_documents = models.ManyToManyField(LocalDocument)
-    documents = models.ManyToManyField(Document)
     hard_copy = models.ForeignKey(
         LocalDocument, blank=True, null=True, related_name="hard_copy"
     )
