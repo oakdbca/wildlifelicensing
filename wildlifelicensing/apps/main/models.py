@@ -208,12 +208,14 @@ class WildlifeLicence(BaseLicence):
     locations = models.TextField(blank=True)
     cover_letter_message = models.TextField(blank=True)
     additional_information = models.TextField(blank=True)
-    licence_document = models.ForeignKey(
-        Document, blank=True, null=True, related_name="licence_document"
-    )
-    cover_letter_document = models.ForeignKey(
-        Document, blank=True, null=True, related_name="cover_letter_document"
-    )
+    licence_document = models.IntegerField(blank=True, null=True)  # models.ForeignKey(
+    # Document, blank=True, null=True, related_name="licence_document"
+    # )
+    cover_letter_document = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(
+    # Document, blank=True, null=True, related_name="cover_letter_document"
+    # )
     return_frequency = models.IntegerField(
         choices=MONTH_FREQUENCY_CHOICES, default=DEFAULT_FREQUENCY
     )
@@ -344,6 +346,7 @@ class CommunicationsLogEntry(models.Model):
         max_length=200, blank=True, verbose_name="Subject / Description"
     )
     text = models.TextField(blank=True)
+    comms_log_documents = models.ManyToManyField(LocalDocument, blank=True)
     documents = models.ManyToManyField(Document, blank=True)
 
     customer = models.ForeignKey(EmailUser, null=True, related_name="customer")
