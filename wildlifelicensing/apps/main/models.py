@@ -9,7 +9,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from dpaw_utils.models import ActiveMixin
-from ledger.accounts.models import Document, EmailUser, Profile, RevisionedMixin
+from ledger.accounts.models import EmailUser, Profile, RevisionedMixin
 
 from wildlifelicensing.apps.payments import utils as payment_utils
 
@@ -345,7 +345,6 @@ class CommunicationsLogEntry(models.Model):
     )
     text = models.TextField(blank=True)
     comms_log_documents = models.ManyToManyField(LocalDocument, blank=True)
-    documents = models.ManyToManyField(Document, blank=True)
 
     customer = models.ForeignKey(EmailUser, null=True, related_name="customer")
     staff = models.ForeignKey(EmailUser, null=True, related_name="staff")
