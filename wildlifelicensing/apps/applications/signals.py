@@ -1,8 +1,7 @@
 from datetime import date
 
 from django.contrib import messages
-from django.dispatch import receiver
-from ledger.accounts.signals import name_changed
+from django.dispatch import Signal, receiver
 
 from wildlifelicensing.apps.applications.emails import (
     send_user_name_change_notification_email,
@@ -16,6 +15,8 @@ from wildlifelicensing.apps.main.models import BaseLicence
 from wildlifelicensing.apps.main.signals import identification_uploaded
 from wildlifelicensing.apps.returns.models import Return
 from wildlifelicensing.apps.returns.signals import return_submitted
+
+name_changed = Signal(providing_args=["user"])
 
 
 @receiver(name_changed)
