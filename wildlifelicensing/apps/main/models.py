@@ -344,7 +344,7 @@ class CommunicationsLogEntry(models.Model):
         max_length=200, blank=True, verbose_name="Subject / Description"
     )
     text = models.TextField(blank=True)
-    comms_log_documents = models.ManyToManyField(LocalDocument, blank=True)
+    documents = models.ManyToManyField(LocalDocument, blank=True)
 
     customer = models.ForeignKey(EmailUser, null=True, related_name="customer")
     staff = models.ForeignKey(EmailUser, null=True, related_name="staff")
