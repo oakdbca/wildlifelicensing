@@ -1,7 +1,10 @@
+import os
+
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
@@ -9,6 +12,33 @@ from dpaw_utils.models import ActiveMixin
 from ledger.accounts.models import Document, EmailUser, Profile, RevisionedMixin
 
 from wildlifelicensing.apps.payments import utils as payment_utils
+
+
+@python_2_unicode_compatible
+class LocalDocument(models.Model):
+    name = models.CharField(
+        max_length=100, blank=True, verbose_name="name", help_text=""
+    )
+    description = models.TextField(blank=True, verbose_name="description", help_text="")
+    file = models.FileField(upload_to="%Y/%m/%d")
+    uploaded_date = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def path(self):
+        return self.file.path
+
+    @property
+    def filename(self):
+        return os.path.basename(self.path)
+
+    def __str__(self):
+        return self.name or self.filename
+
+
+upload_storage = FileSystemStorage(
+    location=settings.LEDGER_PRIVATE_MEDIA_ROOT,
+    base_url=settings.LEDGER_PRIVATE_MEDIA_URL,
+)
 
 
 @python_2_unicode_compatible
