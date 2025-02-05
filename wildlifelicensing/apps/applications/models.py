@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
-from ledger.accounts.models import EmailUser, Profile, RevisionedMixin
+from ledger.accounts.models import Profile, RevisionedMixin
 
 from wildlifelicensing.apps.main.models import (
     AssessorGroup,
@@ -124,22 +124,22 @@ class Application(RevisionedMixin):
     correctness_disclaimer = models.BooleanField(default=False)
     further_information_disclaimer = models.BooleanField(default=False)
 
-    applicant = models.ForeignKey(
-        EmailUser, blank=True, null=True, related_name="applicant"
-    )
+    applicant = models.IntegerField(blank=True, null=True)  # models.ForeignKey(
+    # EmailUser, blank=True, null=True, related_name="applicant"
+    # )
     applicant_profile = models.ForeignKey(Profile, blank=True, null=True)
 
     lodgement_number = models.CharField(max_length=9, blank=True, default="")
     lodgement_sequence = models.IntegerField(blank=True, default=0)
     lodgement_date = models.DateField(blank=True, null=True)
 
-    proxy_applicant = models.ForeignKey(
-        EmailUser, blank=True, null=True, related_name="proxy"
-    )
+    proxy_applicant = models.IntegerField(blank=True, null=True)  # models.ForeignKey(
+    # EmailUser, blank=True, null=True, related_name="proxy"
+    # )
 
-    assigned_officer = models.ForeignKey(
-        EmailUser, blank=True, null=True, related_name="assignee"
-    )
+    assigned_officer = models.IntegerField(blank=True, null=True)  # models.ForeignKey(
+    # EmailUser, blank=True, null=True, related_name="assignee"
+    # )
     processing_status = models.CharField(
         "Processing Status",
         max_length=30,
@@ -271,7 +271,9 @@ class ApplicationRequest(models.Model):
     application = models.ForeignKey(Application)
     subject = models.CharField(max_length=200, blank=True)
     text = models.TextField(blank=True)
-    officer = models.ForeignKey(EmailUser, null=True)
+    officer = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, null=True)
 
 
 class IDRequest(ApplicationRequest):
@@ -328,7 +330,9 @@ class Assessment(ApplicationRequest):
         ("assessment_expired", "Assessment Period Expired"),
     )
     assessor_group = models.ForeignKey(AssessorGroup)
-    assigned_assessor = models.ForeignKey(EmailUser, blank=True, null=True)
+    assigned_assessor = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, blank=True, null=True)
     status = models.CharField(
         "Status", max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
     )
@@ -403,7 +407,9 @@ class ApplicationUserAction(UserAction):
 
 class ApplicationDeclinedDetails(models.Model):
     application = models.ForeignKey(Application)
-    officer = models.ForeignKey(EmailUser, null=False)
+    officer = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, null=False)
     reason = models.TextField(blank=True)
 
 

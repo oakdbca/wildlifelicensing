@@ -346,8 +346,12 @@ class CommunicationsLogEntry(models.Model):
     text = models.TextField(blank=True)
     documents = models.ManyToManyField(LocalDocument, blank=True)
 
-    customer = models.ForeignKey(EmailUser, null=True, related_name="customer")
-    staff = models.ForeignKey(EmailUser, null=True, related_name="staff")
+    customer = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, null=True, related_name="customer")
+    staff = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, null=True, related_name="staff")
 
     created = models.DateTimeField(auto_now_add=True, null=False, blank=False)
 
@@ -393,7 +397,9 @@ class WildlifeLicenceVariantLink(models.Model):
 class AssessorGroup(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField()
-    members = models.ManyToManyField(EmailUser, blank=True)
+    members = models.ManyToManyField(
+        EmailUser, blank=True
+    )  # TODO: Find a way to deal with changing this to EmailUserRO
     purpose = models.BooleanField(default=False)
 
     def __str__(self):
@@ -402,7 +408,9 @@ class AssessorGroup(models.Model):
 
 @python_2_unicode_compatible
 class UserAction(models.Model):
-    who = models.ForeignKey(EmailUser, null=False, blank=False)
+    who = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, null=False, blank=False)
     when = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     what = models.TextField(blank=False)
 

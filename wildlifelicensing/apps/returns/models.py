@@ -3,7 +3,7 @@ import jsontableschema
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
-from ledger.accounts.models import EmailUser, RevisionedMixin
+from ledger.accounts.models import RevisionedMixin
 
 from wildlifelicensing.apps.main.models import (
     CommunicationsLogEntry,
@@ -107,7 +107,9 @@ class Return(RevisionedMixin):
 
     due_date = models.DateField(null=False, blank=False)
 
-    proxy_customer = models.ForeignKey(EmailUser, blank=True, null=True)
+    proxy_customer = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, blank=True, null=True)
 
     nil_return = models.BooleanField(default=False)
 
@@ -137,7 +139,9 @@ class ReturnAmendmentRequest(models.Model):
         "Status", max_length=30, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
     )
     reason = models.TextField(blank=False)
-    officer = models.ForeignKey(EmailUser, null=True)
+    officer = models.IntegerField(
+        blank=True, null=True
+    )  # models.ForeignKey(EmailUser, null=True)
 
 
 class ReturnTable(RevisionedMixin):
