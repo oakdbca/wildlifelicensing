@@ -117,7 +117,7 @@ class Application(RevisionedMixin):
         default=CUSTOMER_STATUS_CHOICES[0][0],
     )
     data = JSONField(blank=True, null=True)
-    application_documents = models.ManyToManyField(LocalDocument)
+    documents = models.ManyToManyField(LocalDocument)
     hard_copy = models.ForeignKey(
         LocalDocument, blank=True, null=True, related_name="hard_copy"
     )
