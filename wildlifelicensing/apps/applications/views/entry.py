@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import urlencode
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
-from ledger.accounts.forms import AddressForm, EmailUserForm, ProfileForm
 from ledger.accounts.models import EmailUser
 
 from wildlifelicensing.apps.applications import utils
@@ -28,7 +27,13 @@ from wildlifelicensing.apps.applications.models import (
     ApplicationVariantLink,
 )
 from wildlifelicensing.apps.applications.utils import delete_session_application
-from wildlifelicensing.apps.main.forms import IdentificationForm, SeniorCardForm
+from wildlifelicensing.apps.main.forms import (
+    AddressForm,
+    EmailUserForm,
+    IdentificationForm,
+    ProfileForm,
+    SeniorCardForm,
+)
 from wildlifelicensing.apps.main.helpers import (
     is_customer,
     is_officer,
