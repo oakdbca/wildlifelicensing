@@ -9,15 +9,17 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.base import TemplateView, View
-from ledger.accounts.forms import AddressForm, EmailUserForm, ProfileForm
 from ledger.accounts.models import EmailUser, Profile
 from preserialize.serialize import serialize
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main import helpers
 from wildlifelicensing.apps.main.forms import (
+    AddressForm,
     CommunicationsLogEntryForm,
+    EmailUserForm,
     IdentificationForm,
+    ProfileForm,
     SeniorCardForm,
 )
 from wildlifelicensing.apps.main.mixins import (
