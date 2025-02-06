@@ -73,7 +73,7 @@
                                 {% endblock %}
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                {% if request.user.is_authenticated %}  
+                                {% if request.user.is_authenticated %}
                                     <li>
                                         <a>
                                         Welcome
@@ -105,7 +105,7 @@
                                                 <li><a href="{% url 'dashboard:index' %}">Oscar Dashboard</a></li>
                                                 <li role="separator" class="divider"></li>
                                             {% endif %}
-                                            <li><a href="{% url 'accounts:logout' %}?next=/">Logout</a></li>
+                                            <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
                                         </ul>
                                     </li>
                                 {% endif %}
