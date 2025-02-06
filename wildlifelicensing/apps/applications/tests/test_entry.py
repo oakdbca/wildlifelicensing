@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
-from ledger.accounts.models import Address, EmailUser, PrivateDocument, Profile
+from ledger.accounts.models import Address, EmailUser, Profile
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.applications.tests import helpers
@@ -288,9 +288,12 @@ class ApplicationEntryTestCase(TestCase):
 
         with open(TEST_ID_PATH, "rb") as fp:
             # self.customer.identification.file.save('test_id.jpg', File(fp), save=True)
-            self.customer.identification2 = PrivateDocument.objects.create(
-                name="test_id"
+            self.customer.identification2 = (
+                "TODO: Replace with api call to get private file"
             )
+            # PrivateDocument.objects.create(
+            #    name="test_id"
+            # )
             self.customer.identification2.upload.save(
                 "test_id.jpg", File(fp), save=True
             )

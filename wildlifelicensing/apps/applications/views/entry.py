@@ -9,7 +9,7 @@ from django.utils.http import urlencode
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 from ledger.accounts.forms import AddressForm, EmailUserForm, ProfileForm
-from ledger.accounts.models import EmailUser, PrivateDocument
+from ledger.accounts.models import EmailUser
 
 from wildlifelicensing.apps.applications import utils
 from wildlifelicensing.apps.applications.forms import ProfileSelectionForm
@@ -466,9 +466,12 @@ class CheckIdentificationRequiredView(
 
         # application.applicant.identification =
         # LocalDocument.objects.create(file=self.request.FILES['identification_file'])
-        application.applicant.identification2 = PrivateDocument.objects.create(
-            upload=self.request.FILES["identification_file"]
+        application.applicant.identification2 = (
+            "TODO: Replace with api call to get private file"
         )
+        # PrivateDocument.objects.create(
+        #    upload=self.request.FILES["identification_file"]
+        # )
         application.applicant.save()
 
         # update any other applications for this user that are awaiting ID upload
@@ -515,10 +518,12 @@ class CheckSeniorCardView(LoginRequiredMixin, ApplicationEntryBaseView, FormView
         if application.applicant.senior_card2 is not None:
             application.applicant.senior_card2.delete()
 
-        # application.applicant.senior_card = LocalDocument.objects.create(file=self.request.FILES['senior_card'])
-        application.applicant.senior_card2 = PrivateDocument.objects.create(
-            upload=self.request.FILES["senior_card"]
+        application.applicant.senior_card2 = (
+            "TODO: Replace with api call to get private file"
         )
+        # PrivateDocument.objects.create(
+        # upload=self.request.FILES["senior_card"]
+        # )
         application.applicant.save()
 
         return redirect("wl_applications:create_select_profile")

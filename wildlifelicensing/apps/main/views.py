@@ -10,7 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.base import TemplateView, View
 from ledger.accounts.forms import AddressForm, EmailUserForm, ProfileForm
-from ledger.accounts.models import EmailUser, PrivateDocument, Profile
+from ledger.accounts.models import EmailUser, Profile
 from preserialize.serialize import serialize
 
 from wildlifelicensing import helpers
@@ -235,9 +235,12 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
                 previous_id = self.request.user.identification2
                 # self.request.user.identification = LocalDocument.objects.create
                 # (file=self.request.FILES['identification_file'])
-                self.request.user.identification2 = PrivateDocument.objects.create(
-                    upload=self.request.FILES["identification_file"]
+                self.request.user.identification2 = (
+                    "TODO: Replace with api call to get private file"
                 )
+                # PrivateDocument.objects.create(
+                #     upload=self.request.FILES["identification_file"]
+                # )
                 self.request.user.save()
                 if bool(previous_id):
                     previous_id.delete()
@@ -252,9 +255,12 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 # previous_senior_card = self.request.user.senior_card
                 previous_senior_card = self.request.user.senior_card2
-                self.request.user.senior_card2 = PrivateDocument.objects.create(
-                    upload=self.request.FILES["senior_card"]
+                self.request.user.senior_card2 = (
+                    "TODO: Replace with api call to get private file"
                 )
+                # PrivateDocument.objects.create(
+                # upload=self.request.FILES["senior_card"]
+                # )
                 self.request.user.save()
                 if bool(previous_senior_card):
                     previous_senior_card.delete()
@@ -596,14 +602,14 @@ def getLedgerSeniorCardFile(request, emailuser_id):
 
 def getAppFile(request, file_id, extension):
     allow_access = False
-    file_record = PrivateDocument.objects.get(id=file_id)
+    file_record = "TODO: Replace with api call to get private file"  # PrivateDocument.objects.get(id=file_id)
 
     if file_record.file_group == 1:
         if helpers.is_account_admin(request.user) is True or request.user.is_superuser:
             allow_access = True
 
     if allow_access is True:
-        file_record = PrivateDocument.objects.get(id=file_id)
+        file_record = "TODO: Replace with api call to get private file"  # PrivateDocument.objects.get(id=file_id)
         file_name_path = file_record.upload.path
 
         if os.path.isfile(file_name_path) is True:

@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.base import TemplateView
 from ledger.accounts.forms import AddressForm, ProfileForm
-from ledger.accounts.models import EmailUser, PrivateDocument, Profile
+from ledger.accounts.models import EmailUser, Profile
 
 from wildlifelicensing.apps.customer_management.forms import CustomerDetailsForm
 from wildlifelicensing.apps.dashboard.views.officer import (
@@ -234,9 +234,10 @@ class EditDetailsView(OfficerRequiredMixin, TemplateView):
             # previous_id = customer.identification
             previous_id = customer.identification2
             # customer.identification = LocalDocument.objects.create(file=self.request.FILES['id'])
-            customer.identification2 = PrivateDocument.objects.create(
-                upload=self.request.FILES["id"]
-            )
+            customer.identification2 = "TODO: Replace with api call to get private file"
+            # PrivateDocument.objects.create(
+            # upload=self.request.FILES["id"]
+            # )
             customer.save()
             if bool(previous_id):
                 previous_id.delete()
@@ -252,9 +253,9 @@ class EditDetailsView(OfficerRequiredMixin, TemplateView):
             # previous = customer.senior_card
             previous = customer.senior_card2
             # customer.senior_card = LocalDocument.objects.create(file=self.request.FILES['senior_card'])
-            customer.senior_card2 = PrivateDocument.objects.create(
-                upload=self.request.FILES["senior_card"]
-            )
+            customer.senior_card2 = "TODO: Replace with api call to get private file"  # PrivateDocument.objects.create(
+            # upload=self.request.FILES["senior_card"]
+            # )
             customer.save()
             if bool(previous):
                 previous.delete()
