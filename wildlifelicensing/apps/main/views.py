@@ -13,8 +13,8 @@ from ledger.accounts.forms import AddressForm, EmailUserForm, ProfileForm
 from ledger.accounts.models import EmailUser, Profile
 from preserialize.serialize import serialize
 
-from wildlifelicensing import helpers
 from wildlifelicensing.apps.applications.models import Application
+from wildlifelicensing.apps.main import helpers
 from wildlifelicensing.apps.main.forms import (
     CommunicationsLogEntryForm,
     IdentificationForm,
