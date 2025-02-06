@@ -13,6 +13,7 @@ from ledger.accounts.forms import AddressForm, EmailUserForm, ProfileForm
 from ledger.accounts.models import EmailUser, PrivateDocument, Profile
 from preserialize.serialize import serialize
 
+from wildlifelicensing import helpers
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main.forms import (
     CommunicationsLogEntryForm,
@@ -591,3 +592,34 @@ def getLedgerSeniorCardFile(request, emailuser_id):
             request, "Unable to find the document due to exception: " + str(e)
         )
         return redirect("wc_home")
+
+
+def getAppFile(request, file_id, extension):
+    allow_access = False
+    file_record = PrivateDocument.objects.get(id=file_id)
+
+    if file_record.file_group == 1:
+        if helpers.is_account_admin(request.user) is True or request.user.is_superuser:
+            allow_access = True
+
+    if allow_access is True:
+        file_record = PrivateDocument.objects.get(id=file_id)
+        file_name_path = file_record.upload.path
+
+        if os.path.isfile(file_name_path) is True:
+            the_file = open(file_name_path, "rb")
+            the_data = the_file.read()
+            the_file.close()
+
+            if extension == "msg":
+                return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+            if extension == "eml":
+                return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
+            if extension == "heic":
+                return HttpResponse(the_data, content_type="image/heic")
+
+            return HttpResponse(
+                the_data, content_type=mimetypes.types_map["." + str(extension)]
+            )
+    else:
+        return HttpResponse("Error loading attachment", content_type="plain/html")
