@@ -53,7 +53,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='application',
             name='applicant_profile',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile'),
+            # field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile'),
+            field=models.IntegerField(),
         ),
         migrations.AddField(
             model_name='application',
@@ -66,15 +67,17 @@ class Migration(migrations.Migration):
             name='conditions',
             field=models.ManyToManyField(through='wl_applications.ApplicationCondition', to='wl_main.Condition'),
         ),
-        migrations.AddField(
-            model_name='application',
-            name='documents',
-            field=models.ManyToManyField(to='accounts.Document'),
-        ),
+        # TODO: How to handle removing m2m references to ledger models?
+        # migrations.AddField(
+        #     model_name='application',
+        #     name='documents',
+        #     field=models.ManyToManyField(to='accounts.Document'),
+        # ),
         migrations.AddField(
             model_name='application',
             name='hard_copy',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='hard_copy', to='accounts.Document'),
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='hard_copy', to='accounts.Document'),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
             model_name='application',

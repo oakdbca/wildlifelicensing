@@ -19,11 +19,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='communicationslogentry',
-            name='documents',
-            field=models.ManyToManyField(blank=True, to='accounts.Document'),
-        ),
+        # TODO: How to handle removing m2m references to ledger models?
+        # migrations.AddField(
+        #     model_name='communicationslogentry',
+        #     name='documents',
+        #     field=models.ManyToManyField(blank=True, to='accounts.Document'),
+        # ),
         migrations.RunPython(migrate_comm_log_document),
         migrations.RemoveField(
             model_name='communicationslogentry',

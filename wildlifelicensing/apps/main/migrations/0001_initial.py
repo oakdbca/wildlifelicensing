@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=254)),
                 ('purpose', models.BooleanField(default=False)),
                 # ('members', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
-                # TODO: How to handle this?
+                # TODO: How to handle removing m2m references to ledger models?
             ],
         ),
         migrations.CreateModel(
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
             name='WildlifeLicence',
             fields=[
                 # ('licence_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='licence.Licence')),
-                ('licence_ptr_id', models.IntegerField(unique=True, primary_key=True)),
+                ('licence_ptr', models.IntegerField(unique=True, primary_key=True)),
                 ('sequence_number', models.IntegerField(default=1)),
                 ('purpose', models.TextField(blank=True)),
                 ('cover_letter_message', models.TextField(blank=True)),
@@ -63,7 +63,8 @@ class Migration(migrations.Migration):
                 # ('licence_document', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='licence_document', to='accounts.Document')),
                 ('licence_document', models.IntegerField(blank=True, null=True)),
                 ('previous_licence', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicence')),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile')),
+                # ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile')),
+                ('profile', models.IntegerField()),
             ],
             options={
                 'abstract': False,
@@ -74,7 +75,7 @@ class Migration(migrations.Migration):
             name='WildlifeLicenceType',
             fields=[
                 # ('licencetype_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='licence.LicenceType')),
-                ('licencetype_ptr_id', models.IntegerField(unique=True, primary_key=True)),
+                ('licencetype_ptr', models.IntegerField(unique=True, primary_key=True)),
                 ('identification_required', models.BooleanField(default=False)),
                 ('default_conditions', models.ManyToManyField(blank=True, through='wl_main.DefaultCondition', to='wl_main.Condition')),
                 ('code_slug', models.SlugField(max_length=64)),

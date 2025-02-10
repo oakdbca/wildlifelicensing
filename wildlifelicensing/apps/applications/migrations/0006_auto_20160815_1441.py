@@ -32,7 +32,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='application',
             name='applicant_profile',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile'),
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile'),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='application',
