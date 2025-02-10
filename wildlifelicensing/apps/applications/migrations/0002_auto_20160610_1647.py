@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
         # ),
         migrations.AddField(
             model_name='application',
-            name='hard_copy',
+            name='hard_copy_id',
             # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='hard_copy', to='accounts.Document'),
             field=models.IntegerField(blank=True, null=True),
         ),
