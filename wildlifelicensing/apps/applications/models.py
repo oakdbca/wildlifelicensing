@@ -118,8 +118,9 @@ class Application(RevisionedMixin):
     )
     data = JSONField(blank=True, null=True)
     documents = models.ManyToManyField(Document)
-    # hard_copy = models.ForeignKey(Document, blank=True, null=True, related_name='hard_copy')
-    hard_copy = models.IntegerField(blank=True, null=True)
+    hard_copy = models.ForeignKey(
+        Document, blank=True, null=True, related_name="hard_copy"
+    )
     correctness_disclaimer = models.BooleanField(default=False)
     further_information_disclaimer = models.BooleanField(default=False)
 
