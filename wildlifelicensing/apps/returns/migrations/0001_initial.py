@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wl_main', '0001_initial'),
     ]
 
@@ -27,7 +27,8 @@ class Migration(migrations.Migration):
                 ('lodgement_date', models.DateField(blank=True, null=True)),
                 ('due_date', models.DateField()),
                 ('licence', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicence')),
-                ('proxy_customer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                # ('proxy_customer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('proxy_customer', models.IntegerField(blank=True, null=True)),
             ],
             options={
                 'abstract': False,

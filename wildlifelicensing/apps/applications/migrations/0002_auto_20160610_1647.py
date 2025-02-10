@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('wl_applications', '0001_initial'),
         ('wl_main', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -31,12 +31,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='applicationlogentry',
             name='document',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Document'),
+            # field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Document'),
+            field=models.IntegerField(null=True),
         ),
         migrations.AddField(
             model_name='applicationlogentry',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            # field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(),
         ),
         migrations.AddField(
             model_name='applicationcondition',
@@ -56,7 +58,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='application',
             name='assigned_officer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='assignee', to=settings.AUTH_USER_MODEL),
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='assignee', to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
             model_name='application',
@@ -91,7 +94,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='application',
             name='proxy_applicant',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='proxy', to=settings.AUTH_USER_MODEL),
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='proxy', to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
             model_name='assessmentcondition',

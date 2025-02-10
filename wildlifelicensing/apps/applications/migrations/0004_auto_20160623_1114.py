@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wl_main', '0003_communicationslogentry'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wl_applications', '0003_auto_20160623_1114'),
     ]
 
@@ -36,7 +36,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='applicationrequest',
             name='officer',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            # field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(null=True),
         ),
         migrations.AddField(
             model_name='amendmentrequest',

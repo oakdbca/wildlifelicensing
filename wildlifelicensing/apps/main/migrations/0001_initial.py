@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         # ('licence', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -24,7 +24,8 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50)),
                 ('email', models.EmailField(max_length=254)),
                 ('purpose', models.BooleanField(default=False)),
-                ('members', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
+                # ('members', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
+                # TODO: How to handle this?
             ],
         ),
         migrations.CreateModel(
