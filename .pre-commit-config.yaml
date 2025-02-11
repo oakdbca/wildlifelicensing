@@ -30,7 +30,12 @@ repos:
     rev: 7.1.1
     hooks:
       - id: flake8
-        args: ["--config=setup.cfg","--per-file-ignores=boranga/settings.py:F405,E402","--ignore=E203, W503"]
+        args:
+          [
+            "--config=setup.cfg",
+            "--per-file-ignores=wildlifelicensing/settings.py:F405,E402",
+            "--ignore=E203, W503",
+          ]
         additional_dependencies: [flake8-isort]
 
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
