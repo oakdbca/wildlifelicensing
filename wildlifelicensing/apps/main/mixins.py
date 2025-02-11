@@ -1,9 +1,7 @@
-from __future__ import unicode_literals
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
 
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
-
-from wildlifelicensing.apps.main.helpers import is_customer, is_officer, is_assessor
+from wildlifelicensing.apps.main.helpers import is_assessor, is_customer, is_officer
 
 
 class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -12,7 +10,8 @@ class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
     If the user is authenticated it should throw a PermissionDenied (status 403), but if the user is not authenticated
     it should return to the login page.
     """
-    login_url = reverse_lazy('home')
+
+    login_url = reverse_lazy("home")
     permission_denied_message = "You don't have the permission to access this resource."
     raise_exception = True
 
@@ -20,7 +19,7 @@ class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
         user = self.request.user
         if not user.is_authenticated():
             self.raise_exception = False
-        return super(BaseAccessMixin, self).handle_no_permission()
+        return super().handle_no_permission()
 
     def test_func(self):
         """

@@ -3,10 +3,10 @@ import jsontableschema
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
-from ledger.accounts.models import RevisionedMixin
 
 from wildlifelicensing.apps.main.models import (
     CommunicationsLogEntry,
+    RevisionedMixin,
     WildlifeLicence,
     WildlifeLicenceType,
 )

@@ -2,13 +2,13 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from ledger.accounts.models import RevisionedMixin
 
 from wildlifelicensing.apps.main.models import (
     AssessorGroup,
     CommunicationsLogEntry,
     Condition,
     Document,
+    RevisionedMixin,
     UserAction,
     Variant,
     WildlifeLicence,
