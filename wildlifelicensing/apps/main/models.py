@@ -11,7 +11,6 @@ from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from reversion import revisions
 from reversion.models import Version
@@ -51,7 +50,6 @@ class RevisionedMixin(models.Model):
         abstract = True
 
 
-@python_2_unicode_compatible
 class Document(models.Model):
     name = models.CharField(
         max_length=100, blank=True, verbose_name="name", help_text=""
@@ -73,7 +71,7 @@ class Document(models.Model):
 
 
 # TODO: Uncomment and create these tables once ledger_api_client / django3.2 is going
-# @python_2_unicode_compatible
+#
 # class BaseAddress(models.Model):
 #     """Generic address model, intended to provide billing and shipping
 #     addresses.
@@ -176,7 +174,7 @@ class Document(models.Model):
 #         return zlib.crc32(self.summary.strip().upper().encode("UTF8"))
 
 
-# @python_2_unicode_compatible
+#
 # class EmailIdentity(models.Model):
 #     """Table used for matching access email address with EmailUser."""
 
@@ -214,7 +212,7 @@ class Document(models.Model):
 # post_clean = Signal(providing_args=["instance"])
 
 
-# @python_2_unicode_compatible
+#
 # class Profile(RevisionedMixin):
 #     user = (
 #         models.IntegerField()
@@ -264,7 +262,6 @@ class Document(models.Model):
 #             return f"{self.email}"
 
 
-@python_2_unicode_compatible
 class Condition(RevisionedMixin):
     text = models.TextField()
     code = models.CharField(max_length=10, unique=True)
@@ -275,7 +272,6 @@ class Condition(RevisionedMixin):
         return self.code
 
 
-@python_2_unicode_compatible
 class Region(models.Model):
     name = models.CharField(max_length=200, blank=False, unique=True)
 
@@ -286,7 +282,6 @@ class Region(models.Model):
         ordering = ["name"]
 
 
-@python_2_unicode_compatible
 class WildlifeLicenceCategory(models.Model):
     name = models.CharField(max_length=100, blank=False, unique=True)
 
@@ -339,7 +334,6 @@ class ActiveMixin(models.Model):
             super().save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class LicenceType(RevisionedMixin, ActiveMixin):
     name = models.CharField(max_length=256)
     short_name = models.CharField(
@@ -433,7 +427,6 @@ class WildlifeLicenceType(LicenceType):
             raise ValidationError(msg)
 
 
-@python_2_unicode_compatible
 class Licence(RevisionedMixin, ActiveMixin):
     # holder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='holder')
     holder_id = models.IntegerField()
@@ -455,7 +448,6 @@ class Licence(RevisionedMixin, ActiveMixin):
         return f"{self.licence_type} {self.licence_number}-{self.licence_sequence}"
 
 
-@python_2_unicode_compatible
 class WildlifeLicence(Licence):
     MONTH_FREQUENCY_CHOICES = [
         (-1, "One off"),
@@ -614,7 +606,6 @@ class CommunicationsLogEntry(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=False, blank=False)
 
 
-@python_2_unicode_compatible
 class Variant(models.Model):
     name = models.CharField(max_length=200)
     product_title = models.CharField(max_length=64, unique=True)
@@ -624,7 +615,6 @@ class Variant(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class VariantGroup(models.Model):
     name = models.CharField(max_length=50)
     child = models.ForeignKey("self", null=True, blank=True)
@@ -651,7 +641,6 @@ class WildlifeLicenceVariantLink(models.Model):
     order = models.IntegerField()
 
 
-@python_2_unicode_compatible
 class AssessorGroup(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -662,7 +651,6 @@ class AssessorGroup(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class UserAction(models.Model):
     # who = models.ForeignKey(EmailUser, null=False, blank=False)
     who = models.IntegerField(null=False, blank=False)
