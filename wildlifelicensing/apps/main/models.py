@@ -436,10 +436,10 @@ class WildlifeLicenceType(LicenceType):
 @python_2_unicode_compatible
 class Licence(RevisionedMixin, ActiveMixin):
     # holder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='holder')
-    holder = models.IntegerField()
+    holder_id = models.IntegerField()
     # issuer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='issuer',
     #    blank=True, null=True)
-    issuer = models.IntegerField(blank=True, null=True)
+    issuer_id = models.IntegerField(blank=True, null=True)
     licence_type = models.ForeignKey(LicenceType, on_delete=models.PROTECT)
     licence_number = models.CharField(max_length=64, blank=True, null=True)
     licence_sequence = models.IntegerField(blank=True, default=0)
