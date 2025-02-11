@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             model_name='application',
             name='hard_copy',
             field=ForeignKey(blank=True, null=True,  
-                  on_delete=django.db.models.deletion.PROTECT,
+                  on_delete=django.db.models.deletion.CASCADE,
                     related_name='hard_copy',
                     to='wl_main.Document'),
         ),
