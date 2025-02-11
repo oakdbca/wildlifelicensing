@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
             name='WildlifeLicence',
             fields=[
                 # ('licence_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='licence.Licence')),
-                ('licence_ptr', models.IntegerField(unique=True, primary_key=True)),
+                ('licence_ptr_id', models.IntegerField(unique=True, primary_key=True)),
                 ('sequence_number', models.IntegerField(default=1)),
                 ('purpose', models.TextField(blank=True)),
                 ('cover_letter_message', models.TextField(blank=True)),
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
             name='WildlifeLicenceType',
             fields=[
                 # ('licencetype_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='licence.LicenceType')),
-                ('licencetype_ptr', models.IntegerField(unique=True, primary_key=True)),
+                ('licencetype_ptr_id', models.IntegerField(unique=True, primary_key=True)),
                 ('identification_required', models.BooleanField(default=False)),
                 ('default_conditions', models.ManyToManyField(blank=True, through='wl_main.DefaultCondition', to='wl_main.Condition')),
                 ('code_slug', models.SlugField(max_length=64)),
