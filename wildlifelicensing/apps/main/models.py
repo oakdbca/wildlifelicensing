@@ -1,13 +1,19 @@
 import os
+import zlib
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.dispatch import Signal
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+from django_countries.fields import CountryField
+from oscar.apps.address.abstract_models import AbstractUserAddress
 from reversion import revisions
 from reversion.models import Version
 
@@ -63,6 +69,197 @@ class Document(models.Model):
 
     def __str__(self):
         return self.name or self.filename
+
+
+@python_2_unicode_compatible
+class BaseAddress(models.Model):
+    """Generic address model, intended to provide billing and shipping
+    addresses.
+    Taken from django-oscar address AbstrastAddress class.
+    """
+
+    STATE_CHOICES = (
+        ("ACT", "ACT"),
+        ("NSW", "NSW"),
+        ("NT", "NT"),
+        ("QLD", "QLD"),
+        ("SA", "SA"),
+        ("TAS", "TAS"),
+        ("VIC", "VIC"),
+        ("WA", "WA"),
+    )
+
+    # Addresses consist of 1+ lines, only the first of which is
+    # required.
+    line1 = models.CharField("Line 1", max_length=255)
+    line2 = models.CharField("Line 2", max_length=255, blank=True)
+    line3 = models.CharField("Line 3", max_length=255, blank=True)
+    locality = models.CharField("Suburb / Town", max_length=255)
+    state = models.CharField(max_length=255, default="WA", blank=True)
+    country = CountryField(default="AU")
+    postcode = models.CharField(max_length=10)
+    # A field only used for searching addresses.
+    search_text = models.TextField(editable=False)
+    hash = models.CharField(max_length=255, db_index=True, editable=False)
+
+    def __str__(self):
+        return self.summary
+
+    class Meta:
+        abstract = True
+
+    def clean(self):
+        # Strip all whitespace
+        for field in ["line1", "line2", "line3", "locality", "state"]:
+            if self.__dict__[field]:
+                self.__dict__[field] = self.__dict__[field].strip()
+
+    def save(self, *args, **kwargs):
+        self._update_search_text()
+        self.hash = self.generate_hash()
+        super().save(*args, **kwargs)
+
+    def _update_search_text(self):
+        search_fields = filter(
+            bool,
+            [
+                self.line1,
+                self.line2,
+                self.line3,
+                self.locality,
+                self.state,
+                str(self.country.name),
+                self.postcode,
+            ],
+        )
+        self.search_text = " ".join(search_fields)
+
+    @property
+    def summary(self):
+        """Returns a single string summary of the address, separating fields
+        using commas.
+        """
+        return ", ".join(self.active_address_fields())
+
+    # Helper methods
+    def active_address_fields(self):
+        """Return the non-empty components of the address."""
+        fields = [
+            self.line1,
+            self.line2,
+            self.line3,
+            self.locality,
+            self.state,
+            self.country,
+            self.postcode,
+        ]
+        fields = [
+            f.encode("utf-8").decode("unicode-escape").strip() for f in fields if f
+        ]
+
+        return fields
+
+    def join_fields(self, fields, separator=", "):
+        """Join a sequence of fields using the specified separator."""
+        field_values = []
+        for field in fields:
+            value = getattr(self, field)
+            field_values.append(value)
+        return separator.join(filter(bool, field_values))
+
+    def generate_hash(self):
+        """
+        Returns a hash of the address summary
+        """
+        return zlib.crc32(self.summary.strip().upper().encode("UTF8"))
+
+
+@python_2_unicode_compatible
+class EmailIdentity(models.Model):
+    """Table used for matching access email address with EmailUser."""
+
+    user = models.ForeignKey(
+        get_user_model(), null=True, related_name="email_identities"
+    )
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.email
+
+
+class LocalUserAddress(AbstractUserAddress):
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="local_addresses",
+        verbose_name=_("User"),
+    )
+
+
+class Address(BaseAddress):
+    user = (
+        models.IntegerField()
+    )  # models.models.ForeignKey('EmailUser', related_name='profile_addresses')
+    oscar_address = models.ForeignKey(
+        LocalUserAddress, related_name="profile_addresses"
+    )
+
+    class Meta:
+        verbose_name_plural = "addresses"
+        unique_together = ("user", "hash")
+
+
+post_clean = Signal(providing_args=["instance"])
+
+
+@python_2_unicode_compatible
+class Profile(RevisionedMixin):
+    user = (
+        models.IntegerField()
+    )  # models.ForeignKey(EmailUser, verbose_name='User', related_name='profiles')
+    name = models.CharField(
+        "Display Name", max_length=100, help_text="e.g Personal, Work, University, etc"
+    )
+    email = models.EmailField("Email")
+    postal_address = models.ForeignKey(
+        Address,
+        verbose_name="Postal Address",
+        on_delete=models.PROTECT,
+        related_name="profiles",
+    )
+    institution = models.CharField(
+        "Institution",
+        max_length=200,
+        blank=True,
+        default="",
+        help_text="e.g. Company Name, Tertiary Institution, Government Department, etc",
+    )
+
+    @property
+    def is_auth_identity(self):
+        """
+        Return True if the email is an email identity; otherwise return False.
+        """
+        if not self.email:
+            return False
+
+        if not hasattr(self, "_auth_identity"):
+            self._auth_identity = EmailIdentity.objects.filter(
+                user=self.user, email=self.email
+            ).exists()
+
+        return self._auth_identity
+
+    def clean(self):
+        super().clean()
+        self.email = self.email.lower() if self.email else self.email
+        post_clean.send(sender=self.__class__, instance=self)
+
+    def __str__(self):
+        if len(self.name) > 0:
+            return f"{self.name} ({self.email})"
+        else:
+            return f"{self.email}"
 
 
 @python_2_unicode_compatible
