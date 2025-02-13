@@ -56,7 +56,7 @@ urlpatterns = [
             namespace="wl_payments",
         ),
     ),
-    url(r"^social/", include("social_django.urls", namespace="social")),
+    url(r"^social/", include(("social_django.urls", "social"), namespace="social")),
 ]
 
 if settings.DEBUG:
