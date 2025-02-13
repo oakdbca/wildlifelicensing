@@ -274,7 +274,7 @@ class AbstractAddress(models.Model):
     state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = UppercaseCharField(_("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey(
-        "address.Country", on_delete=models.CASCADE, verbose_name=_("Country")
+        "wl_main.Country", on_delete=models.CASCADE, verbose_name=_("Country")
     )
 
     # A field only used for searching addresses - this contains all the
