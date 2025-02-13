@@ -26,7 +26,6 @@ ROOT_URLCONF = "wildlifelicensing.urls"
 SITE_ID = 1
 INSTALLED_APPS += [
     "bootstrap3",
-    "social_django",
     "ledger_api_client",
     "wildlifelicensing.apps.dashboard",
     "wildlifelicensing.apps.main",
@@ -124,37 +123,22 @@ MIDDLEWARE_CLASSES = None
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-AUTHENTICATION_BACKENDS = (
-    "social_core.backends.email.EmailAuth",
-    "django.contrib.auth.backends.ModelBackend",
-)
+SYSTEM_NAME = env("SYSTEM_NAME", "Wildlife Licensing")
+SYSTEM_NAME_SHORT = env("SYSTEM_NAME_SHORT", "WLS")
 
-USER_FIELDS = ["email"]
-SOCIAL_AUTH_STRATEGY = "social_django.strategy.DjangoStrategy"
-SOCIAL_AUTH_STORAGE = "social_django.models.DjangoStorage"
-SOCIAL_AUTH_EMAIL_FORM_URL = "/ledger/"
-SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = "ledger.accounts.mail.send_validation"
-SOCIAL_AUTH_EMAIL_VALIDATION_URL = "/ledger/validation-sent/"
-SOCIAL_AUTH_EMAIL_VALIDATION_ALLOW_REUSE = True
-SOCIAL_AUTH_EMAIL_VALIDATION_EXPIRED_THRESHOLD = env("EMAIL_VALIDATION_EXPIRY", 86400)
-SOCIAL_AUTH_PASSWORDLESS = True
-SOCIAL_AUTH_SESSION_EXPIRATION = env("SESSION_EXPIRATION", False)
-SOCIAL_AUTH_MAX_SESSION_LENGTH = env("MAX_SESSION_LENGTH", 1209600)  # two weeks
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ["first_name", "last_name", "email"]
-SOCIAL_AUTH_PIPELINE = (
-    "social_core.pipeline.social_auth.social_details",
-    "wildlifelicensing.accounts.pipeline.lower_email_address",
-    "wildlifelicensing.accounts.pipeline.logout_previous_session",
-    "social_core.pipeline.social_auth.social_uid",
-    "social_core.pipeline.social_auth.auth_allowed",
-    "social_core.pipeline.social_auth.social_user",
-    "social_core.pipeline.user.get_username",
-    "wildlifelicensing.accounts.pipeline.mail_validation",
-    "wildlifelicensing.accounts.pipeline.user_by_email",
-    "social_core.pipeline.user.create_user",
-    "wildlifelicensing.accounts.pipeline.user_is_new_session",
-    "social_core.pipeline.social_auth.associate_user",
-    "social_core.pipeline.social_auth.load_extra_data",
+SITE_PREFIX = env("SITE_PREFIX")
+SITE_DOMAIN = env("SITE_DOMAIN")
+
+SUPPORT_EMAIL = env("SUPPORT_EMAIL", "wildlifelicensing@" + SITE_DOMAIN).lower()
+DEP_URL = env("DEP_URL", "www." + SITE_DOMAIN)
+DEP_PHONE = env("DEP_PHONE", "(08) 9219 9978")
+DEP_PHONE_SUPPORT = env("DEP_PHONE_SUPPORT", "(08) 9219 9000")
+DEP_FAX = env("DEP_FAX", "(08) 9423 8242")
+DEP_POSTAL = env(
+    "DEP_POSTAL", "Locked Bag 104, Bentley Delivery Centre, Western Australia 6983"
 )
+DEP_NAME = env("DEP_NAME", "Department of Biodiversity, Conservation and Attractions")
+DEP_NAME_SHORT = env("DEP_NAME_SHORT", "DBCA")
+DEP_ADDRESS = env("DEP_ADDRESS", "17 Dick Perry Avenue, Kensington WA 6151")
+
+BRANCH_NAME = env("BRANCH_NAME", "Tourism and Concessions Branch")
