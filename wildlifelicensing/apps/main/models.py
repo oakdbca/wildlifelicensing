@@ -5,7 +5,6 @@ import zlib
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.dispatch import Signal
@@ -392,7 +391,7 @@ class WildlifeLicenceType(LicenceType):
     default_conditions = models.ManyToManyField(
         Condition, through="DefaultCondition", blank=True
     )
-    application_schema = JSONField(blank=True, null=True)
+    application_schema = models.JSONField(blank=True, null=True)
     category = models.ForeignKey(
         WildlifeLicenceCategory, null=True, blank=True, on_delete=models.PROTECT
     )
@@ -493,7 +492,7 @@ class WildlifeLicence(Licence):
         "Variant", blank=True, through="WildlifeLicenceVariantLink"
     )
     renewal_sent = models.BooleanField(default=False)
-    extracted_fields = JSONField(blank=True, null=True)
+    extracted_fields = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.reference

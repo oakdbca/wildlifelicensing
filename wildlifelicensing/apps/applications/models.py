@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -116,7 +115,7 @@ class Application(RevisionedMixin):
         choices=CUSTOMER_STATUS_CHOICES,
         default=CUSTOMER_STATUS_CHOICES[0][0],
     )
-    data = JSONField(blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
     documents = models.ManyToManyField(Document)
     hard_copy = models.ForeignKey(
         Document,

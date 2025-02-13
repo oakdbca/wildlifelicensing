@@ -1,6 +1,5 @@
 import datapackage
 import jsontableschema
-from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -20,7 +19,7 @@ class ReturnType(models.Model):
     #  http://dataprotocols.org/data-packages/
     #  The schema inside the 'resources' must follow the JSON Table Schema defined at:
     #  http://dataprotocols.org/json-table-schema/
-    data_descriptor = JSONField()
+    data_descriptor = models.JSONField()
 
     month_frequency = models.IntegerField(
         choices=WildlifeLicence.MONTH_FREQUENCY_CHOICES,
@@ -152,7 +151,7 @@ class ReturnTable(RevisionedMixin):
 class ReturnRow(RevisionedMixin):
     return_table = models.ForeignKey(ReturnTable, on_delete=models.PROTECT)
 
-    data = JSONField(blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
 
 
 class ReturnLogEntry(CommunicationsLogEntry):
