@@ -4,11 +4,54 @@ import zlib
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
+from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import UppercaseCharField
 from phonenumber_field.modelfields import PhoneNumberField
+
+AUTH_USER_MODEL = getattr(settings, "AUTH_USER_MODEL", "auth.User")
+
+
+class Creator:
+    """
+    A placeholder class that provides a way to set the attribute on the model.
+    """
+
+    def __init__(self, field):
+        self.field = field
+
+    # pylint: disable=W0622
+    def __get__(self, obj, type=None):
+        if obj is None:
+            return self
+        return obj.__dict__[self.field.name]
+
+    def __set__(self, obj, value):
+        obj.__dict__[self.field.name] = self.field.to_python(value)
+
+
+class UppercaseCharField(CharField):
+    """
+    A simple subclass of ``django.db.models.fields.CharField`` that
+    restricts all text to be uppercase.
+    """
+
+    def contribute_to_class(self, cls, name, private_only=False, **kwargs):
+        super().contribute_to_class(cls, name, private_only=private_only, **kwargs)
+        setattr(cls, self.name, Creator(self))
+
+    def from_db_value(self, value, *args, **kwargs):
+        return self.to_python(value)
+
+    def to_python(self, value):
+        """
+        Cast the supplied value to uppercase
+        """
+        val = super().to_python(value)
+        if isinstance(val, str):
+            return val.upper()
+        else:
+            return val
 
 
 class AbstractAddress(models.Model):
