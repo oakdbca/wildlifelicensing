@@ -1,8 +1,5 @@
 import json
 
-from oscar.apps.partner.strategy import Selector
-from oscar.apps.voucher.models import Voucher
-
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments.exceptions import PaymentException
 
@@ -64,29 +61,11 @@ def get_product(product_title):
 
 
 def is_licence_free(product_title):
-    product = get_product(product_title)
-
-    if product is None:
-        return True
-
-    selector = Selector()
-    strategy = selector.strategy()
-    purchase_info = strategy.fetch_for_product(product=product)
-
-    return purchase_info.price.effective_price == 0
+    return "TODO: Replace with code that finds out if the licence is free from the local system."
 
 
 def get_licence_price(product_title):
-    product = get_product(product_title)
-
-    if product is None:
-        return 0.00
-
-    selector = Selector()
-    strategy = selector.strategy()
-    purchase_info = strategy.fetch_for_product(product=product)
-
-    return purchase_info.price.effective_price
+    return "TODO: Replace with code that gets the price of the product from the local system."
 
 
 def get_application_payment_status(application):
@@ -130,4 +109,4 @@ def invoke_credit_card_payment(application):
 
 
 def get_voucher(voucher_code):
-    return Voucher.objects.filter(code=voucher_code).first()
+    return "TODO: Replace with local Voucher model"  # Voucher.objects.filter(code=voucher_code).first()
