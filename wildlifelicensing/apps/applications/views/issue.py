@@ -10,7 +10,6 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView, View
-from preserialize.serialize import serialize
 from PyPDF2 import PdfFileMerger, PdfFileReader
 
 from wildlifelicensing.apps.applications.emails import send_licence_issued_email
@@ -41,6 +40,7 @@ from wildlifelicensing.apps.main.pdf import (
 from wildlifelicensing.apps.main.signals import licence_issued
 from wildlifelicensing.apps.payments import utils as payment_utils
 from wildlifelicensing.apps.payments.exceptions import PaymentException
+from wildlifelicensing.preserialize.serialize import serialize
 
 LICENCE_TYPE_NUM_CHARS = 2
 LICENCE_NUMBER_NUM_CHARS = 6

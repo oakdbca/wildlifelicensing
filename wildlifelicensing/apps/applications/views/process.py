@@ -7,7 +7,6 @@ from django.template.context_processors import csrf
 from django.utils import formats
 from django.views.generic import TemplateView, View
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
-from preserialize.serialize import serialize
 from reversion.models import Version
 
 from wildlifelicensing.apps.applications.emails import (
@@ -54,6 +53,7 @@ from wildlifelicensing.apps.main.models import AssessorGroup
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments import utils as payment_utils
 from wildlifelicensing.apps.returns.models import Return
+from wildlifelicensing.preserialize.serialize import serialize
 
 
 class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):

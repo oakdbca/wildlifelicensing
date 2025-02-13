@@ -11,7 +11,6 @@ from django.core.files.storage import default_storage
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.base import TemplateView, View
-from preserialize.serialize import serialize
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main import excel
@@ -45,6 +44,7 @@ from wildlifelicensing.apps.returns.utils_schema import (
     Schema,
     create_return_template_workbook,
 )
+from wildlifelicensing.preserialize.serialize import serialize
 
 LICENCE_TYPE_NUM_CHARS = 2
 LODGEMENT_NUMBER_NUM_CHARS = 6

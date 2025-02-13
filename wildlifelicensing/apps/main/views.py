@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView, View
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
-from preserialize.serialize import serialize
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main.forms import (
@@ -38,6 +37,7 @@ from wildlifelicensing.apps.main.pdf import (
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.main.signals import identification_uploaded
 from wildlifelicensing.apps.main.utils import format_communications_log_entry
+from wildlifelicensing.preserialize.serialize import serialize
 
 
 class SearchCustomersView(OfficerRequiredMixin, View):

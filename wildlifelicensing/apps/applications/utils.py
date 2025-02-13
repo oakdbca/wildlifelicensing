@@ -1,5 +1,4 @@
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
-from preserialize.serialize import serialize
 
 from wildlifelicensing.apps.applications.models import (
     AmendmentRequest,
@@ -10,6 +9,7 @@ from wildlifelicensing.apps.applications.models import (
     Document,
 )
 from wildlifelicensing.apps.main.helpers import is_customer, is_officer
+from wildlifelicensing.preserialize.serialize import serialize
 
 PROCESSING_STATUSES = dict(Application.PROCESSING_STATUS_CHOICES)
 ID_CHECK_STATUSES = dict(Application.ID_CHECK_STATUS_CHOICES)

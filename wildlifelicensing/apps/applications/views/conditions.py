@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, View
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
-from preserialize.serialize import serialize
 
 from wildlifelicensing.apps.applications.emails import (
     send_assessment_assigned_email,
@@ -39,6 +38,7 @@ from wildlifelicensing.apps.main.mixins import (
 from wildlifelicensing.apps.main.models import Condition
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments import utils as payment_utils
+from wildlifelicensing.preserialize.serialize import serialize
 
 
 class EnterConditionsView(OfficerRequiredMixin, TemplateView):
