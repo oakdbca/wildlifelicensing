@@ -10,7 +10,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0001_initial'),
+        # ('accounts', '0001_initial'),
         # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wl_main', '0002_fixtures'),
     ]
