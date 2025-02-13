@@ -16,7 +16,10 @@ from django_countries.fields import CountryField
 from reversion import revisions
 from reversion.models import Version
 
-from wildlifelicensing.apps.main.oscar_abstract_models import AbstractUserAddress
+from wildlifelicensing.apps.main.oscar_abstract_models import (
+    AbstractCountry,
+    AbstractUserAddress,
+)
 from wildlifelicensing.apps.payments import utils as payment_utils
 
 
@@ -187,7 +190,12 @@ class EmailIdentity(models.Model):
         return self.email
 
 
-class LocalUserAddress(AbstractUserAddress):
+class Country(AbstractCountry):
+    class Meta:
+        abstract = False
+
+
+class UserAddress(AbstractUserAddress):
     user = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
@@ -195,13 +203,16 @@ class LocalUserAddress(AbstractUserAddress):
         verbose_name=_("User"),
     )
 
+    class Meta:
+        abstract = False
+
 
 class Address(BaseAddress):
     user = (
         models.IntegerField()
     )  # models.models.ForeignKey('EmailUser', related_name='profile_addresses')
     oscar_address = models.ForeignKey(
-        LocalUserAddress, related_name="profile_addresses", on_delete=models.PROTECT
+        UserAddress, related_name="profile_addresses", on_delete=models.PROTECT
     )
 
     class Meta:
