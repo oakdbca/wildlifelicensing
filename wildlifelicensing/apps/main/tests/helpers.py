@@ -1,11 +1,11 @@
 import datetime
 import os
-import re
 
 from django.contrib.auth.models import Group
 from django.contrib.messages import constants as message_constants
 from django.core import mail
-from django.test import Client, TestCase
+from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 from django.utils.encoding import smart_text
 from django_countries.models import Country
@@ -64,31 +64,6 @@ class TestData:
         "last_name": "user",
         "dob": "1979-12-13",
     }
-
-
-class SocialClient(Client):
-    """
-    A django Client for authenticating with the social auth password-less framework.
-    """
-
-    def login(self, email):
-        # important clear the mail box before
-        clear_mailbox()
-        self.post(
-            reverse("social:complete", kwargs={"backend": "email"}), {"email": email}
-        )
-        if len(mail.outbox) == 0:
-            raise Exception("Email not received")
-        else:
-            login_url = re.search(
-                r"(?P<url>https?://[^\s]+)", mail.outbox[0].body
-            ).group("url")
-            response = self.get(login_url, follow=True)
-            clear_mailbox()
-        return response
-
-    def logout(self):
-        self.get(reverse("accounts:logout"))
 
 
 def create_default_country():
@@ -213,7 +188,7 @@ def clear_mailbox():
 def upload_id(user):
     with open(TestData.TEST_ID_PATH, "rb") as fp:
         post_params = {"identification": True, "identification_file": fp}
-        client = SocialClient()
+        client = Client()
         client.login(user.email)
         response = client.post(
             reverse("wl_main:identification"), post_params, follow=True
@@ -266,7 +241,7 @@ class BaseUserTestCase(TestCase):
     A test case that provides some users
     """
 
-    client_class = SocialClient
+    client_class = Client
 
     def _pre_setup(self):
         super()._pre_setup()
@@ -390,7 +365,7 @@ class BasePermissionViewTestCase(BaseUserTestCase):
 
 class HelpersTest(TestCase):
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
 
     def test_create_default_customer(self):
         user = get_or_create_default_customer()
@@ -445,7 +420,7 @@ class HelpersTest(TestCase):
 class TestClient(TestCase):
     def test_login_logout_login(self):
         user = get_or_create_default_customer()
-        client = SocialClient()
+        client = Client()
         self.assertFalse(is_client_authenticated(client))
         client.login(user.email)
         self.assertTrue(is_client_authenticated(client))

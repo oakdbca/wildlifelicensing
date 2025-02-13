@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse, reverse_lazy
 from django_dynamic_fixture import G
 
@@ -15,7 +16,6 @@ from wildlifelicensing.apps.applications.views.entry import (
 )
 from wildlifelicensing.apps.main.models import Address, Profile, Region
 from wildlifelicensing.apps.main.tests.helpers import (
-    SocialClient,
     create_default_country,
     create_random_customer,
     get_or_create_default_assessor_group,
@@ -49,7 +49,7 @@ def lodge_application(application):
     """
     :param application:
     """
-    client = SocialClient()
+    client = Client()
     client.login(application.applicant.email)
     client.get(reverse("wl_applications:edit_application", args=[application.pk]))
     url = reverse_lazy("wl_applications:preview")
@@ -79,7 +79,7 @@ def issue_licence(application=None, user=None, licence_data=None):
         application = create_and_lodge_application(user)
     if user is None:
         user = get_or_create_default_officer()
-    client = SocialClient()
+    client = Client()
     client.login(user.email)
     if licence_data is None:
         licence_data = {}
@@ -139,7 +139,7 @@ def get_minimum_data_for_issuing_licence():
 
 
 def get_communication_log(application):
-    client = SocialClient()
+    client = Client()
     officer = get_or_create_default_officer()
     client.login(officer.email)
     url = reverse("wl_applications:log_list", args=[application.pk])
@@ -149,7 +149,7 @@ def get_communication_log(application):
 
 
 def get_action_log(application):
-    client = SocialClient()
+    client = Client()
     officer = get_or_create_default_officer()
     client.login(officer.email)
     url = reverse("wl_applications:action_list", args=[application.pk])

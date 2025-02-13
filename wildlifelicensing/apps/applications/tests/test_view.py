@@ -1,11 +1,11 @@
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 
 from wildlifelicensing.apps.applications.tests.helpers import (
     create_and_lodge_application,
 )
 from wildlifelicensing.apps.main.tests.helpers import (
-    SocialClient,
     create_random_customer,
     get_or_create_default_assessor,
     get_or_create_default_customer,
@@ -23,7 +23,7 @@ class ViewApplicationTestCase(TestCase):
         self.not_allowed_customer = create_random_customer()
         self.assertNotEqual(self.not_allowed_customer, self.customer)
 
-        self.client = SocialClient()
+        self.client = Client()
         self.application = create_and_lodge_application(self.customer)
 
     def tearDown(self):

@@ -2,6 +2,7 @@ import datetime
 import json
 
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 from django_dynamic_fixture import G
 
@@ -22,7 +23,6 @@ from wildlifelicensing.apps.applications.tests.helpers import (
 )
 from wildlifelicensing.apps.main.models import Region
 from wildlifelicensing.apps.main.tests.helpers import (
-    SocialClient,
     clear_all_id_files,
     clear_mailbox,
     get_email,
@@ -40,7 +40,7 @@ class TestStatusLifeCycle(TestCase):
     fixtures = ["licences.json"]
 
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
         self.officer = get_or_create_default_officer()
         self.user = get_or_create_default_customer()
         self.assertNotEqual(self.officer, self.user)
@@ -381,7 +381,7 @@ class TestStatusLifeCycle(TestCase):
 
 class TestViewAccess(TestCase):
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
         self.user = get_or_create_default_customer()
         self.officer = get_or_create_default_officer()
         self.application = create_and_lodge_application(

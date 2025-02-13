@@ -4,6 +4,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.core.files import File
 from django.test import TestCase, TransactionTestCase
+from django.test.client import Client
 from django.urls import reverse
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 
@@ -11,7 +12,6 @@ from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.applications.tests import helpers
 from wildlifelicensing.apps.main.models import Address, Profile, WildlifeLicenceType
 from wildlifelicensing.apps.main.tests.helpers import (
-    SocialClient,
     clear_mailbox,
     create_random_customer,
     get_or_create_default_customer,
@@ -33,7 +33,7 @@ class ApplicationEntryTestCase(TestCase):
         helpers.create_default_country()
         self.customer = get_or_create_default_customer()
 
-        self.client = SocialClient()
+        self.client = Client()
 
         self.licence_type = WildlifeLicenceType.objects.get(
             product_title="regulation-17"
@@ -758,7 +758,7 @@ class ApplicationEntrySecurity(TransactionTestCase):
     serialized_rollback = True
 
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
 
     def tearDown(self):
         self.client.logout()
@@ -893,7 +893,7 @@ class TestApplicationDiscardView(TestCase):
     fixtures = ["licences.json", "catalogue.json", "partner.json"]
 
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
         self.officer = helpers.get_or_create_default_officer()
         self.applicant = get_or_create_default_customer()
         self.assertNotEqual(self.officer, self.applicant)

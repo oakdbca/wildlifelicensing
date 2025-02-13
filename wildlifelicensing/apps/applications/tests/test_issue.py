@@ -2,6 +2,7 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 from django_dynamic_fixture import G
 
@@ -19,7 +20,7 @@ class TestIssueLicence(TestCase):
     fixtures = ["licences.json"]
 
     def setUp(self):
-        self.client = main_helpers.SocialClient()
+        self.client = Client()
         self.user = main_helpers.get_or_create_default_customer()
         self.officer = main_helpers.get_or_create_default_officer()
         self.assessor = main_helpers.get_or_create_default_assessor()

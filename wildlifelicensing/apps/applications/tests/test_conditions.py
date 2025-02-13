@@ -2,6 +2,7 @@ from datetime import date
 
 from django.shortcuts import reverse
 from django.test import TestCase
+from django.test.client import Client
 from django_dynamic_fixture import G
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 
@@ -14,7 +15,6 @@ from wildlifelicensing.apps.applications.tests import helpers as app_helpers
 from wildlifelicensing.apps.main.helpers import get_user_assessor_groups, is_assessor
 from wildlifelicensing.apps.main.models import AssessorGroup
 from wildlifelicensing.apps.main.tests.helpers import (
-    SocialClient,
     add_assessor_to_assessor_group,
     add_to_group,
     clear_mailbox,
@@ -30,7 +30,7 @@ class TestViewAccess(TestCase):
     fixtures = ["licences.json", "conditions.json", "returns.json"]
 
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
         self.user = get_or_create_default_customer()
         self.officer = get_or_create_default_officer()
         self.application = app_helpers.create_and_lodge_application(
@@ -292,7 +292,7 @@ class TestAssignAssessor(TestCase):
     fixtures = ["licences.json", "conditions.json"]
 
     def setUp(self):
-        self.client = SocialClient()
+        self.client = Client()
         self.user = get_or_create_default_customer()
         self.officer = get_or_create_default_officer()
         self.application = app_helpers.create_and_lodge_application(

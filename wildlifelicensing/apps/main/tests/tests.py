@@ -2,12 +2,12 @@ import datetime
 import os
 
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 
 from wildlifelicensing.apps.main.models import Profile
 from wildlifelicensing.apps.main.tests.helpers import (
     BasePermissionViewTestCase,
-    SocialClient,
     TestData,
     add_to_group,
     create_default_country,
@@ -27,7 +27,7 @@ class AccountsTestCase(TestCase):
 
         self.officer = get_or_create_default_officer()
 
-        self.client = SocialClient()
+        self.client = Client()
 
     def tearDown(self):
         self.client.logout()

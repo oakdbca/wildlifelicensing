@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 from rest_framework import status
 
@@ -35,7 +36,7 @@ class TestExplorerView(TestCase):
         admin.save()
         self.assertTrue(is_api_user(admin))
 
-        client = helpers.SocialClient()
+        client = Client()
         forbidden = [customer, officer, assessor]
         for user in forbidden:
             client.login(user.email)
@@ -85,7 +86,7 @@ class TestDataView(TestCase):
         admin.save()
         self.assertTrue(is_api_user(admin))
 
-        client = helpers.SocialClient()
+        client = Client()
         forbidden = [customer, officer, assessor]
         for user in forbidden:
             client.login(user.email)

@@ -4,11 +4,11 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from django.core import mail
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
 
 from wildlifelicensing.apps.applications.tests import helpers as app_helpers
 from wildlifelicensing.apps.main.tests.helpers import (
-    SocialClient,
     clear_mailbox,
     create_licence,
     create_random_customer,
@@ -68,7 +68,7 @@ class ReturnsTestCase(TestCase):
         self.customer = get_or_create_default_customer(include_default_profile=True)
         self.officer = get_or_create_default_officer()
 
-        self.client = SocialClient()
+        self.client = Client()
 
         self.licence = create_licence(
             self.customer, self.officer, product_title="regulation-17"
@@ -167,7 +167,7 @@ class TestPermissions(TestCase):
         self.not_allowed_customer = create_random_customer()
         self.assertNotEqual(self.not_allowed_customer, self.customer)
 
-        self.client = SocialClient()
+        self.client = Client()
         self.licence = create_licence(
             self.customer, self.officer, product_title="regulation-17"
         )
@@ -317,7 +317,7 @@ class TestLifeCycle(TestCase):
         self.not_allowed_customer = create_random_customer()
         self.assertNotEqual(self.not_allowed_customer, self.customer)
 
-        self.client = SocialClient()
+        self.client = Client()
         self.licence_type = get_or_create_licence_type("regulation-17")
         self.return_type = get_or_create_return_type(self.licence_type)
 
