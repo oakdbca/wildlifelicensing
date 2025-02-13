@@ -31,7 +31,7 @@ class UserCanEditApplicationMixin(BaseAccessMixin):
         implementation of the UserCanEditApplicationMixin test_func
         """
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if is_officer(user):
             return True
@@ -59,7 +59,7 @@ class UserCanRenewApplicationMixin(BaseAccessMixin):
         implementation of the UserCanRenewApplicationMixin test_func
         """
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if is_officer(user):
             return True
@@ -93,7 +93,7 @@ class UserCanAmendApplicationMixin(BaseAccessMixin):
         implementation of the UserCanAmendApplicationMixin test_func
         """
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if is_officer(user):
             return True
@@ -160,7 +160,7 @@ class CanPerformAssessmentMixin(BaseAccessMixin):
         implementation of the UserPassesTestMixin test_func
         """
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if not is_assessor(user):
             return False
@@ -188,7 +188,7 @@ class UserCanViewApplicationMixin(BaseAccessMixin):
         implementation of the UserPassesTestMixin test_func
         """
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if is_officer(user) or is_assessor(user):
             return True

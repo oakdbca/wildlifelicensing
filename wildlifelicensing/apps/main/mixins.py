@@ -17,7 +17,7 @@ class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
 
     def handle_no_permission(self):
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             self.raise_exception = False
         return super().handle_no_permission()
 

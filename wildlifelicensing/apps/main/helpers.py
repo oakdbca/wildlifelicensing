@@ -19,7 +19,7 @@ def is_customer(user):
     :param user:
     :return:
     """
-    return user.is_authenticated() and not is_officer(user) and not is_assessor(user)
+    return user.is_authenticated and not is_officer(user) and not is_assessor(user)
 
 
 def is_officer(user):

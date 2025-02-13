@@ -110,7 +110,7 @@ class DashBoardRoutingView(TemplateView):
     template_name = "wl/index.html"
 
     def get(self, *args, **kwargs):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             if (
                 (not self.request.user.first_name)
                 or (not self.request.user.last_name)
