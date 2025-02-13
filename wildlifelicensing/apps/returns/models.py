@@ -13,7 +13,7 @@ from wildlifelicensing.apps.main.models import (
 
 
 class ReturnType(models.Model):
-    licence_type = models.OneToOneField(WildlifeLicenceType)
+    licence_type = models.OneToOneField(WildlifeLicenceType, on_delete=models.PROTECT)
     #  data_descriptor should follow the Tabular Data Package format described at:
     #  http://data.okfn.org/doc/tabular-data-package
     #  also in:
@@ -94,8 +94,8 @@ class Return(RevisionedMixin):
 
     CUSTOMER_EDITABLE_STATE = ["current", "draft", "amendment_required"]
 
-    return_type = models.ForeignKey(ReturnType)
-    licence = models.ForeignKey(WildlifeLicence)
+    return_type = models.ForeignKey(ReturnType, on_delete=models.PROTECT)
+    licence = models.ForeignKey(WildlifeLicence, on_delete=models.PROTECT)
 
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=DEFAULT_STATUS
@@ -107,7 +107,7 @@ class Return(RevisionedMixin):
 
     due_date = models.DateField(null=False, blank=False)
 
-    # proxy_customer = models.ForeignKey(EmailUser, blank=True, null=True)
+    # proxy_customer = models.ForeignKey(EmailUser, blank=True, null=True, on_delete=models.PROTECT)
 
     proxy_customer = models.IntegerField(blank=True, null=True)
 
@@ -134,29 +134,29 @@ class Return(RevisionedMixin):
 class ReturnAmendmentRequest(models.Model):
     STATUS_CHOICES = (("requested", "Requested"), ("amended", "Amended"))
 
-    ret = models.ForeignKey(Return)
+    ret = models.ForeignKey(Return, on_delete=models.PROTECT)
     status = models.CharField(
         "Status", max_length=30, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
     )
     reason = models.TextField(blank=False)
-    # officer = models.ForeignKey(EmailUser, null=True)
+    # officer = models.ForeignKey(EmailUser, null=True, on_delete=models.PROTECT)
     officer = models.IntegerField(null=True)
 
 
 class ReturnTable(RevisionedMixin):
-    ret = models.ForeignKey(Return)
+    ret = models.ForeignKey(Return, on_delete=models.PROTECT)
 
     name = models.CharField(max_length=50)
 
 
 class ReturnRow(RevisionedMixin):
-    return_table = models.ForeignKey(ReturnTable)
+    return_table = models.ForeignKey(ReturnTable, on_delete=models.PROTECT)
 
     data = JSONField(blank=True, null=True)
 
 
 class ReturnLogEntry(CommunicationsLogEntry):
-    ret = models.ForeignKey(Return)
+    ret = models.ForeignKey(Return, on_delete=models.PROTECT)
 
     def save(self, **kwargs):
         # save the application reference if the reference not provided

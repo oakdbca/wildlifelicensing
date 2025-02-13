@@ -176,7 +176,10 @@ class EmailIdentity(models.Model):
     """Table used for matching access email address with EmailUser."""
 
     user = models.ForeignKey(
-        get_user_model(), null=True, related_name="email_identities"
+        get_user_model(),
+        null=True,
+        related_name="email_identities",
+        on_delete=models.PROTECT,
     )
     email = models.EmailField(unique=True)
 
@@ -198,7 +201,7 @@ class Address(BaseAddress):
         models.IntegerField()
     )  # models.models.ForeignKey('EmailUser', related_name='profile_addresses')
     oscar_address = models.ForeignKey(
-        LocalUserAddress, related_name="profile_addresses"
+        LocalUserAddress, related_name="profile_addresses", on_delete=models.PROTECT
     )
 
     class Meta:
@@ -379,8 +382,12 @@ class WildlifeLicenceType(LicenceType):
         Condition, through="DefaultCondition", blank=True
     )
     application_schema = JSONField(blank=True, null=True)
-    category = models.ForeignKey(WildlifeLicenceCategory, null=True, blank=True)
-    variant_group = models.ForeignKey("VariantGroup", null=True, blank=True)
+    category = models.ForeignKey(
+        WildlifeLicenceCategory, null=True, blank=True, on_delete=models.PROTECT
+    )
+    variant_group = models.ForeignKey(
+        "VariantGroup", null=True, blank=True, on_delete=models.PROTECT
+    )
     help_text = models.TextField(blank=True)
 
     def clean(self):
@@ -467,7 +474,9 @@ class WildlifeLicence(Licence):
     return_frequency = models.IntegerField(
         choices=MONTH_FREQUENCY_CHOICES, default=DEFAULT_FREQUENCY
     )
-    replaced_by = models.ForeignKey("self", blank=True, null=True)
+    replaced_by = models.ForeignKey(
+        "self", blank=True, null=True, on_delete=models.PROTECT
+    )
     regions = models.ManyToManyField(Region, blank=False)
     variants = models.ManyToManyField(
         "Variant", blank=True, through="WildlifeLicenceVariantLink"
@@ -565,8 +574,10 @@ class WildlifeLicence(Licence):
 
 
 class DefaultCondition(models.Model):
-    condition = models.ForeignKey(Condition)
-    wildlife_licence_type = models.ForeignKey(WildlifeLicenceType)
+    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
+    wildlife_licence_type = models.ForeignKey(
+        WildlifeLicenceType, on_delete=models.PROTECT
+    )
     order = models.IntegerField()
 
     class Meta:
@@ -613,7 +624,7 @@ class Variant(models.Model):
 
 class VariantGroup(models.Model):
     name = models.CharField(max_length=50)
-    child = models.ForeignKey("self", null=True, blank=True)
+    child = models.ForeignKey("self", null=True, blank=True, on_delete=models.PROTECT)
     variants = models.ManyToManyField(Variant)
 
     def clean(self):
@@ -632,8 +643,8 @@ class VariantGroup(models.Model):
 
 
 class WildlifeLicenceVariantLink(models.Model):
-    licence = models.ForeignKey(WildlifeLicence)
-    variant = models.ForeignKey(Variant)
+    licence = models.ForeignKey(WildlifeLicence, on_delete=models.PROTECT)
+    variant = models.ForeignKey(Variant, on_delete=models.PROTECT)
     order = models.IntegerField()
 
 

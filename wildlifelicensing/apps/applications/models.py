@@ -107,7 +107,9 @@ class Application(RevisionedMixin):
         choices=APPLICATION_TYPE_CHOICES,
         default=APPLICATION_TYPE_CHOICES[0][0],
     )
-    licence_type = models.ForeignKey(WildlifeLicenceType, blank=True, null=True)
+    licence_type = models.ForeignKey(
+        WildlifeLicenceType, blank=True, null=True, on_delete=models.PROTECT
+    )
     customer_status = models.CharField(
         "Customer Status",
         max_length=40,
@@ -117,24 +119,31 @@ class Application(RevisionedMixin):
     data = JSONField(blank=True, null=True)
     documents = models.ManyToManyField(Document)
     hard_copy = models.ForeignKey(
-        Document, blank=True, null=True, related_name="hard_copy"
+        Document,
+        blank=True,
+        null=True,
+        related_name="hard_copy",
+        on_delete=models.PROTECT,
     )
     correctness_disclaimer = models.BooleanField(default=False)
     further_information_disclaimer = models.BooleanField(default=False)
 
-    # applicant = models.ForeignKey(EmailUser, blank=True, null=True, related_name='applicant')
+    # applicant = models.ForeignKey(EmailUser, blank=True, null=True,
+    # related_name='applicant', on_delete=models.PROTECT)
     applicant = models.IntegerField(blank=True, null=True)
-    # applicant_profile = models.ForeignKey(Profile, blank=True, null=True)
+    # applicant_profile = models.ForeignKey(Profile, blank=True, null=True, on_delete=models.PROTECT)
     applicant_profile = models.IntegerField(blank=True, null=True)
 
     lodgement_number = models.CharField(max_length=9, blank=True, default="")
     lodgement_sequence = models.IntegerField(blank=True, default=0)
     lodgement_date = models.DateField(blank=True, null=True)
 
-    # proxy_applicant = models.ForeignKey(EmailUser, blank=True, null=True, related_name='proxy')
+    # proxy_applicant = models.ForeignKey(EmailUser, blank=True,
+    # null=True, related_name='proxy', on_delete=models.PROTECT)
     proxy_applicant = models.IntegerField(blank=True, null=True)
 
-    # assigned_officer = models.ForeignKey(EmailUser, blank=True, null=True, related_name='assignee')
+    # assigned_officer = models.ForeignKey(EmailUser, blank=True,
+    # null=True, related_name='assignee', on_delete=models.PROTECT)
     assigned_officer = models.IntegerField(blank=True, null=True)
     processing_status = models.CharField(
         "Processing Status",
@@ -169,7 +178,9 @@ class Application(RevisionedMixin):
 
     conditions = models.ManyToManyField(Condition, through="ApplicationCondition")
 
-    licence = models.ForeignKey(WildlifeLicence, blank=True, null=True)
+    licence = models.ForeignKey(
+        WildlifeLicence, blank=True, null=True, on_delete=models.PROTECT
+    )
 
     previous_application = models.ForeignKey(
         "self", on_delete=models.PROTECT, blank=True, null=True
@@ -248,13 +259,13 @@ class Application(RevisionedMixin):
 
 
 class ApplicationVariantLink(models.Model):
-    application = models.ForeignKey(Application)
-    variant = models.ForeignKey(Variant)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    variant = models.ForeignKey(Variant, on_delete=models.PROTECT)
     order = models.IntegerField()
 
 
 class ApplicationLogEntry(CommunicationsLogEntry):
-    application = models.ForeignKey(Application)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT)
 
     def save(self, **kwargs):
         # save the application reference if the reference not provided
@@ -264,10 +275,10 @@ class ApplicationLogEntry(CommunicationsLogEntry):
 
 
 class ApplicationRequest(models.Model):
-    application = models.ForeignKey(Application)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT)
     subject = models.CharField(max_length=200, blank=True)
     text = models.TextField(blank=True)
-    # officer = models.ForeignKey(EmailUser, null=True)
+    # officer = models.ForeignKey(EmailUser, null=True, on_delete=models.PROTECT)
     officer = models.IntegerField(null=True)
 
 
@@ -324,8 +335,8 @@ class Assessment(ApplicationRequest):
         ("assessed", "Assessed"),
         ("assessment_expired", "Assessment Period Expired"),
     )
-    assessor_group = models.ForeignKey(AssessorGroup)
-    # assigned_assessor = models.ForeignKey(EmailUser, blank=True, null=True)
+    assessor_group = models.ForeignKey(AssessorGroup, on_delete=models.PROTECT)
+    # assigned_assessor = models.ForeignKey(EmailUser, blank=True, null=True, on_delete=models.PROTECT)
     assigned_assessor = models.IntegerField(blank=True, null=True)
     status = models.CharField(
         "Status", max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
@@ -337,8 +348,8 @@ class Assessment(ApplicationRequest):
 
 
 class ApplicationCondition(models.Model):
-    condition = models.ForeignKey(Condition)
-    application = models.ForeignKey(Application)
+    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT)
     order = models.IntegerField()
 
     class Meta:
@@ -351,8 +362,8 @@ class AssessmentCondition(models.Model):
         ("accepted", "Accepted"),
         ("declined", "Declined"),
     )
-    condition = models.ForeignKey(Condition)
-    assessment = models.ForeignKey(Assessment)
+    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
+    assessment = models.ForeignKey(Assessment, on_delete=models.PROTECT)
     order = models.IntegerField()
     acceptance_status = models.CharField(
         "Acceptance Status",
@@ -396,12 +407,12 @@ class ApplicationUserAction(UserAction):
     def log_action(cls, application, action, user):
         return cls.objects.create(application=application, who=user, what=f"{action}")
 
-    application = models.ForeignKey(Application)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT)
 
 
 class ApplicationDeclinedDetails(models.Model):
-    application = models.ForeignKey(Application)
-    # officer = models.ForeignKey(EmailUser, null=False)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    # officer = models.ForeignKey(EmailUser, null=False, on_delete=models.PROTECT)
     officer = models.IntegerField(null=False)
     reason = models.TextField(blank=True)
 
