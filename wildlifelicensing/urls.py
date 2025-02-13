@@ -1,11 +1,13 @@
+from django import urls
 from django.conf import settings
 from django.conf.urls import include, static, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 from wildlifelicensing.apps.dashboard.views.base import DashBoardRoutingView
 
 urlpatterns = [
-    url(r"^ledger/admin/", admin.site.urls, name="ledger_admin"),
+    urls.path(r"admin/", admin.site.urls),
     url(r"^$", DashBoardRoutingView.as_view(), name="wl_home"),
     url(
         r"",
@@ -60,3 +62,14 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# DBCA Template URLs
+urlpatterns.append(
+    urls.path(
+        "logout/", auth_views.LogoutView.as_view(), {"next_page": "/"}, name="logout"
+    )
+)
+if settings.ENABLE_DJANGO_LOGIN:
+    urlpatterns.append(
+        urls.re_path(r"^ssologin/", auth_views.LoginView.as_view(), name="ssologin")
+    )
