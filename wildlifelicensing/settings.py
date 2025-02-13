@@ -114,3 +114,9 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = (
     "postcode",
     "country",
 )
+
+MIDDLEWARE_CLASSES += [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+]
+MIDDLEWARE = MIDDLEWARE_CLASSES
+MIDDLEWARE_CLASSES = None
