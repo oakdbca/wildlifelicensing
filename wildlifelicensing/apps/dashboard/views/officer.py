@@ -2,9 +2,9 @@ import datetime
 import logging
 
 from dateutil.parser import parse as date_parse
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db.models import Q
 from django.http.response import HttpResponse
+from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 
 from wildlifelicensing.apps.applications.models import Application

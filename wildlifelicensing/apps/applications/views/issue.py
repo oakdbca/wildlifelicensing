@@ -4,10 +4,10 @@ from io import BytesIO
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.files import File
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.urls import reverse
 from django.views.generic import TemplateView, View
 from PyPDF2 import PdfFileMerger, PdfFileReader

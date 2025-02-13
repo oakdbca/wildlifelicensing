@@ -6,10 +6,10 @@ import logging
 from dateutil.parser import parse as date_parse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db.models import Q
 from django.db.models.query import EmptyQuerySet
 from django.shortcuts import redirect
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.views.generic import TemplateView
