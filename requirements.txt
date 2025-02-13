@@ -1,7 +1,5 @@
 Django~=3.2
 django-extensions==1.9.8
-social-auth-app-django==2.1.0
-git+https://github.com/scottp-dpaw/social-core.git@email_fix#egg=social-auth-core
 psycopg2==2.8.6
 coverage==4.3.1
 coveralls==1.1
