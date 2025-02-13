@@ -123,3 +123,38 @@ MIDDLEWARE = MIDDLEWARE_CLASSES
 MIDDLEWARE_CLASSES = None
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.email.EmailAuth",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+USER_FIELDS = ["email"]
+SOCIAL_AUTH_STRATEGY = "social_django.strategy.DjangoStrategy"
+SOCIAL_AUTH_STORAGE = "social_django.models.DjangoStorage"
+SOCIAL_AUTH_EMAIL_FORM_URL = "/ledger/"
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = "ledger.accounts.mail.send_validation"
+SOCIAL_AUTH_EMAIL_VALIDATION_URL = "/ledger/validation-sent/"
+SOCIAL_AUTH_EMAIL_VALIDATION_ALLOW_REUSE = True
+SOCIAL_AUTH_EMAIL_VALIDATION_EXPIRED_THRESHOLD = env("EMAIL_VALIDATION_EXPIRY", 86400)
+SOCIAL_AUTH_PASSWORDLESS = True
+SOCIAL_AUTH_SESSION_EXPIRATION = env("SESSION_EXPIRATION", False)
+SOCIAL_AUTH_MAX_SESSION_LENGTH = env("MAX_SESSION_LENGTH", 1209600)  # two weeks
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ["first_name", "last_name", "email"]
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "wildlifelicensing.accounts.pipeline.lower_email_address",
+    "wildlifelicensing.accounts.pipeline.logout_previous_session",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "wildlifelicensing.accounts.pipeline.mail_validation",
+    "wildlifelicensing.accounts.pipeline.user_by_email",
+    "social_core.pipeline.user.create_user",
+    "wildlifelicensing.accounts.pipeline.user_is_new_session",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+)
