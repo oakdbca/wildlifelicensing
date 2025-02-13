@@ -452,7 +452,7 @@ class Licence(RevisionedMixin, ActiveMixin):
     issue_date = models.DateField(blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
-    is_renewable = models.NullBooleanField(blank=True)
+    is_renewable = models.BooleanField(blank=True, null=True)
 
     class Meta:
         unique_together = ("licence_number", "licence_sequence")
