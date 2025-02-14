@@ -223,7 +223,7 @@ post_clean = Signal(providing_args=["instance"])
 
 
 class Profile(RevisionedMixin):
-    user = (
+    user_id = (
         models.IntegerField()
     )  # models.ForeignKey(EmailUser, verbose_name='User', related_name='profiles')
     name = models.CharField(
