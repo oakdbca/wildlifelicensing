@@ -122,7 +122,7 @@ class Application(RevisionedMixin):
         blank=True,
         null=True,
         related_name="hard_copy",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     correctness_disclaimer = models.BooleanField(default=False)
     further_information_disclaimer = models.BooleanField(default=False)
