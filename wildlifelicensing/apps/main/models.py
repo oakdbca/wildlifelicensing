@@ -207,7 +207,7 @@ class UserAddress(AbstractUserAddress):
 
 
 class Address(BaseAddress):
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         EmailUser, related_name="wl_profile_addresses", on_delete=models.PROTECT
     )
     oscar_address = models.ForeignKey(
