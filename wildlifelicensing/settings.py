@@ -143,3 +143,6 @@ DEP_NAME_SHORT = env("DEP_NAME_SHORT", "DBCA")
 DEP_ADDRESS = env("DEP_ADDRESS", "17 Dick Perry Avenue, Kensington WA 6151")
 
 BRANCH_NAME = env("BRANCH_NAME", "Tourism and Concessions Branch")
+
+GROUP_NAME_OFFICERS = "Officers"
+GROUP_NAME_ASSESSORS = "Assessors"
