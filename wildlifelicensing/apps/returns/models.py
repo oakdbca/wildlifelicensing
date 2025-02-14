@@ -2,6 +2,7 @@ import datapackage
 import jsontableschema
 from django.core.exceptions import ValidationError
 from django.db import models
+from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 
 from wildlifelicensing.apps.main.models import (
     CommunicationsLogEntry,
@@ -106,9 +107,9 @@ class Return(RevisionedMixin):
 
     due_date = models.DateField(null=False, blank=False)
 
-    # proxy_customer = models.ForeignKey(EmailUser, blank=True, null=True, on_delete=models.CASCADE)
-
-    proxy_customer = models.IntegerField(blank=True, null=True)
+    proxy_customer = models.ForeignKey(
+        EmailUser, blank=True, null=True, on_delete=models.CASCADE
+    )
 
     nil_return = models.BooleanField(default=False)
 
@@ -138,8 +139,7 @@ class ReturnAmendmentRequest(models.Model):
         "Status", max_length=30, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
     )
     reason = models.TextField(blank=False)
-    # officer = models.ForeignKey(EmailUser, null=True, on_delete=models.CASCADE)
-    officer = models.IntegerField(null=True)
+    officer = models.ForeignKey(EmailUser, null=True, on_delete=models.CASCADE)
 
 
 class ReturnTable(RevisionedMixin):
