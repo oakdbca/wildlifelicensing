@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(choices=[('requested', 'Requested'), ('amended', 'Amended')], default='requested', max_length=30, verbose_name='Status')),
                 ('reason', models.TextField()),
                 # ('officer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('officer', models.IntegerField(null=True)),
+                ('officer_id', models.IntegerField(null=True)),
             ],
         ),
         migrations.AlterField(

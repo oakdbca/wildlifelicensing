@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('due_date', models.DateField()),
                 ('licence', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='wl_main.WildlifeLicence')),
                 # ('proxy_customer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('proxy_customer', models.IntegerField(blank=True, null=True)),
+                ('proxy_customer_id', models.IntegerField(blank=True, null=True)),
             ],
             options={
                 'abstract': False,

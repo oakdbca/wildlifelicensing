@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='assessment',
-            name='assigned_assessor',
+            name='assigned_assessor_id',
             # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
             field=models.IntegerField(blank=True, null=True),
         ),

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('reason', models.TextField(blank=True)),
                 ('application', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='wl_applications.Application')),
                 # ('officer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('officer', models.IntegerField()),
+                ('officer_id', models.IntegerField()),
             ],
         ),
     ]
