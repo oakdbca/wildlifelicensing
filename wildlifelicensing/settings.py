@@ -138,9 +138,12 @@ DEP_FAX = env("DEP_FAX", "(08) 9423 8242")
 DEP_POSTAL = env(
     "DEP_POSTAL", "Locked Bag 104, Bentley Delivery Centre, Western Australia 6983"
 )
-DEP_NAME = env("DEP_NAME", "Department of Biodiversity, Conservation and Attractions")
+DEP_NAME = env("DEP_NAME", "Department of Parks and Wildlife")
 DEP_NAME_SHORT = env("DEP_NAME_SHORT", "DBCA")
-DEP_ADDRESS = env("DEP_ADDRESS", "17 Dick Perry Avenue, Kensington WA 6151")
+DEP_POSTAL_ADDRESS_LINE_1 = env("DEP_POSTAL_ADDRESS_LINE_1", "Locked Bag 30")
+DEP_POSTAL_ADDRESS_LINE_2 = env("DEP_POSTAL_ADDRESS_LINE_2", "BENTLEY DELIVERY CENTRE")
+DEP_STATE = env("DEP_STATE", "WA")
+DEP_POSTAL_POSTCODE = env("DEP_POSTAL_POSTCODE", "6983")
 
 BRANCH_NAME = env("BRANCH_NAME", "Tourism and Concessions Branch")
 
@@ -157,3 +160,4 @@ CACHE_TIMEOUT_24_HOURS = 60 * 60 * 24
 CACHE_TIMEOUT_NEVER = None
 
 CACHE_KEY_SUPERUSER_IDS = "superuser-ids"
+CACHE_KEY_USER_BELONGS_TO_GROUP = "user-{user_id}-belongs-to-{group_name}"

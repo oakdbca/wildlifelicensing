@@ -27,3 +27,23 @@ def dept_name():
 @register.simple_tag()
 def dept_support_phone():
     return settings.DEP_PHONE_SUPPORT
+
+
+@register.simple_tag()
+def dept_postal_address_line_1():
+    return settings.DEP_POSTAL_ADDRESS_LINE_1
+
+
+@register.simple_tag()
+def dept_postal_address_line_2():
+    return settings.DEP_POSTAL_ADDRESS_LINE_2
+
+
+@register.simple_tag()
+def dept_postal_postcode():
+    return settings.DEP_POSTAL_POSTCODE
+
+
+@register.simple_tag()
+def dept_state():
+    return settings.DEP_STATE

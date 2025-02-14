@@ -3,6 +3,7 @@
 {% load bootstrap3 %}
 
 {% load static %}
+{% load utils %}
 
 {% block left_menu_items %}
     <li><a href="{% url 'wl_main:contact_us' %}">Contact Us</a></li>
@@ -13,26 +14,34 @@
 {% endblock %}
 
 {% block content %}
+    {% dept_name as dept_name %}
+    {% dept_postal_address_line_1 as dept_postal_address_line_1 %}
+    {% dept_postal_address_line_2 as dept_postal_address_line_2 %}
+    {% dept_state as dept_state %}
+    {% dept_postal_postcode as dept_postal_postcode %}
+    {% system_name as system_name %}
+    {% support_email as support_email %}
+    {% dept_support_phone as dept_support_phone %}
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <h2>Contact Us</h2>
                 <p>
-                    If you have any enquiries about wildlife licensing, the Department of Parks and Wildlife’s Wildlife Licensing Section can be contacted:
+                    If you have any enquiries about {{ system_name|lower }}, the {{ dept_name }}’s {{ system_name }} Section can be contacted:
                 </p>
                 <p>
-                    <strong>By email:</strong> <a href="mailto:wildlifelicensing@dpaw.wa.gov.au">wildlifelicensing@dpaw.wa.gov.au</a>
+                    <strong>By email:</strong> <a href="mailto:{{ support_email }}">{{ support_email }}</a>
                 </p>
                 <p>
-                    <strong>By phone:</strong> (08) 9219 9000
+                    <strong>By phone:</strong> {{ dept_support_phone }}
                 </p>
                 <p>
                     <strong>By post:</strong>
                     <address>
-                        Wildlife Licensing Section<br>
-                        Department of Parks and Wildlife<br>
-                        Locked Bag 30<br>
-                        BENTLEY DELIVERY CENTRE WA 6983
+                        {{ system_name }} Section<br>
+                        {{ dept_name }}<br>
+                        {{ dept_postal_address_line_1 }}<br>
+                        {{ dept_postal_address_line_2 }} {{ dept_state }} {{ dept_postal_postcode }}
                     </address>
                 </p>
             </div>
