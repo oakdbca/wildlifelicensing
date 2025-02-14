@@ -102,10 +102,9 @@
                                             {% endif %}
                                             {% if request.user.is_staff %}
                                                 <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                                                <li><a href="{% url 'dashboard:index' %}">Oscar Dashboard</a></li>
                                                 <li role="separator" class="divider"></li>
                                             {% endif %}
-                                            <li><a href="{% url 'accounts:logout' %}?next=/">Logout</a></li>
+                                            <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
                                         </ul>
                                     </li>
                                 {% endif %}

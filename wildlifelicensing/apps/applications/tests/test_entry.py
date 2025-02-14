@@ -646,7 +646,7 @@ class ApplicationEntryTestCase(TestCase):
             + "conclude or save this application before creating a new one. If you are seeing this "
             + "message and there is not another application being entered, you may need to "
             + '<a href="{}">logout</a> and log in again.'
-        ).format(reverse("accounts:logout"))
+        ).format(reverse("logout"))
 
         self.client.login(self.customer.email)
 

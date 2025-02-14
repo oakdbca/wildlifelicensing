@@ -120,7 +120,7 @@ class RedirectApplicationInSessionMixin:
                 "There is currently another application in the process of being entered. Please "
                 "conclude or save this application before creating a new one. If you are seeing this "
                 'message and there is not another application being entered, you may need to <a href="{}">logout'
-                "</a> and log in again.".format(reverse("accounts:logout")),
+                "</a> and log in again.".format(reverse("logout")),
             )
             return redirect("home")
 
