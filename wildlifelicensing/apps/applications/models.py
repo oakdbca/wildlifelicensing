@@ -107,7 +107,7 @@ class Application(RevisionedMixin):
         default=APPLICATION_TYPE_CHOICES[0][0],
     )
     licence_type = models.ForeignKey(
-        WildlifeLicenceType, blank=True, null=True, on_delete=models.PROTECT
+        WildlifeLicenceType, blank=True, null=True, on_delete=models.CASCADE
     )
     customer_status = models.CharField(
         "Customer Status",
@@ -178,7 +178,7 @@ class Application(RevisionedMixin):
     conditions = models.ManyToManyField(Condition, through="ApplicationCondition")
 
     licence = models.ForeignKey(
-        WildlifeLicence, blank=True, null=True, on_delete=models.PROTECT
+        WildlifeLicence, blank=True, null=True, on_delete=models.CASCADE
     )
 
     previous_application = models.ForeignKey(
@@ -258,13 +258,13 @@ class Application(RevisionedMixin):
 
 
 class ApplicationVariantLink(models.Model):
-    application = models.ForeignKey(Application, on_delete=models.PROTECT)
-    variant = models.ForeignKey(Variant, on_delete=models.PROTECT)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     order = models.IntegerField()
 
 
 class ApplicationLogEntry(CommunicationsLogEntry):
-    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
 
     def save(self, **kwargs):
         # save the application reference if the reference not provided
@@ -274,7 +274,7 @@ class ApplicationLogEntry(CommunicationsLogEntry):
 
 
 class ApplicationRequest(models.Model):
-    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
     subject = models.CharField(max_length=200, blank=True)
     text = models.TextField(blank=True)
     # officer = models.ForeignKey(EmailUser, null=True, on_delete=models.PROTECT)
@@ -334,7 +334,7 @@ class Assessment(ApplicationRequest):
         ("assessed", "Assessed"),
         ("assessment_expired", "Assessment Period Expired"),
     )
-    assessor_group = models.ForeignKey(AssessorGroup, on_delete=models.PROTECT)
+    assessor_group = models.ForeignKey(AssessorGroup, on_delete=models.CASCADE)
     # assigned_assessor = models.ForeignKey(EmailUser, blank=True, null=True, on_delete=models.PROTECT)
     assigned_assessor = models.IntegerField(blank=True, null=True)
     status = models.CharField(
@@ -347,8 +347,8 @@ class Assessment(ApplicationRequest):
 
 
 class ApplicationCondition(models.Model):
-    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
-    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
     order = models.IntegerField()
 
     class Meta:
@@ -361,8 +361,8 @@ class AssessmentCondition(models.Model):
         ("accepted", "Accepted"),
         ("declined", "Declined"),
     )
-    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
-    assessment = models.ForeignKey(Assessment, on_delete=models.PROTECT)
+    condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     order = models.IntegerField()
     acceptance_status = models.CharField(
         "Acceptance Status",
@@ -406,11 +406,11 @@ class ApplicationUserAction(UserAction):
     def log_action(cls, application, action, user):
         return cls.objects.create(application=application, who=user, what=f"{action}")
 
-    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
 
 
 class ApplicationDeclinedDetails(models.Model):
-    application = models.ForeignKey(Application, on_delete=models.PROTECT)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
     # officer = models.ForeignKey(EmailUser, null=False, on_delete=models.PROTECT)
     officer = models.IntegerField(null=False)
     reason = models.TextField(blank=True)
