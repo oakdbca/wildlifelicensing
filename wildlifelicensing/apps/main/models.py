@@ -181,7 +181,7 @@ class EmailIdentity(models.Model):
         get_user_model(),
         null=True,
         related_name="email_identities",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     email = models.EmailField(unique=True)
 
@@ -211,7 +211,7 @@ class Address(BaseAddress):
         models.IntegerField()
     )  # models.models.ForeignKey('EmailUser', related_name='profile_addresses')
     oscar_address = models.ForeignKey(
-        UserAddress, related_name="profile_addresses", on_delete=models.PROTECT
+        UserAddress, related_name="profile_addresses", on_delete=models.CASCADE
     )
 
     class Meta:
@@ -233,7 +233,7 @@ class Profile(RevisionedMixin):
     postal_address = models.ForeignKey(
         Address,
         verbose_name="Postal Address",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="profiles",
     )
     institution = models.CharField(
@@ -396,7 +396,7 @@ class WildlifeLicenceType(LicenceType):
         WildlifeLicenceCategory, null=True, blank=True, on_delete=models.PROTECT
     )
     variant_group = models.ForeignKey(
-        "VariantGroup", null=True, blank=True, on_delete=models.PROTECT
+        "VariantGroup", null=True, blank=True, on_delete=models.CASCADE
     )
     help_text = models.TextField(blank=True)
 
@@ -441,9 +441,9 @@ class WildlifeLicenceType(LicenceType):
 
 
 class Licence(RevisionedMixin, ActiveMixin):
-    # holder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='holder')
+    # holder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='holder')
     holder_id = models.IntegerField()
-    # issuer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='issuer',
+    # issuer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='issuer',
     #    blank=True, null=True)
     issuer_id = models.IntegerField(blank=True, null=True)
     licence_type = models.ForeignKey(LicenceType, on_delete=models.PROTECT)
@@ -584,9 +584,9 @@ class WildlifeLicence(Licence):
 
 
 class DefaultCondition(models.Model):
-    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
+    condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
     wildlife_licence_type = models.ForeignKey(
-        WildlifeLicenceType, on_delete=models.PROTECT
+        WildlifeLicenceType, on_delete=models.CASCADE
     )
     order = models.IntegerField()
 
@@ -634,7 +634,7 @@ class Variant(models.Model):
 
 class VariantGroup(models.Model):
     name = models.CharField(max_length=50)
-    child = models.ForeignKey("self", null=True, blank=True, on_delete=models.PROTECT)
+    child = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     variants = models.ManyToManyField(Variant)
 
     def clean(self):
@@ -653,8 +653,8 @@ class VariantGroup(models.Model):
 
 
 class WildlifeLicenceVariantLink(models.Model):
-    licence = models.ForeignKey(WildlifeLicence, on_delete=models.PROTECT)
-    variant = models.ForeignKey(Variant, on_delete=models.PROTECT)
+    licence = models.ForeignKey(WildlifeLicence, on_delete=models.CASCADE)
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     order = models.IntegerField()
 
 
