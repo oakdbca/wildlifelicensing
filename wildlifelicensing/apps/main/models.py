@@ -1,7 +1,6 @@
 import os
 import zlib
 
-# from oscar.apps.address.abstract_models import AbstractUserAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
@@ -12,6 +11,7 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import CountryField
+from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from reversion import revisions
 from reversion.models import Version
 
@@ -207,11 +207,11 @@ class UserAddress(AbstractUserAddress):
 
 
 class Address(BaseAddress):
-    user_id = (
-        models.IntegerField()
-    )  # models.models.ForeignKey('EmailUser', related_name='profile_addresses')
+    user_id = models.ForeignKey(
+        EmailUser, related_name="wl_profile_addresses", on_delete=models.PROTECT
+    )
     oscar_address = models.ForeignKey(
-        UserAddress, related_name="profile_addresses", on_delete=models.CASCADE
+        UserAddress, related_name="wl_profile_addresses", on_delete=models.CASCADE
     )
 
     class Meta:
@@ -223,9 +223,12 @@ post_clean = Signal(providing_args=["instance"])
 
 
 class Profile(RevisionedMixin):
-    user_id = (
-        models.IntegerField()
-    )  # models.ForeignKey(EmailUser, verbose_name='User', related_name='profiles')
+    user = models.ForeignKey(
+        EmailUser,
+        verbose_name="User",
+        related_name="profiles",
+        on_delete=models.PROTECT,
+    )
     name = models.CharField(
         "Display Name", max_length=100, help_text="e.g Personal, Work, University, etc"
     )
@@ -615,9 +618,12 @@ class CommunicationsLogEntry(models.Model):
     text = models.TextField(blank=True)
     documents = models.ManyToManyField(Document, blank=True)
 
-    # customer = models.ForeignKey(EmailUser, null=True, related_name='customer')
-    customer = models.IntegerField(null=True)
-    # staff = models.ForeignKey(EmailUser, null=True, related_name='staff')
+    customer = models.ForeignKey(
+        EmailUser, null=True, related_name="customer", on_delete=models.PROTECT
+    )
+    staff = models.ForeignKey(
+        EmailUser, null=True, related_name="staff", on_delete=models.PROTECT
+    )
     staff = models.IntegerField(null=True)
 
     created = models.DateTimeField(auto_now_add=True, null=False, blank=False)
@@ -661,7 +667,7 @@ class WildlifeLicenceVariantLink(models.Model):
 class AssessorGroup(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField()
-    # members = models.ManyToManyField(EmailUser, blank=True)
+    # TODO: Create field and copy data from old table - members = models.ManyToManyField(EmailUser, blank=True)
     purpose = models.BooleanField(default=False)
 
     def __str__(self):
@@ -669,7 +675,9 @@ class AssessorGroup(models.Model):
 
 
 class UserAction(models.Model):
-    # who = models.ForeignKey(EmailUser, null=False, blank=False)
+    who = models.ForeignKey(
+        EmailUser, null=False, blank=False, on_delete=models.PROTECT
+    )
     who = models.IntegerField(null=False, blank=False)
     when = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     what = models.TextField(blank=False)
