@@ -1,6 +1,7 @@
 import datetime
 import os
 
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.messages import constants as message_constants
 from django.core import mail
@@ -116,7 +117,7 @@ def get_or_create_default_customer(include_default_profile=False):
 def get_or_create_default_officer():
     user, created = get_or_create_user(TestData.DEFAULT_OFFICER)
     if created:
-        add_to_group(user, "Officers")
+        add_to_group(user, settings)
     return user
 
 

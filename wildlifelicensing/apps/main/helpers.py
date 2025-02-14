@@ -1,6 +1,8 @@
+from django.conf import settings
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 
 
+# TODO: Change to Ledger api client System Groups
 def belongs_to(user, group_name):
     """
     Check if the user belongs to the given group.
@@ -30,7 +32,7 @@ def is_officer(user):
     :param user:
     :return:
     """
-    return belongs_to(user, "Officers")
+    return belongs_to(user, settings.GROUP_NAME_OFFICERS)
 
 
 def is_assessor(user):
@@ -41,15 +43,15 @@ def is_assessor(user):
     :param user:
     :return:
     """
-    return belongs_to(user, "Assessors")
+    return belongs_to(user, settings.GROUP_NAME_OFFICERS)
 
 
 def get_all_officers():
-    return EmailUser.objects.filter(groups__name="Officers")
+    return EmailUser.objects.filter(groups__name=settings.GROUP_NAME_OFFICERS)
 
 
 def get_all_assessors():
-    return EmailUser.objects.filter(groups__name="Assessors")
+    return EmailUser.objects.filter(groups__name=settings.GROUP_NAME_ASSESSORS)
 
 
 def get_user_assessor_groups(user):

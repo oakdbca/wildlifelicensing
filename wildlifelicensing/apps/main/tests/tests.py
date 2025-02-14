@@ -1,6 +1,7 @@
 import datetime
 import os
 
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
@@ -198,7 +199,7 @@ class SearchCustomerTestCase(BasePermissionViewTestCase):
         self.assertEqual(len(json_response), 2)
 
         # make user_2 an officer and check that only user_1 is found by search for common part of first name
-        add_to_group(user_2, "officers")
+        add_to_group(user_2, settings.GROUP_NAME_OFFICERS)
 
         response = self.client.get("{}?q={}".format(self.view_url, "some"))
         self.assertEqual(200, response.status_code)
