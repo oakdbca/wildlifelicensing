@@ -26,6 +26,7 @@ ROOT_URLCONF = "wildlifelicensing.urls"
 SITE_ID = 1
 INSTALLED_APPS += [
     "bootstrap3",
+    "reversion",
     "ledger_api_client",
     "wildlifelicensing.apps.dashboard",
     "wildlifelicensing.apps.main",
