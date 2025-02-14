@@ -176,8 +176,9 @@ class DashboardTreeViewBase(TemplateView):
         return [parent_node]
 
     def get_context_data(self, **kwargs):
-        if "dataJSON" not in kwargs:
-            kwargs["dataJSON"] = json.dumps(self._build_tree_nodes())
+        # TODO: Get the officer dashboard tree working again
+        # if "dataJSON" not in kwargs:
+        #     kwargs["dataJSON"] = json.dumps(self._build_tree_nodes())
         if "title" not in kwargs and hasattr(self, "title"):
             kwargs["title"] = self.title
         return super().get_context_data(**kwargs)
