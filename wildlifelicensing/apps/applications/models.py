@@ -155,7 +155,6 @@ class Application(RevisionedMixin):
         related_name="assignee",
         on_delete=models.PROTECT,
     )
-    assigned_officer = models.IntegerField(blank=True, null=True)
     processing_status = models.CharField(
         "Processing Status",
         max_length=30,

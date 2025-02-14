@@ -624,7 +624,6 @@ class CommunicationsLogEntry(models.Model):
     staff = models.ForeignKey(
         EmailUser, null=True, related_name="staff", on_delete=models.PROTECT
     )
-    staff = models.IntegerField(null=True)
 
     created = models.DateTimeField(auto_now_add=True, null=False, blank=False)
 
