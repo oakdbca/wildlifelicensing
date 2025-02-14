@@ -223,12 +223,12 @@ class AddressForm(forms.ModelForm):
             "state",
             "country",
             "postcode",
-            "user",
+            "user_id",
         ]
-        widgets = {"country": CountrySelectWidget(), "user": forms.HiddenInput()}
+        widgets = {"country": CountrySelectWidget(), "user_id": forms.HiddenInput()}
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop("user", None)
+        user = kwargs.pop("user_id", None)
         self.profiles = None
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
@@ -239,7 +239,7 @@ class AddressForm(forms.ModelForm):
             self.fields.pop("update")
 
         if user is not None:
-            self.fields["user"].initial = user
+            self.fields["user_id"].initial = user
 
     def save(self, commit=True):
         try:

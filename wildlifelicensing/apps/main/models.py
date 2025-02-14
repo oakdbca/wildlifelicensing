@@ -207,7 +207,7 @@ class UserAddress(AbstractUserAddress):
 
 
 class Address(BaseAddress):
-    user = (
+    user_id = (
         models.IntegerField()
     )  # models.models.ForeignKey('EmailUser', related_name='profile_addresses')
     oscar_address = models.ForeignKey(
@@ -216,7 +216,7 @@ class Address(BaseAddress):
 
     class Meta:
         verbose_name_plural = "addresses"
-        unique_together = ("user", "hash")
+        unique_together = ("user_id", "hash")
 
 
 post_clean = Signal(providing_args=["instance"])
