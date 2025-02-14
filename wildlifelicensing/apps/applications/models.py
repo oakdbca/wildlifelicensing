@@ -147,7 +147,6 @@ class Application(RevisionedMixin):
     proxy_applicant = models.ForeignKey(
         EmailUser, blank=True, null=True, related_name="proxy", on_delete=models.PROTECT
     )
-    proxy_applicant = models.IntegerField(blank=True, null=True)
 
     assigned_officer = models.ForeignKey(
         EmailUser,
