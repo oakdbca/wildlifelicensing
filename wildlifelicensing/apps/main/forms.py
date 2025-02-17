@@ -4,7 +4,6 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 from django import forms
-from django.contrib.postgres.forms import JSONField
 from django.forms.widgets import SelectMultiple
 from django_countries.widgets import CountrySelectWidget
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
@@ -20,7 +19,7 @@ from wildlifelicensing.apps.main.models import (
 DATE_FORMAT = "%d/%m/%Y"
 
 
-class BetterJSONField(JSONField):
+class BetterJSONField(forms.JSONField):
     """
     A form field for the JSONField.
     It fixes the double 'stringification', avoid the null text and indents the json (see prepare_value).
@@ -28,7 +27,7 @@ class BetterJSONField(JSONField):
 
     def __init__(self, **kwargs):
         kwargs.setdefault("widget", forms.Textarea(attrs={"cols": 80, "rows": 20}))
-        super(JSONField, self).__init__(**kwargs)
+        super(forms.JSONField, self).__init__(**kwargs)
 
     def prepare_value(self, value):
         if value is None:
