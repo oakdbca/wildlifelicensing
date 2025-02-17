@@ -1,5 +1,5 @@
 import django.dispatch
 
-identification_uploaded = django.dispatch.Signal(providing_args=['request'])
+identification_uploaded = django.dispatch.Signal()
 
-licence_issued = django.dispatch.Signal(providing_args=['wildlice_licence'])
+licence_issued = django.dispatch.Signal()

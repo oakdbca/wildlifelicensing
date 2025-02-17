@@ -16,7 +16,7 @@ from wildlifelicensing.apps.main.signals import identification_uploaded
 from wildlifelicensing.apps.returns.models import Return
 from wildlifelicensing.apps.returns.signals import return_submitted
 
-name_changed = Signal(providing_args=["user"])
+name_changed = Signal()
 
 
 @receiver(name_changed)
