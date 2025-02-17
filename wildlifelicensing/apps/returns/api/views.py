@@ -5,7 +5,7 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.views.generic import View
 
 from wildlifelicensing.apps.returns.api.mixins import APIUserRequiredMixin
@@ -106,6 +106,6 @@ class ReturnsDataView(APIUserRequiredMixin, View):
         for ret_row in qs:
             row = []
             for field in schema.field_names:
-                row.append(smart_text(ret_row.data.get(field, ""), errors="replace"))
+                row.append(smart_str(ret_row.data.get(field, ""), errors="replace"))
             writer.writerow(row)
         return response

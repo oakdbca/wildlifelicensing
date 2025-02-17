@@ -8,7 +8,7 @@ from django.core import mail
 from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django_countries.models import Country
 from django_dynamic_fixture import G
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
@@ -165,7 +165,7 @@ def is_login_page(response):
     if hasattr(response, "content"):
         content = response.content
     else:
-        content = smart_text(response)
+        content = smart_str(response)
     return content.find(b'<div id="wl-login-container">') > 0
 
 
@@ -429,13 +429,13 @@ class TestClient(TestCase):
         self.assertFalse(is_client_authenticated(client))
         client.login(user.email)
         self.assertTrue(is_client_authenticated(client))
-        self.assertEqual(smart_text(user.pk), client.session.get("_auth_user_id"))
+        self.assertEqual(smart_str(user.pk), client.session.get("_auth_user_id"))
         client.logout()
         officer = get_or_create_default_officer()
         client.login(officer.email)
         self.assertTrue(is_client_authenticated(client))
-        self.assertEqual(smart_text(officer.pk), client.session.get("_auth_user_id"))
+        self.assertEqual(smart_str(officer.pk), client.session.get("_auth_user_id"))
         client.logout()
         client.login(user.email)
         self.assertTrue(is_client_authenticated(client))
-        self.assertEqual(smart_text(user.pk), client.session.get("_auth_user_id"))
+        self.assertEqual(smart_str(user.pk), client.session.get("_auth_user_id"))
