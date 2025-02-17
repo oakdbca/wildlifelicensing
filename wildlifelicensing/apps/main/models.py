@@ -9,7 +9,7 @@ from django.db import models
 from django.dispatch import Signal
 from django.utils import timezone
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from reversion import revisions
@@ -219,7 +219,7 @@ class Address(BaseAddress):
         unique_together = ("user_id", "hash")
 
 
-post_clean = Signal(providing_args=["instance"])
+post_clean = Signal()
 
 
 class Profile(RevisionedMixin):
