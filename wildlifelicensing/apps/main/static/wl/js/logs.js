@@ -28,8 +28,8 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
             });
         }
 
-        // if log table is in a popover, need to prepare log table container before initializing table or 
-        // search/paging/etc won't show 
+        // if log table is in a popover, need to prepare log table container before initializing table or
+        // search/paging/etc won't show
         if (options.showLogPopoverSelector) {
             $logListContent = $('<div>').append($(options.logTableSelector));
         }
@@ -181,7 +181,6 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                         return result;
                     },
                     'createdCell': function (cell) {
-                        //TODO why this is not working?
                         // the call to popover is done in the 'draw' event
                         $(cell).popover();
                     }
@@ -289,7 +288,7 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                 serverSide: false,
                 autowidth: true,
                 order: [[2, 'desc']],
-                // TODO: next one is to avoid the 'search' field to go out of the popover (table width is small).
+                // Note: next one is to avoid the 'search' field to go out of the popover (table width is small).
                 // see https://datatables.net/reference/option/dom
                 dom:
                 "<'row'<'col-sm-5'l><'col-sm-6'f>>" +

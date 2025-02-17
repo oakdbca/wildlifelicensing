@@ -32,7 +32,6 @@ def belongs_to_by_user_id(user_id: int, group_name: str) -> bool:
     return belongs_to
 
 
-# TODO: Change to Ledger api client System Groups
 def belongs_to(user: EmailUser, group_name: str) -> bool:
     if not user.is_authenticated:
         return False

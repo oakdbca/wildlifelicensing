@@ -86,7 +86,6 @@ def _log_email(email_message, ret, sender=None):
             EmailMessage,
         ),
     ):
-        # TODO this will log the plain text body, should we log the html instead
         text = email_message.body
         subject = email_message.subject
         fromm = smart_str(sender) if sender else smart_str(email_message.from_email)

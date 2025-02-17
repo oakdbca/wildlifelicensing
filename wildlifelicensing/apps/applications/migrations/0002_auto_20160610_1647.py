@@ -67,7 +67,8 @@ class Migration(migrations.Migration):
             name='conditions',
             field=models.ManyToManyField(through='wl_applications.ApplicationCondition', to='wl_main.Condition'),
         ),
-        # TODO: How to handle removing m2m references to ledger models?
+        # m2m fields to no longer existing applications are recreated and the data is copied 
+        # from the old table to the new one with SQL.
         # migrations.AddField(
         #     model_name='application',
         #     name='documents',

@@ -62,7 +62,8 @@ def _defaults(options):
 
 def model_to_dict(instance, **options):
     "Takes a model instance and converts it into a dict."
-
+    print(type(instance))
+    print(instance)
     options = _defaults(options)
     attrs = {}
 
@@ -75,7 +76,7 @@ def model_to_dict(instance, **options):
     # Items in the `fields` list are the output aliases, not the raw
     # accessors (field, method, property names)
     for alias in options["fields"]:
-
+        print(alias)
         # Get the accessor for the object
         accessor = options["aliases"].get(alias, alias)
 

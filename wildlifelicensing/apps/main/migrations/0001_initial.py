@@ -24,8 +24,9 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50)),
                 ('email', models.EmailField(max_length=254)),
                 ('purpose', models.BooleanField(default=False)),
+                # m2m fields to no longer existing applications are recreated and the data is copied 
+                # from the old table to the new one with SQL.
                 # ('members', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
-                # TODO: How to handle removing m2m references to ledger models?
             ],
         ),
         migrations.CreateModel(
