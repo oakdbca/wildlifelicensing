@@ -33,7 +33,7 @@ RUN apt-get install --no-install-recommends -y wget git libmagic-dev gcc \
     rsyslog gunicorn libreoffice
 RUN apt-get install --no-install-recommends -y libpq-dev patch
 RUN apt-get install --no-install-recommends -y postgresql-client mtr htop \
-    vim ssh 
+    vim ssh
 RUN apt-get install --no-install-recommends -y python3-gevent \
     software-properties-common imagemagick gunicorn tzdata
 
@@ -53,10 +53,10 @@ FROM builder_base_wls as python_libs_wls
 WORKDIR /app
 COPY requirements.txt ./
 RUN python3.7 -m pip install --no-cache-dir -r requirements.txt \
-  # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
-  # Reference: https://stackoverflow.com/questions/18643998/geodjango-geosexception-error
-  # && sed -i -e "s/ver = geos_version().decode()/ver = geos_version().decode().split(' ')[0]/" /usr/local/lib/python2.7/dist-packages/django/contrib/gis/geos/libgeos.py \
-  && rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
+    # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
+    # Reference: https://stackoverflow.com/questions/18643998/geodjango-geosexception-error
+    # && sed -i -e "s/ver = geos_version().decode()/ver = geos_version().decode().split(' ')[0]/" /usr/local/lib/python2.7/dist-packages/django/contrib/gis/geos/libgeos.py \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
 
 COPY libgeos.py.patch /app/
 RUN patch /usr/local/lib/python3.7/dist-packages/django/contrib/gis/geos/libgeos.py /app/libgeos.py.patch
@@ -64,7 +64,7 @@ RUN rm /app/libgeos.py.patch
 
 # Install the project (ensure that frontend projects have been built prior to this step).
 FROM python_libs_wls
-COPY gunicorn.ini manage_wl.py ./
+COPY gunicorn.ini manage.py ./
 #COPY timezone /etc/timezone
 RUN echo "Australia/Perth" > /etc/timezone
 ENV TZ=Australia/Perth
@@ -73,7 +73,7 @@ RUN touch /app/.env
 COPY .git ./.git
 #COPY ledger ./ledger
 COPY wildlifelicensing ./wildlifelicensing
-RUN python manage_wl.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 # upgrade postgresql to v11
 #RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main 11" > /etc/apt/sources.list.d/pgsql.list
