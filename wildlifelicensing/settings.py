@@ -16,7 +16,6 @@ SITE_ID = 1
 DEPT_DOMAINS = config(
     "DEPT_DOMAINS", default="dpaw.wa.gov.au,dbca.wa.gov.au", cast=Csv()
 )
-SUPERVISOR_STOP_CMD = config("SUPERVISOR_STOP_CMD")
 SYSTEM_MAINTENANCE_WARNING = config(
     "SYSTEM_MAINTENANCE_WARNING", default=24, cast=int
 )  # hours
@@ -134,13 +133,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 SYSTEM_NAME = config("SYSTEM_NAME", default="Wildlife Licensing")
 SYSTEM_NAME_SHORT = config("SYSTEM_NAME_SHORT", default="WLS")
 
-SITE_PREFIX = config("SITE_PREFIX")
-SITE_DOMAIN = config("SITE_DOMAIN")
-
 SUPPORT_EMAIL = config(
-    "SUPPORT_EMAIL", default="wildlifelicensing@" + SITE_DOMAIN
+    "SUPPORT_EMAIL", default="wildlifelicensing@dpaw.wa.gov.au"
 ).lower()
-DEP_URL = config("DEP_URL", default="www." + SITE_DOMAIN)
 DEP_PHONE = config("DEP_PHONE", default="(08) 9219 9978")
 DEP_PHONE_SUPPORT = config("DEP_PHONE_SUPPORT", default="(08) 9219 9000")
 DEP_FAX = config("DEP_FAX", default="(08) 9423 8242")

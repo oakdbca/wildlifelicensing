@@ -8,8 +8,6 @@ ENV SECRET_KEY="ThisisNotRealKey"
 ENV NOTIFICATION_EMAIL="asi@dbca.wa.gov.au"
 ENV NON_PROD_EMAIL='asi@dbca.wa.gov.au'
 ENV EMAIL_INSTANCE='UAT'
-ENV SITE_PREFIX='wildlifelicencing-uat'
-ENV SITE_DOMAIN='dbca.wa.gov.au'
 ENV OSCAR_SHOP_NAME='Parks & Wildlife'
 ENV BPAY_ALLOWED=False
 
