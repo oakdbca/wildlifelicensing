@@ -1,18 +1,19 @@
 import logging
 import os
 
+import confy
 from decouple import Csv, config
 
 logger = logging.getLogger(__name__)
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.environ.setdefault("BASE_DIR", BASE_DIR)
 
+if os.path.exists(BASE_DIR + "/.env"):
+    confy.read_environment_file(BASE_DIR + "/.env")
+
 from ledger_api_client.settings_base import *  # noqa: F403, E402
 
-ROOT_URLCONF = "disturbance.urls"
-SITE_ID = 1
 DEPT_DOMAINS = config(
     "DEPT_DOMAINS", default="dpaw.wa.gov.au,dbca.wa.gov.au", cast=Csv()
 )
