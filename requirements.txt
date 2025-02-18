@@ -7,7 +7,6 @@ dj-static==0.0.6
 django_bootstrap3==12.1.0
 django-braces==1.16.0
 django-ckeditor==5.4.0
-django-confy==1.0.4
 django-countries==7.6.1
 django-crispy-forms==1.7.0
 django-cron==0.6.0 # This project is no longer maintained

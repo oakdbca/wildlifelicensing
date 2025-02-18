@@ -5,13 +5,19 @@ It exposes the WSGI callable as a module-level variable named ``application``.
 
 import os
 
-import confy
+# This import will automatically find the .env file and load the environment variables
+from decouple import config  # noqa
 from django.core.wsgi import get_wsgi_application
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if os.path.exists(BASE_DIR + "/.env"):
-    confy.read_environment_file(BASE_DIR + "/.env")
-os.environ.setdefault("BASE_DIR", BASE_DIR)
+path = os.path.dirname(os.path.abspath(__file__))
+# Remove trailing slash
+if path.endswith("/"):
+    path = path[:-1]
+project_folder_name = os.path.basename(path)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "wildlifelicensing.settings")
+os.environ.setdefault(
+    "BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"{project_folder_name}.settings")
+
 application = get_wsgi_application()
