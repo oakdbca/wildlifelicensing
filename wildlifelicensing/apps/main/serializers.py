@@ -6,6 +6,10 @@ from django.core.serializers.json import (  # to handle the datetime serializati
 from django.db.models.fields.files import FieldFile
 from django.utils.encoding import smart_str
 from django_countries.fields import Country
+from ledger_api_client.ledger_models import EmailUserRO as EmailUser
+from rest_framework import serializers
+
+from wildlifelicensing.apps.main.models import Address, Profile, UserAddress
 
 logger = logging.getLogger(__name__)
 
@@ -28,3 +32,37 @@ class WildlifeLicensingJSONEncoder(DjangoJSONEncoder):
                 logger.warning("Failed to serialize object of type %s: %s", type(o), e)
                 result = str(o)
             return result
+
+
+class EmailUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailUser
+        exclude = (
+            "residential_address",
+            "postal_address",
+            "billing_address",
+        )
+
+
+class UserAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAddress
+        exclude = ("user",)
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    # oscar_address_id = serializers.CharField(source="id")
+    oscar_address = UserAddressSerializer()
+
+    class Meta:
+        model = Address
+        exclude = ("user",)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = EmailUserSerializer()
+    postal_address = AddressSerializer()
+
+    class Meta:
+        model = Profile
+        fields = "__all__"
