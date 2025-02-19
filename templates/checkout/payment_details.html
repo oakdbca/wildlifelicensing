@@ -2,31 +2,33 @@
 {% load static %}
 {% load i18n %}
 
-{%block styles %}
-    {{ block.super}}
-    <style>
-        .card-logo{
-            width: 100px;
-            float: left;
-            margin: 5px;
-        }
-        .card-logo.disabled{
-            opacity: 0.4;
-        }
-    </style>
+{% block styles %}
+  {{ block.super }}
+  <style>
+    .card-logo {
+      width: 100px;
+      float: left;
+      margin: 5px;
+    }
+    .card-logo.disabled {
+      opacity: 0.4;
+    }
+  </style>
 {% endblock %}
 {% block payment_details %}
-<div clas="container">
+  <div clas="container">
     <!-- Pills -->
     <ul class="nav nav-pills nav-justified">
-        <!--<li class="active"><a data-toggle="tab" href="#card">Pay now by Card</a></li>-->
-{% if bpay_allowed %}
-        <li><a data-toggle="tab" href="#bpay">Pay later by BPAY/Cash/Cheque/Money Order</a></li>
-{% endif %}
+      <!-- <li class="active"><a data-toggle="tab" href="#card">Pay now by Card</a></li> -->
+      {% if bpay_allowed %}
+        <li>
+          <a data-toggle="tab" href="#bpay">Pay later by BPAY/Cash/Cheque/Money Order</a>
+        </li>
+      {% endif %}
     </ul>
     <!-- Pills -->
     <div class="tab-content">
-        <!--
+      <!--
         <div id="card" class="tab-pane fade in active">
             <div class="well">
                 <div class="sub-header">
@@ -94,31 +96,30 @@
                 </form>
             </div>
         </div>
-        -->
-{% if bpay_allowed %}
-    <!-- BPAY -->
+          -->
+      {% if bpay_allowed %}
+        <!-- BPAY -->
         <div id="bpay" class="tab-pane fade in active">
-            <div class="well">
-                <div class="sub-header">
-                    <h3>{% trans "BPAY/Cash/Cheque/Money Order" %}</h3>
-                    <p>Click Continue to preview your order. An invoice will be generated once you place your order.</p>
-                </div>
-                <form method="post" action="{% url 'checkout:preview' %}" class="form-stacked">
-                    {% csrf_token %}
-                    <input type="hidden" name="payment_method" readonly value="bpay"/>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Continue" %}</button>
-                    </div>
-                </form>
+          <div class="well">
+            <div class="sub-header">
+              <h3>{% trans 'BPAY/Cash/Cheque/Money Order' %}</h3>
+              <p>Click Continue to preview your order. An invoice will be generated once you place your order.</p>
             </div>
+            <form method="post" action="{% url 'checkout:preview' %}" class="form-stacked">
+              {% csrf_token %}
+              <input type="hidden" name="payment_method" readonly value="bpay" />
+              <div class="form-actions">
+                <button type="submit" class="btn btn-large btn-primary pull-right">{% trans 'Continue' %}</button>
+              </div>
+            </form>
+          </div>
         </div>
-{% endif %}
-
+      {% endif %}
     </div>
-</div> 
+  </div>
 {% endblock %}
 {% block extrascripts %}
-    <script type="text/javascript" src="{% static 'payments/js/checkout.js'%}"></script>
-    
-    {{ block.super }}
+  <script type="text/javascript" src="{% static 'payments/js/checkout.js' %}"></script>
+
+  {{ block.super }}
 {% endblock %}
