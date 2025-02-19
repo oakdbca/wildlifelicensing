@@ -19,7 +19,6 @@ from wildlifelicensing.apps.main.oscar_abstract_models import (
     AbstractCountry,
     AbstractUserAddress,
 )
-from wildlifelicensing.apps.payments import utils as payment_utils
 
 
 class RevisionedMixin(models.Model):
@@ -151,9 +150,7 @@ class BaseAddress(models.Model):
             self.country,
             self.postcode,
         ]
-        fields = [
-            f.encode("utf-8").decode("unicode-escape").strip() for f in fields if f
-        ]
+        fields = [str(f).strip() for f in fields if f]
 
         return fields
 
@@ -408,6 +405,8 @@ class WildlifeLicenceType(LicenceType):
         - Check for senior voucher if applicable.
         :return: raise an exception if error
         """
+        from wildlifelicensing.apps.payments import utils as payment_utils
+
         variant_codes = payment_utils.generate_product_title_variants(self)
 
         missing_product_variants = []
