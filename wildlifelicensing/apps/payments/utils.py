@@ -77,6 +77,7 @@ def get_application_payment_status(application):
         return PAYMENT_STATUS_NOT_REQUIRED
 
     invoice = "TODO: Replace with call to ledger api client to get invoice"
+    return invoice
     # get_object_or_404(Invoice, reference=application.invoice_reference)
 
     if invoice.amount > 0:
