@@ -40,12 +40,10 @@ class RevisionedMixin(models.Model):
 
     @property
     def created_date(self):
-        # return revisions.get_for_object(self).last().revision.date_created
         return Version.objects.get_for_object(self).last().revision.date_created
 
     @property
     def modified_date(self):
-        # return revisions.get_for_object(self).first().revision.date_created
         return Version.objects.get_for_object(self).first().revision.date_created
 
     class Meta:
@@ -216,7 +214,7 @@ class Address(BaseAddress):
 
     class Meta:
         verbose_name_plural = "addresses"
-        unique_together = ("user_id", "hash")
+        unique_together = ("user", "hash")
 
 
 post_clean = Signal()
@@ -444,11 +442,16 @@ class WildlifeLicenceType(LicenceType):
 
 
 class Licence(RevisionedMixin, ActiveMixin):
-    # holder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='holder')
-    holder_id = models.IntegerField()
-    # issuer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='issuer',
-    #    blank=True, null=True)
-    issuer_id = models.IntegerField(blank=True, null=True)
+    holder = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="holder"
+    )
+    issuer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="issuer",
+        blank=True,
+        null=True,
+    )
     licence_type = models.ForeignKey(LicenceType, on_delete=models.PROTECT)
     licence_number = models.CharField(max_length=64, blank=True, null=True)
     licence_sequence = models.IntegerField(blank=True, default=0)
@@ -474,16 +477,25 @@ class WildlifeLicence(Licence):
     ]
     DEFAULT_FREQUENCY = MONTH_FREQUENCY_CHOICES[0][0]
 
-    # profile = models.ForeignKey(Profile)
-    profile = models.IntegerField()
+    profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
     purpose = models.TextField(blank=True)
     locations = models.TextField(blank=True)
     cover_letter_message = models.TextField(blank=True)
     additional_information = models.TextField(blank=True)
-    # licence_document = models.ForeignKey(Document, blank=True, null=True, related_name='licence_document')
-    licence_document = models.IntegerField(blank=True, null=True)
-    # cover_letter_document = models.ForeignKey(Document, blank=True, null=True, related_name='cover_letter_document')
-    cover_letter_document = models.IntegerField(blank=True, null=True)
+    licence_document = models.ForeignKey(
+        Document,
+        blank=True,
+        null=True,
+        related_name="licence_document",
+        on_delete=models.PROTECT,
+    )
+    cover_letter_document = models.ForeignKey(
+        Document,
+        blank=True,
+        null=True,
+        related_name="cover_letter_document",
+        on_delete=models.PROTECT,
+    )
     return_frequency = models.IntegerField(
         choices=MONTH_FREQUENCY_CHOICES, default=DEFAULT_FREQUENCY
     )
