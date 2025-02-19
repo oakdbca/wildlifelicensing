@@ -224,7 +224,7 @@ class AddressForm(forms.ModelForm):
             "postcode",
             "user",
         ]
-        widgets = {"country": CountrySelectWidget(), "user_id": forms.HiddenInput()}
+        widgets = {"country": CountrySelectWidget(), "user": forms.HiddenInput()}
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
