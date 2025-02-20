@@ -1,102 +1,102 @@
-# Prepare the base environment.
-FROM ubuntu:20.04 as builder_base_wls
-MAINTAINER asi@dbca.wa.gov.au
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Australia/Perth
-ENV PRODUCTION_EMAIL=False
-ENV SECRET_KEY="ThisisNotRealKey"
-ENV NOTIFICATION_EMAIL="asi@dbca.wa.gov.au"
-ENV NON_PROD_EMAIL='asi@dbca.wa.gov.au'
-ENV EMAIL_INSTANCE='UAT'
-ENV OSCAR_SHOP_NAME='Parks & Wildlife'
-ENV BPAY_ALLOWED=False
+# syntax = docker/dockerfile:1.2
 
-# Install Python libs from base environment.
-RUN apt-get clean
-RUN apt-get update
-RUN apt-get upgrade -y
+FROM ubuntu:24.04 as builder_base_wildlifelicensing
 
-# RUN apt-get install -yq git mercurial gcc gdal-bin libsasl2-dev libpq-dev \
-#   python python-setuptools python-dev python-pip \
-#   imagemagick poppler-utils \
-#   libldap2-dev libssl-dev wget build-essential \
-#   libmagic-dev binutils libproj-dev gunicorn tzdata \
-#   mtr libevent-dev python-gevent \
-#   cron rsyslog iproute2
-# RUN pip install --upgrade pip
-# RUN apt-get install -yq vim
+LABEL maintainer="asi@dbca.wa.gov.au"
+LABEL org.opencontainers.image.source="https://github.com/dbca-wa/wildlifelicensing"
 
-RUN apt-get install --no-install-recommends -y wget git libmagic-dev gcc \
-    binutils libproj-dev gdal-bin python3-setuptools python3-pip tzdata cron \
-    rsyslog gunicorn libreoffice
-RUN apt-get install --no-install-recommends -y libpq-dev patch
-RUN apt-get install --no-install-recommends -y postgresql-client mtr htop \
-    vim ssh
-RUN apt-get install --no-install-recommends -y python3-gevent \
-    software-properties-common imagemagick gunicorn tzdata
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Australia/Perth \
+    PRODUCTION_EMAIL=False \
+    SECRET_KEY="ThisisNotRealKey" \
+    NOTIFICATION_EMAIL="asi@dbca.wa.gov.au" \
+    NON_PROD_EMAIL="asi@dbca.wa.gov.au" \
+    EMAIL_INSTANCE="UAT" \
+    OSCAR_SHOP_NAME="Parks & Wildlife" \
+    BPAY_ALLOWED=False
 
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update
-RUN apt-get install --no-install-recommends -y python3.7 python3.7-dev
-RUN apt-get install --no-install-recommends -y python3.7 python3.7-dev python3.7-distutils
+FROM builder_base_wildlifelicensing as apt_packages_wildlifelicensing
 
-RUN ln -s /usr/bin/python3.7 /usr/bin/python && \
-    rm /usr/bin/pip && \
-    ln -s /usr/bin/pip3 /usr/bin/pip
-RUN python3.7 -m pip install --upgrade pip
-RUN apt-get install -yq vim
+# Use Australian Mirrors
+RUN sed 's/archive.ubuntu.com/au.archive.ubuntu.com/g' /etc/apt/sources.list > /etc/apt/sourcesau.list && \
+    mv /etc/apt/sourcesau.list /etc/apt/sources.list
 
-# Install Python libs from requirements.txt.
-FROM builder_base_wls as python_libs_wls
-WORKDIR /app
-COPY requirements.txt ./
-RUN python3.7 -m pip install --no-cache-dir -r requirements.txt \
-    # Update the Django <1.11 bug in django/contrib/gis/geos/libgeos.py
-    # Reference: https://stackoverflow.com/questions/18643998/geodjango-geosexception-error
-    # && sed -i -e "s/ver = geos_version().decode()/ver = geos_version().decode().split(' ')[0]/" /usr/local/lib/python2.7/dist-packages/django/contrib/gis/geos/libgeos.py \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
+RUN --mount=type=cache,target=/var/cache/apt apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y \
+    binutils \
+    ca-certificates \
+    cron  \
+    gcc  \
+    gdal-bin \
+    git \
+    gunicorn \
+    gunicorn \
+    htop \
+    imagemagick \
+    libmagic-dev \
+    libpq-dev \
+    libproj-dev \
+    libreoffice \
+    mtr \
+    patch \
+    postgresql-client \
+    python3-dev \
+    python3-gevent \
+    python3-pip \
+    python3-setuptools \
+    python3-venv \
+    rsyslog \
+    software-properties-common \
+    ssh \
+    sudo \
+    tzdata \
+    vim \
+    wget && \
+    rm -rf /var/lib/apt/lists/* && \
+    update-ca-certificates
 
-COPY libgeos.py.patch /app/
-RUN patch /usr/local/lib/python3.7/dist-packages/django/contrib/gis/geos/libgeos.py /app/libgeos.py.patch
-RUN rm /app/libgeos.py.patch
+FROM apt_packages_wildlifelicensing as configure_wildlifelicensing
 
-# Install the project (ensure that frontend projects have been built prior to this step).
-FROM python_libs_wls
-COPY gunicorn.ini manage.py ./
-#COPY timezone /etc/timezone
-RUN echo "Australia/Perth" > /etc/timezone
-ENV TZ=Australia/Perth
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN touch /app/.env
-COPY .git ./.git
-#COPY ledger ./ledger
-COPY wildlifelicensing ./wildlifelicensing
-RUN python manage.py collectstatic --noinput
-
-# upgrade postgresql to v11
-#RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main 11" > /etc/apt/sources.list.d/pgsql.list
-#RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main 11" > /etc/apt/sources.list.d/pgsql.list
-#RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-#RUN apt update && apt install -y lsb-release postgresql-11 postgresql-client
-
-RUN mkdir /app/tmp/
-RUN chmod 777 /app/tmp/
-
-COPY cron /etc/cron.d/dockercron
 COPY startup.sh /
-# Cron start
-RUN service rsyslog start
-RUN chmod 0644 /etc/cron.d/dockercron
-RUN crontab /etc/cron.d/dockercron
-RUN touch /var/log/cron.log
-RUN service cron start
-RUN chmod 755 /startup.sh
-# cron end
 
-# IPYTHONDIR - Will allow shell_plus (in Docker) to remember history between sessions
-RUN export IPYTHONDIR=/app/logs/.ipython/
+RUN chmod 755 /startup.sh && \
+    chmod +s /startup.sh && \
+    groupadd -g 5000 oim && \
+    useradd -g 5000 -u 5000 oim -s /bin/bash -d /app && \
+    usermod -a -G sudo oim && \
+    echo "oim  ALL=(ALL)  NOPASSWD: /startup.sh" > /etc/sudoers.d/oim && \
+    mkdir /app && \
+    chown -R oim.oim /app && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh && \
+    chmod 755 /tmp/default_script_installer.sh && \
+    /tmp/default_script_installer.sh && \
+    rm -rf /tmp/*
+
+FROM configure_wildlifelicensing as python_dependencies_wildlifelicensing
+
+WORKDIR /app
+USER oim
+ENV VIRTUAL_ENV_PATH=/app/venv
+ENV PATH=$VIRTUAL_ENV_PATH/bin:$PATH
+
+COPY --chown=oim:oim requirements.txt gunicorn.ini.py manage.py python-cron ./
+COPY --chown=oim:oim .git ./.git
+COPY --chown=oim:oim wildlifelicensing ./wildlifelicensing
+
+RUN python3.12 -m venv $VIRTUAL_ENV_PATH
+RUN $VIRTUAL_ENV_PATH/bin/pip3 install --upgrade pip && \
+    $VIRTUAL_ENV_PATH/bin/pip3 install --no-cache-dir -r requirements.txt && \
+    rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
+
+FROM python_dependencies_wildlifelicensing as collectstatic_wildlifelicensing
+
+RUN touch /app/.env
+RUN $VIRTUAL_ENV_PATH/bin/python manage.py collectstatic --noinput
+
+FROM collectstatic_wildlifelicensing as launch_wildlifelicensing
 
 EXPOSE 8080
 HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget", "-q", "-O", "-", "http://localhost:8080/"]
 CMD ["/startup.sh"]
-#CMD ["gunicorn", "wildlifecompliance.wsgi", "--bind", ":8080", "--config", "gunicorn.ini"]
