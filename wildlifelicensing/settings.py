@@ -169,3 +169,25 @@ CACHE_TIMEOUT_NEVER = None
 
 CACHE_KEY_SUPERUSER_IDS = "superuser-ids"
 CACHE_KEY_USER_BELONGS_TO_GROUP = "user-{user_id}-belongs-to-{group_name}"
+
+if DEBUG:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+            },
+        },
+        "root": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+        "loggers": {
+            "django": {
+                "handlers": ["console"],
+                "level": config("DJANGO_LOG_LEVEL", default="INFO"),
+                "propagate": False,
+            },
+        },
+    }
