@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from wildlifelicensing.apps.main.models import (
     Address,
     Country,
+    Document,
     EmailIdentity,
     Profile,
     UserAddress,
@@ -15,6 +16,8 @@ from wildlifelicensing.apps.main.models import (
 identification_uploaded = django.dispatch.Signal()
 
 licence_issued = django.dispatch.Signal()
+
+post_clean = django.dispatch.Signal()
 
 
 @receiver(post_delete, sender=Profile)
@@ -112,6 +115,21 @@ def profile_post_save(sender, instance, **kwargs):
             u.oscar_address.delete()
             u.delete()"""
 
+    @receiver(post_clean, sender=Profile)
+    def profile_post_clean(sender, instance, **kwargs):
+        if instance.email:
+            if (
+                EmailIdentity.objects.filter(email=instance.email)
+                .exclude(user=instance.user)
+                .exists()
+            ):
+                # Email already used by other user in email identity.
+                raise ValidationError(
+                    "This email address is already associated with an existing account "
+                    "or profile; if this email address belongs to you, please contact "
+                    "the system administrator to request for the email address to be added to your account."
+                )
+
 
 @receiver(pre_save, sender=Address)
 def address_pre_save(sender, instance, **kwargs):
@@ -144,6 +162,8 @@ def address_pre_save(sender, instance, **kwargs):
                 hash=check_address.generate_hash(), user=check_address.user
             )
         except UserAddress.DoesNotExist:
+            print("UserAddress does not exist")
+            print(check_address)
             check_address.save()
         instance.oscar_address = check_address
 
@@ -174,3 +194,11 @@ def address__post_save(sender, instance, **kwargs):
                 raise ValidationError("Multiple profiles cannot have the same address.")
             else:
                 raise
+
+    @receiver(pre_save, sender=Document)
+    def document_pre_save(sender, instance, **kwargs):
+        if instance.pk:
+            original_instance = Document.objects.get(pk=instance.pk)
+            setattr(instance, "_original_instance", original_instance)
+        elif hasattr(instance, "_original_instance"):
+            delattr(instance, "_original_instance")
