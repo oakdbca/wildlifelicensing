@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 
-FROM ubuntu:24.04 as builder_base_wildlifelicensing
+FROM ubuntu:24.04 AS builder_base_wildlifelicensing
 
 LABEL maintainer="asi@dbca.wa.gov.au"
 LABEL org.opencontainers.image.source="https://github.com/dbca-wa/wildlifelicensing"
@@ -15,7 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     OSCAR_SHOP_NAME="Parks & Wildlife" \
     BPAY_ALLOWED=False
 
-FROM builder_base_wildlifelicensing as apt_packages_wildlifelicensing
+FROM builder_base_wildlifelicensing AS apt_packages_wildlifelicensing
 
 # Use Australian Mirrors
 RUN sed 's/archive.ubuntu.com/au.archive.ubuntu.com/g' /etc/apt/sources.list > /etc/apt/sourcesau.list && \
@@ -56,7 +56,7 @@ RUN --mount=type=cache,target=/var/cache/apt apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     update-ca-certificates
 
-FROM apt_packages_wildlifelicensing as configure_wildlifelicensing
+FROM apt_packages_wildlifelicensing AS configure_wildlifelicensing
 
 COPY startup.sh /
 
@@ -74,7 +74,7 @@ RUN chmod 755 /startup.sh && \
     /tmp/default_script_installer.sh && \
     rm -rf /tmp/*
 
-FROM configure_wildlifelicensing as python_dependencies_wildlifelicensing
+FROM configure_wildlifelicensing AS python_dependencies_wildlifelicensing
 
 WORKDIR /app
 USER oim
@@ -90,12 +90,12 @@ RUN $VIRTUAL_ENV_PATH/bin/pip3 install --upgrade pip && \
     $VIRTUAL_ENV_PATH/bin/pip3 install --no-cache-dir -r requirements.txt && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
 
-FROM python_dependencies_wildlifelicensing as collectstatic_wildlifelicensing
+FROM python_dependencies_wildlifelicensing AS collectstatic_wildlifelicensing
 
 RUN touch /app/.env
 RUN $VIRTUAL_ENV_PATH/bin/python manage.py collectstatic --noinput
 
-FROM collectstatic_wildlifelicensing as launch_wildlifelicensing
+FROM collectstatic_wildlifelicensing AS launch_wildlifelicensing
 
 EXPOSE 8080
 HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget", "-q", "-O", "-", "http://localhost:8080/"]
