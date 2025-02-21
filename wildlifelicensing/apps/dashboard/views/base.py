@@ -158,7 +158,7 @@ class DashboardTreeViewBase(TemplateView):
 
     @staticmethod
     def _add_node(parent, child):
-        if "nodes" not in parent or parent["nodes"] is list:
+        if "nodes" not in parent or parent["nodes"] is not list:
             parent["nodes"] = [child]
         else:
             parent["nodes"].append(child)
@@ -177,8 +177,8 @@ class DashboardTreeViewBase(TemplateView):
 
     def get_context_data(self, **kwargs):
         # TODO: Get the officer dashboard tree working again
-        # if "dataJSON" not in kwargs:
-        #     kwargs["dataJSON"] = json.dumps(self._build_tree_nodes())
+        if "dataJSON" not in kwargs:
+            kwargs["dataJSON"] = json.dumps(self._build_tree_nodes())
         if "title" not in kwargs and hasattr(self, "title"):
             kwargs["title"] = self.title
         return super().get_context_data(**kwargs)
