@@ -34,7 +34,10 @@ from wildlifelicensing.apps.main.pdf import (
     bulk_licence_renewal_pdf_bytes,
     create_licence_renewal_pdf_bytes,
 )
-from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
+from wildlifelicensing.apps.main.serializers import (
+    ProfileSerializer,
+    WildlifeLicensingJSONEncoder,
+)
 from wildlifelicensing.apps.main.signals import identification_uploaded
 from wildlifelicensing.apps.main.utils import format_communications_log_entry
 from wildlifelicensing.preserialize.serialize import serialize
@@ -76,26 +79,13 @@ class ListProfilesView(CustomerRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         def posthook(instance, attr):
+            # TODO: Take a look if these still work in django 5
             attr["auth_identity"] = instance.auth_identity
             return attr
 
-        # context['data'] = serialize(Profile.objects.filter(user=self.request.user))
-        context["data"] = serialize(
-            Profile.objects.filter(user=self.request.user),
-            related={
-                "user": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "postal_address": {
-                    "related": {"oscar_address": {"exclude": ["user"]}},
-                    "exclude": ["user"],
-                },
-            },
-        )
+        context["data"] = ProfileSerializer(
+            Profile.objects.filter(user=self.request.user), many=True
+        ).data
 
         return context
 
