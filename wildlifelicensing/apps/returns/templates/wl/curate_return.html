@@ -1,36 +1,59 @@
-{% extends 'wl/returns_base.html' %} {% load static %} {% load bootstrap3 %} {%
-load dict_helpers %} {% load users %} {% load jsonify %} {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.10/css/dataTables.bootstrap.css"
-/>
-<link
-  href="//static.dpaw.wa.gov.au/static/libs/select2/3.5.3/select2.min.css"
-  rel="stylesheet"
-/>
-<link
-  href="//static.dpaw.wa.gov.au/static/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css"
-  rel="stylesheet"
-/>
-<link
-  href="//static.dpaw.wa.gov.au/static/cdnjs/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
-  rel="stylesheet"
-/>
-<link href="{% static 'wl/css/applications.css' %}" rel="stylesheet" />
-{{ block.super }} {% endblock %} {% block requirements %} require([ "{% static
-'wl/js/curate_return.js' %}", 'js/logs' ], function (module, logs) {
-module.init({ selectors: { requestAmendmentBtn: '#requestAmendmentBtn',
-requestAmendmentModal: '#requestAmendmentModal', showAmendmentRequests:
-'#showAmendmentsRequests' }, data: { amendmentRequests: {{
-amendment_requests|jsonify }} } }); logs.initCommunicationLog({ logListURL: "{%
-url 'wl_returns:log_list' return.id %}", addLogEntryURL: "{% url
-'wl_returns:add_log_entry' return.id %}" }); }); {% endblock %} {% block
-breadcrumbs %}
+{% extends 'wl/returns_base.html' %}
+
+{% load static %}
+{% load bootstrap3 %}
+{% load dict_helpers %}
+{% load users %}
+{% load jsonify %}
+
+{% block extra_css %}
+    <link
+    rel="stylesheet"
+    href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.10/css/dataTables.bootstrap.css"
+    />
+    <link
+    href="//static.dpaw.wa.gov.au/static/libs/select2/3.5.3/select2.min.css"
+    rel="stylesheet"
+    />
+    <link
+    href="//static.dpaw.wa.gov.au/static/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css"
+    rel="stylesheet"
+    />
+    <link
+    href="//static.dpaw.wa.gov.au/static/cdnjs/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    rel="stylesheet"
+    />
+    <link href="{% static 'wl/css/applications.css' %}" rel="stylesheet" />
+    {{ block.super }}
+{% endblock %}
+
+{% block requirements %}
+    require([ "{% static
+        'wl/js/curate_return.js' %}", 'js/logs'
+    ], function (module, logs) {
+        module.init({
+            selectors: {
+                requestAmendmentBtn: '#requestAmendmentBtn',
+                requestAmendmentModal: '#requestAmendmentModal',
+                showAmendmentRequests: '#showAmendmentsRequests'
+            }, data: {
+                amendmentRequests: {{ amendment_requests|jsonify }}
+            }
+        });
+        logs.initCommunicationLog({
+            logListURL: "{% url 'wl_returns:log_list' return.id %}",
+            addLogEntryURL: "{% url'wl_returns:add_log_entry' return.id %}"
+        });
+    });
+{% endblock %}
+
+{% block breadcrumbs %}
 <div class="container">
   <div class="row">
     <div class="col-md-12">
       <ol class="breadcrumb wl-breadcrumbs">
         <li><a href="{% url 'wl_home' %}">Home</a></li>
+        {% load users %}
         {% if request.user|is_officer %}
         <li>
           <a href="{% url 'wl_dashboard:tables_returns_officer' %}">Returns</a>
@@ -84,8 +107,7 @@ breadcrumbs %}
                 <div class="col-md-6">
                   <label>Status</label>
                   <p>
-                    {{ return.status }}{% if return.nil_return %} (Nil){% endif
-                    %}
+                    {{ return.status }}{% if return.nil_return %} (Nil){% endif %}
                   </p>
                 </div>
                 <div class="col-md-6">
@@ -98,8 +120,7 @@ breadcrumbs %}
               </div>
             </div>
           </div>
-          {% with hide_action_log=True %} {% include 'wl/logs_panel.html' %} {%
-          endwith %}
+          {% with hide_action_log=True %} {% include 'wl/logs_panel.html' %} {% endwith %}
           <div class="panel panel-default">
             <div class="panel-heading">
               Review
