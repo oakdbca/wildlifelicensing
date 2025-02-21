@@ -266,7 +266,7 @@ class EnterReturnView(UserCanEditReturnMixin, TemplateView):
 
             # redirect or reshow page depending on whether save or save/continue was clicked
             if "draft" in request.POST:
-                return redirect("home")
+                return redirect("wl_home")
             else:
                 for table in context["tables"]:
                     table["data"] = _get_validated_rows_from_post(
@@ -278,7 +278,7 @@ class EnterReturnView(UserCanEditReturnMixin, TemplateView):
                 _create_return_data_from_post_data(ret, context["tables"], request.POST)
 
                 self._set_submitted(ret)
-                return redirect("home")
+                return redirect("wl_home")
             else:
                 for table in context["tables"]:
                     table["data"] = _get_validated_rows_from_post(
@@ -302,7 +302,7 @@ class EnterReturnView(UserCanEditReturnMixin, TemplateView):
                 ret.nil_return = True
                 ret.comments = form.cleaned_data["comments"]
                 self._set_submitted(ret)
-                return redirect("home")
+                return redirect("wl_home")
 
         return render(request, self.template_name, context)
 
@@ -352,13 +352,13 @@ class CurateReturnView(UserCanCurateReturnMixin, EnterReturnView):
                 ret.save()
 
                 messages.success(request, "Return was accepted.")
-                return redirect("home")
+                return redirect("wl_home")
             elif ret.nil_return:
                 ret.status = "accepted"
                 ret.save()
 
                 messages.success(request, "Nil return was accepted.")
-                return redirect("home")
+                return redirect("wl_home")
             else:
                 for table in context["tables"]:
                     table["data"] = _get_validated_rows_from_post(
@@ -376,7 +376,7 @@ class CurateReturnView(UserCanCurateReturnMixin, EnterReturnView):
             ret.save()
 
             messages.warning(request, "Return was declined.")
-            return redirect("home")
+            return redirect("wl_home")
 
 
 class ViewReturnReadonlyView(UserCanViewReturnMixin, TemplateView):

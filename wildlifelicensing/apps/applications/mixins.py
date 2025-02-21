@@ -122,7 +122,7 @@ class RedirectApplicationInSessionMixin:
                 'message and there is not another application being entered, you may need to <a href="{}">logout'
                 "</a> and log in again.".format(reverse("logout")),
             )
-            return redirect("home")
+            return redirect("wl_home")
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -137,7 +137,7 @@ class RedirectApplicationNotInSessionMixin:
     def dispatch(self, request, *args, **kwargs):
         if "application_id" not in request.session:
             messages.error(request, "The application session was corrupted.")
-            return redirect("home")
+            return redirect("wl_home")
 
         return super().dispatch(request, *args, **kwargs)
 
