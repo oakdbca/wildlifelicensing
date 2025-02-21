@@ -427,6 +427,7 @@ def get_log_entry_to(application):
         return application.proxy_applicant.get_full_name()
 
 
+# TODO:Make sure the new drf serializers do the formatting required in these posthooks
 def format_application(instance, attrs):
     # print(attrs['applicant'])
     attrs["processing_status"] = PROCESSING_STATUSES[attrs["processing_status"]]
