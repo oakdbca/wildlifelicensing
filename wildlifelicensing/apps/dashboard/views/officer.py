@@ -367,7 +367,7 @@ class DataTableApplicationsOfficerView(
             # action += r'<br \><a target="_blank" href="{}"> View Payment</a>'.format(
             #     url
             # )
-            action += r'<br \><a href="#">TODO: Replace</a>'
+            action += r'<br \><a href="#">TODO: Ledger API View Payment</a>'
 
         return action
 
