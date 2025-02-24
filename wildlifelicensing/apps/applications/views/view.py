@@ -16,20 +16,22 @@ from wildlifelicensing.apps.applications.models import (
     Assessment,
 )
 from wildlifelicensing.apps.applications.pdf import create_application_pdf_bytes
-from wildlifelicensing.apps.applications.serializers import ApplicationSerializer
+from wildlifelicensing.apps.applications.serializers import (
+    ApplicationLogEntrySerializer,
+    ApplicationSerializer,
+    ApplicationUserActionSerializer,
+    AssessmentSerializer,
+)
 from wildlifelicensing.apps.applications.utils import (
     append_app_document_to_schema_data,
     convert_documents_to_url,
-    format_assessment,
     get_log_entry_to,
 )
 from wildlifelicensing.apps.main.helpers import is_officer, render_user_name
 from wildlifelicensing.apps.main.mixins import OfficerOrAssessorRequiredMixin
 from wildlifelicensing.apps.main.models import Document
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
-from wildlifelicensing.apps.main.utils import format_communications_log_entry
 from wildlifelicensing.apps.payments import utils as payment_utils
-from wildlifelicensing.preserialize.serialize import serialize
 
 
 class ViewReadonlyView(UserCanViewApplicationMixin, TemplateView):
@@ -107,18 +109,9 @@ class ViewReadonlyOfficerView(UserCanViewApplicationMixin, TemplateView):
 
         kwargs["application"] = ApplicationSerializer(application).data
 
-        kwargs["assessments"] = serialize(
-            Assessment.objects.filter(application=application),
-            posthook=format_assessment,
-            exclude=["application", "applicationrequest_ptr"],
-            related={
-                "assessor_group": {
-                    "related": {"members": {"exclude": ["residential_address"]}}
-                },
-                "officer": {"exclude": ["residential_address"]},
-                "assigned_assessor": {"exclude": ["residential_address"]},
-            },
-        )
+        kwargs["assessments"] = AssessmentSerializer(
+            Assessment.objects.filter(application=application), many=True
+        ).data
 
         kwargs["payment_status"] = payment_utils.PAYMENT_STATUSES.get(
             payment_utils.get_application_payment_status(application)
@@ -160,33 +153,14 @@ class ViewReadonlyAssessorView(CanPerformAssessmentMixin, TemplateView):
 
         assessment = get_object_or_404(Assessment, pk=self.args[1])
 
-        kwargs["assessment"] = serialize(
-            assessment,
-            post_hook=format_assessment,
-            exclude=["application", "applicationrequest_ptr"],
-            related={
-                "assessor_group": {
-                    "related": {"members": {"exclude": ["residential_address"]}}
-                },
-                "officer": {"exclude": ["residential_address"]},
-                "assigned_assessor": {"exclude": ["residential_address"]},
-            },
-        )
+        kwargs["assessment"] = AssessmentSerializer(assessment).data
 
-        kwargs["other_assessments"] = serialize(
+        kwargs["other_assessments"] = AssessmentSerializer(
             Assessment.objects.filter(application=application)
             .exclude(id=assessment.id)
             .order_by("id"),
-            posthook=format_assessment,
-            exclude=["application", "applicationrequest_ptr"],
-            related={
-                "assessor_group": {
-                    "related": {"members": {"exclude": ["residential_address"]}}
-                },
-                "officer": {"exclude": ["residential_address"]},
-                "assigned_assessor": {"exclude": ["residential_address"]},
-            },
-        )
+            many=True,
+        ).data
 
         kwargs["log_entry_form"] = ApplicationLogEntryForm(
             to=get_log_entry_to(application), fromm=self.request.user.get_full_name()
@@ -208,17 +182,11 @@ class ViewReadonlyAssessorView(CanPerformAssessmentMixin, TemplateView):
 
 
 class ApplicationLogListView(OfficerOrAssessorRequiredMixin, View):
-    serial_template = {
-        "exclude": ["application", "communicationslogentry_ptr", "customer", "staff"],
-        "posthook": format_communications_log_entry,
-    }
-
     def get(self, request, *args, **kwargs):
         application = get_object_or_404(Application, pk=args[0])
-        data = serialize(
-            ApplicationLogEntry.objects.filter(application=application),
-            **self.serial_template
-        )
+        data = ApplicationLogEntrySerializer(
+            ApplicationLogEntry.objects.filter(application=application)
+        ).data
         return JsonResponse(
             {"data": data}, safe=False, encoder=WildlifeLicensingJSONEncoder
         )
@@ -276,10 +244,9 @@ class ApplicationUserActionListView(OfficerOrAssessorRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         application = get_object_or_404(Application, pk=args[0])
-        data = serialize(
-            ApplicationUserAction.objects.filter(application=application),
-            **self.serial_template
-        )
+        data = ApplicationUserActionSerializer(
+            ApplicationUserAction.objects.filter(application=application), many=True
+        ).data
         return JsonResponse(
             {"data": data}, safe=False, encoder=WildlifeLicensingJSONEncoder
         )

@@ -35,12 +35,11 @@ from wildlifelicensing.apps.main.pdf import (
     create_licence_renewal_pdf_bytes,
 )
 from wildlifelicensing.apps.main.serializers import (
+    DocumentSerializer,
     ProfileSerializer,
     WildlifeLicensingJSONEncoder,
 )
 from wildlifelicensing.apps.main.signals import identification_uploaded
-from wildlifelicensing.apps.main.utils import format_communications_log_entry
-from wildlifelicensing.preserialize.serialize import serialize
 
 
 class SearchCustomersView(OfficerRequiredMixin, View):
@@ -351,7 +350,9 @@ class ListDocumentView(CustomerRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["data"] = serialize(self.request.user.documents.all())
+        context["data"] = DocumentSerializer(
+            self.request.user.documents.all(), many=True
+        ).data
 
         return context
 
@@ -396,18 +397,12 @@ class BulkLicenceRenewalPDFView(OfficerRequiredMixin, View):
 
 
 class CommunicationsLogListView(OfficerRequiredMixin, View):
-    serial_template = {
-        "exclude": ["communicationslogentry_ptr", "customer", "staff"],
-        "posthook": format_communications_log_entry,
-    }
-
     def get(self, request, *args, **kwargs):
         q = Q(staff=args[0]) | Q(customer=args[0])
 
-        data = serialize(
-            CommunicationsLogEntry.objects.filter(q).order_by("created"),
-            **self.serial_template,
-        )
+        data = CommunicationsLogEntry(
+            CommunicationsLogEntry.objects.filter(q).order_by("created"), many=True
+        ).data
 
         return JsonResponse(
             {"data": data}, safe=False, encoder=WildlifeLicensingJSONEncoder

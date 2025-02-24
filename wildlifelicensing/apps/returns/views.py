@@ -17,7 +17,6 @@ from wildlifelicensing.apps.main import excel
 from wildlifelicensing.apps.main.helpers import is_officer
 from wildlifelicensing.apps.main.models import Document
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
-from wildlifelicensing.apps.main.utils import format_communications_log_entry
 from wildlifelicensing.apps.returns.emails import send_amendment_requested_email
 from wildlifelicensing.apps.returns.forms import (
     NilReturnForm,
@@ -38,13 +37,16 @@ from wildlifelicensing.apps.returns.models import (
     ReturnTable,
     ReturnType,
 )
+from wildlifelicensing.apps.returns.serializers import (
+    ReturnAmendmentRequestSerializer,
+    ReturnLogEntrySerializer,
+    ReturnSerializer,
+)
 from wildlifelicensing.apps.returns.signals import return_submitted
-from wildlifelicensing.apps.returns.utils import format_return
 from wildlifelicensing.apps.returns.utils_schema import (
     Schema,
     create_return_template_workbook,
 )
-from wildlifelicensing.preserialize.serialize import serialize
 
 LICENCE_TYPE_NUM_CHARS = 2
 LODGEMENT_NUMBER_NUM_CHARS = 6
@@ -314,11 +316,9 @@ class CurateReturnView(UserCanCurateReturnMixin, EnterReturnView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ret = ctx["return"]
-        ctx["return"] = serialize(
+        ctx["return"] = ReturnSerializer(
             ret,
-            posthook=format_return,
-            exclude=["application", "applicationrequest_ptr", "licence"],
-        )
+        ).data
 
         if ret.proxy_customer is None:
             to = ret.licence.holder
@@ -335,9 +335,9 @@ class CurateReturnView(UserCanCurateReturnMixin, EnterReturnView):
         )
 
         amendment_requests = ReturnAmendmentRequest.objects.filter(ret=ret)
-        ctx["amendment_requests"] = serialize(
-            amendment_requests, fields=["status", "reason"]
-        )
+        ctx["amendment_requests"] = ReturnAmendmentRequestSerializer(
+            amendment_requests, many=True
+        ).data
         return ctx
 
     def post(self, request, *args, **kwargs):
@@ -414,13 +414,9 @@ class ViewReturnReadonlyView(UserCanViewReturnMixin, TemplateView):
 class ReturnLogListView(UserCanCurateReturnMixin, View):
     def get(self, request, *args, **kwargs):
         ret = get_object_or_404(Return, pk=args[0])
-        data = (
-            serialize(
-                ReturnLogEntry.objects.filter(ret=ret),
-                posthook=format_communications_log_entry,
-                exclude=["ret", "communicationslogentry_ptr", "customer", "officer"],
-            ),
-        )
+        data = ReturnLogEntrySerializer(
+            ReturnLogEntry.objects.filter(ret=ret),
+        ).data
 
         return JsonResponse(
             {"data": data[0]}, safe=False, encoder=WildlifeLicensingJSONEncoder
@@ -491,9 +487,9 @@ class AmendmentRequestView(UserCanCurateReturnMixin, View):
             application = get_object_or_404(Application, licence=ret.licence)
             send_amendment_requested_email(amendment_request, request, application)
             response = {
-                "amendment_request": serialize(
-                    amendment_request, fields=["status", "reason"]
-                )
+                "amendment_request": ReturnAmendmentRequestSerializer(
+                    amendment_request,
+                ).data
             }
             return JsonResponse(
                 response, safe=False, encoder=WildlifeLicensingJSONEncoder

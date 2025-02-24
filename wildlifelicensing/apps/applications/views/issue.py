@@ -22,7 +22,6 @@ from wildlifelicensing.apps.applications.models import (
 from wildlifelicensing.apps.applications.serializers import ApplicationSerializer
 from wildlifelicensing.apps.applications.utils import (
     extract_licence_fields,
-    format_application,
     get_log_entry_to,
     update_licence_fields,
 )
@@ -41,7 +40,6 @@ from wildlifelicensing.apps.main.pdf import (
 from wildlifelicensing.apps.main.signals import licence_issued
 from wildlifelicensing.apps.payments import utils as payment_utils
 from wildlifelicensing.apps.payments.exceptions import PaymentException
-from wildlifelicensing.preserialize.serialize import serialize
 
 LICENCE_TYPE_NUM_CHARS = 2
 LICENCE_NUMBER_NUM_CHARS = 6
@@ -366,83 +364,9 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
                     request,
                     self.template_name,
                     {
-                        "application": serialize(
+                        "application": ApplicationSerializer(
                             application,
-                            posthook=format_application,
-                            related={
-                                "applicant": {
-                                    "exclude": [
-                                        "residential_address",
-                                        "postal_address",
-                                        "billing_address",
-                                    ]
-                                },
-                                "proxy_applicant": {
-                                    "exclude": [
-                                        "residential_address",
-                                        "postal_address",
-                                        "billing_address",
-                                    ]
-                                },
-                                "assigned_officer": {
-                                    "exclude": [
-                                        "residential_address",
-                                        "postal_address",
-                                        "billing_address",
-                                    ]
-                                },
-                                "applicant_profile": {
-                                    "fields": ["email", "id", "institution", "name"]
-                                },
-                                "previous_application": {
-                                    "exclude": [
-                                        "applicant",
-                                        "applicant_profile",
-                                        "previous_application",
-                                        "licence",
-                                        "proxy_applicant",
-                                        "assigned_officer",
-                                    ]
-                                },
-                                "licence": {
-                                    "related": {
-                                        "holder": {
-                                            "exclude": [
-                                                "residential_address",
-                                                "postal_address",
-                                                "billing_address",
-                                            ]
-                                        },
-                                        "issuer": {
-                                            "exclude": [
-                                                "residential_address",
-                                                "postal_address",
-                                                "billing_address",
-                                            ]
-                                        },
-                                        "profile": {
-                                            "related": {
-                                                "user": {
-                                                    "exclude": [
-                                                        "residential_address",
-                                                        "postal_address",
-                                                        "billing_address",
-                                                    ]
-                                                }
-                                            },
-                                            "exclude": ["postal_address"],
-                                        },
-                                    },
-                                    "exclude": [
-                                        "holder",
-                                        "issuer",
-                                        "profile",
-                                        "licence_ptr",
-                                        "replaced_by",
-                                    ],
-                                },
-                            },
-                        ),
+                        ).data,
                         "issue_licence_form": issue_licence_form,
                         "extracted_fields": extracted_fields,
                         "payment_status": payment_status_verbose,
@@ -467,83 +391,9 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
                 request,
                 self.template_name,
                 {
-                    "application": serialize(
+                    "application": ApplicationSerializer(
                         application,
-                        posthook=format_application,
-                        related={
-                            "applicant": {
-                                "exclude": [
-                                    "residential_address",
-                                    "postal_address",
-                                    "billing_address",
-                                ]
-                            },
-                            "proxy_applicant": {
-                                "exclude": [
-                                    "residential_address",
-                                    "postal_address",
-                                    "billing_address",
-                                ]
-                            },
-                            "assigned_officer": {
-                                "exclude": [
-                                    "residential_address",
-                                    "postal_address",
-                                    "billing_address",
-                                ]
-                            },
-                            "applicant_profile": {
-                                "fields": ["email", "id", "institution", "name"]
-                            },
-                            "previous_application": {
-                                "exclude": [
-                                    "applicant",
-                                    "applicant_profile",
-                                    "previous_application",
-                                    "licence",
-                                    "proxy_applicant",
-                                    "assigned_officer",
-                                ]
-                            },
-                            "licence": {
-                                "related": {
-                                    "holder": {
-                                        "exclude": [
-                                            "residential_address",
-                                            "postal_address",
-                                            "billing_address",
-                                        ]
-                                    },
-                                    "issuer": {
-                                        "exclude": [
-                                            "residential_address",
-                                            "postal_address",
-                                            "billing_address",
-                                        ]
-                                    },
-                                    "profile": {
-                                        "related": {
-                                            "user": {
-                                                "exclude": [
-                                                    "residential_address",
-                                                    "postal_address",
-                                                    "billing_address",
-                                                ]
-                                            }
-                                        },
-                                        "exclude": ["postal_address"],
-                                    },
-                                },
-                                "exclude": [
-                                    "holder",
-                                    "issuer",
-                                    "profile",
-                                    "licence_ptr",
-                                    "replaced_by",
-                                ],
-                            },
-                        },
-                    ),
+                    ).data,
                     "issue_licence_form": issue_licence_form,
                     "extracted_fields": extracted_fields,
                     "payment_status": payment_status_verbose,

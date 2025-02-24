@@ -9,7 +9,7 @@ from django_countries.fields import Country
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from rest_framework import serializers
 
-from wildlifelicensing.apps.main.models import Address, Profile, UserAddress
+from wildlifelicensing.apps.main.models import Address, Document, Profile, UserAddress
 
 logger = logging.getLogger(__name__)
 
@@ -66,3 +66,28 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+
+
+class DocumentSerializer(serializers.Serializer):
+
+    class Meta:
+        model = Document
+        fields = "__all__"
+
+
+class EmailUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailUser
+        fields = "__all__"
+
+
+class EmailUserWithoutResidentialAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailUser
+        exclude = ("residential_address",)
+
+
+class EmailUserWithoutAddressesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailUser
+        exclude = ("residential_address", "postal_address", "billing_address")

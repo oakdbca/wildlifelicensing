@@ -20,12 +20,15 @@ from wildlifelicensing.apps.applications.models import (
     Assessment,
     AssessmentCondition,
 )
-from wildlifelicensing.apps.applications.serializers import ApplicationSerializer
+from wildlifelicensing.apps.applications.serializers import (
+    ApplicationSerializer,
+    AssessmentSerializer,
+    ConditionSerializer,
+)
 from wildlifelicensing.apps.applications.utils import (
     ASSESSMENT_CONDITION_ACCEPTANCE_STATUSES,
     append_app_document_to_schema_data,
     convert_documents_to_url,
-    format_assessment,
     get_log_entry_to,
 )
 from wildlifelicensing.apps.applications.views.process import (
@@ -38,7 +41,6 @@ from wildlifelicensing.apps.main.mixins import (
 from wildlifelicensing.apps.main.models import Condition
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments import utils as payment_utils
-from wildlifelicensing.preserialize.serialize import serialize
 
 
 class EnterConditionsView(OfficerRequiredMixin, TemplateView):
@@ -60,18 +62,9 @@ class EnterConditionsView(OfficerRequiredMixin, TemplateView):
 
         kwargs["application"] = ApplicationSerializer(application).data
         kwargs["form_structure"] = application.licence_type.application_schema
-        kwargs["assessments"] = serialize(
-            Assessment.objects.filter(application=application),
-            posthook=format_assessment,
-            exclude=["application", "applicationrequest_ptr"],
-            related={
-                "assessor_group": {
-                    "related": {"members": {"exclude": ["residential_address"]}}
-                },
-                "officer": {"exclude": ["residential_address"]},
-                "assigned_assessor": {"exclude": ["residential_address"]},
-            },
-        )
+        kwargs["assessments"] = AssessmentSerializer(
+            Assessment.objects.filter(application=application).order_by("id"), many=True
+        ).data
 
         kwargs["log_entry_form"] = ApplicationLogEntryForm(
             to=get_log_entry_to(application), fromm=self.request.user.get_full_name()
@@ -138,33 +131,14 @@ class EnterConditionsAssessorView(CanPerformAssessmentMixin, TemplateView):
         kwargs["application"] = ApplicationSerializer(application).data
         kwargs["form_structure"] = application.licence_type.application_schema
 
-        kwargs["assessment"] = serialize(
-            assessment,
-            post_hook=format_assessment,
-            exclude=["application", "applicationrequest_ptr"],
-            related={
-                "assessor_group": {
-                    "related": {"members": {"exclude": ["residential_address"]}}
-                },
-                "officer": {"exclude": ["residential_address"]},
-                "assigned_assessor": {"exclude": ["residential_address"]},
-            },
-        )
+        kwargs["assessment"] = Assessment
 
-        kwargs["other_assessments"] = serialize(
+        kwargs["other_assessments"] = AssessmentSerializer(
             Assessment.objects.filter(application=application)
             .exclude(id=assessment.id)
             .order_by("id"),
-            posthook=format_assessment,
-            exclude=["application", "applicationrequest_ptr"],
-            related={
-                "assessor_group": {
-                    "related": {"members": {"exclude": ["residential_address"]}}
-                },
-                "officer": {"exclude": ["residential_address"]},
-                "assigned_assessor": {"exclude": ["residential_address"]},
-            },
-        )
+            many=True,
+        ).data
 
         assessors = [
             {"id": assessor.id, "text": assessor.get_full_name()}
@@ -271,7 +245,7 @@ class SearchConditionsView(OfficerOrAssessorRequiredMixin, View):
             qs = Condition.objects.filter(q)
         else:
             qs = Condition.objects.none()
-        conditions = serialize(qs)
+        conditions = ConditionSerializer(qs, many=True).data
 
         return JsonResponse(
             conditions, safe=False, encoder=WildlifeLicensingJSONEncoder
@@ -292,7 +266,7 @@ class CreateConditionView(OfficerRequiredMixin, View):
                     ApplicationUserAction.ACTION_CREATE_CONDITION_.format(condition),
                     request,
                 )
-            response = serialize(condition)
+            response = ConditionSerializer(condition).data
         except IntegrityError:
             response = "This code has already been used. Please enter a unique code."
 

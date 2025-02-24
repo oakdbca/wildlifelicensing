@@ -9,7 +9,6 @@ from wildlifelicensing.apps.applications.models import (
     Document,
 )
 from wildlifelicensing.apps.main.helpers import is_customer, is_officer
-from wildlifelicensing.preserialize.serialize import serialize
 
 PROCESSING_STATUSES = dict(Application.PROCESSING_STATUS_CHOICES)
 ID_CHECK_STATUSES = dict(Application.ID_CHECK_STATUS_CHOICES)
@@ -425,77 +424,3 @@ def get_log_entry_to(application):
         return application.applicant.get_full_name()
     else:
         return application.proxy_applicant.get_full_name()
-
-
-# TODO:Make sure the new drf serializers do the formatting required in these posthooks
-def format_application(instance, attrs):
-    # print(attrs['applicant'])
-    attrs["processing_status"] = PROCESSING_STATUSES[attrs["processing_status"]]
-    attrs["id_check_status"] = ID_CHECK_STATUSES[attrs["id_check_status"]]
-    attrs["returns_check_status"] = RETURNS_CHECK_STATUSES[
-        attrs["returns_check_status"]
-    ]
-    attrs["character_check_status"] = CHARACTER_CHECK_STATUSES[
-        attrs["character_check_status"]
-    ]
-    attrs["review_status"] = REVIEW_STATUSES[attrs["review_status"]]
-    attrs["licence_type"]["default_conditions"] = serialize(
-        [
-            ap.condition
-            for ap in instance.licence_type.defaultcondition_set.order_by("order")
-        ]
-    )
-    attrs["conditions"] = serialize(
-        [ap.condition for ap in instance.applicationcondition_set.order_by("order")]
-    )
-
-    attrs["applicant_profile"]["user"] = serialize(
-        instance.applicant_profile.user,
-        exclude=["postal_address", "residential_address", "billing_address"],
-    )
-    attrs["applicant_profile"]["postal_address"] = serialize(
-        instance.applicant_profile.postal_address, exclude=["user", "oscar_address"]
-    )
-    # if instance.applicant.identification is not None and instance.applicant.identification.file is not None:
-    #     attrs['applicant']['identification']['url'] = instance.applicant.identification.file.url
-    if (
-        instance.applicant.identification2 is not None
-        and instance.applicant.identification2.upload is not None
-    ):
-        attrs["applicant"]["identification2"][
-            "url"
-        ] = instance.applicant.identification2.upload.url
-    if (
-        instance.applicant.senior_card2 is not None
-        and instance.applicant.senior_card2.upload is not None
-    ):
-        attrs["applicant"]["senior_card2"][
-            "url"
-        ] = instance.applicant.senior_card2.upload.url
-
-    return attrs
-
-
-def format_amendment_request(instance, attrs):
-    attrs["reason"] = AMENDMENT_REQUEST_REASONS[attrs["reason"]]
-
-    return attrs
-
-
-def format_assessment(instance, attrs):
-    attrs["conditions"] = serialize(
-        instance.assessmentcondition_set.all().order_by("order"),
-        fields=["acceptance_status", "id", "condition"],
-        posthook=format_assessment_condition,
-    )
-    attrs["status"] = ASSESSMENT_STATUSES[attrs["status"]]
-
-    return attrs
-
-
-def format_assessment_condition(instance, attrs):
-    attrs["acceptance_status"] = ASSESSMENT_CONDITION_ACCEPTANCE_STATUSES[
-        attrs["acceptance_status"]
-    ]
-
-    return attrs
