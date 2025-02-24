@@ -20,11 +20,11 @@ from wildlifelicensing.apps.applications.models import (
     Assessment,
     AssessmentCondition,
 )
+from wildlifelicensing.apps.applications.serializers import ApplicationSerializer
 from wildlifelicensing.apps.applications.utils import (
     ASSESSMENT_CONDITION_ACCEPTANCE_STATUSES,
     append_app_document_to_schema_data,
     convert_documents_to_url,
-    format_application,
     format_assessment,
     get_log_entry_to,
 )
@@ -58,82 +58,7 @@ class EnterConditionsView(OfficerRequiredMixin, TemplateView):
 
         convert_documents_to_url(application.data, application.documents.all(), "")
 
-        # kwargs['application'] = serialize(application, posthook=format_application)
-        kwargs["application"] = serialize(
-            application,
-            posthook=format_application,
-            related={
-                "applicant": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "proxy_applicant": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "assigned_officer": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "applicant_profile": {"fields": ["email", "id", "institution", "name"]},
-                "previous_application": {
-                    "exclude": [
-                        "applicant",
-                        "applicant_profile",
-                        "previous_application",
-                        "licence",
-                        "proxy_applicant",
-                        "assigned_officer",
-                    ]
-                },
-                "licence": {
-                    "related": {
-                        "holder": {
-                            "exclude": [
-                                "residential_address",
-                                "postal_address",
-                                "billing_address",
-                            ]
-                        },
-                        "issuer": {
-                            "exclude": [
-                                "residential_address",
-                                "postal_address",
-                                "billing_address",
-                            ]
-                        },
-                        "profile": {
-                            "related": {
-                                "user": {
-                                    "exclude": [
-                                        "residential_address",
-                                        "postal_address",
-                                        "billing_address",
-                                    ]
-                                }
-                            },
-                            "exclude": ["postal_address"],
-                        },
-                    },
-                    "exclude": [
-                        "holder",
-                        "issuer",
-                        "profile",
-                        "licence_ptr",
-                        "replaced_by",
-                    ],
-                },
-            },
-        )
+        kwargs["application"] = ApplicationSerializer(application).data
         kwargs["form_structure"] = application.licence_type.application_schema
         kwargs["assessments"] = serialize(
             Assessment.objects.filter(application=application),
@@ -210,82 +135,7 @@ class EnterConditionsAssessorView(CanPerformAssessmentMixin, TemplateView):
 
         convert_documents_to_url(application.data, application.documents.all(), "")
 
-        # kwargs['application'] = serialize(application, posthook=format_application)
-        kwargs["application"] = serialize(
-            application,
-            posthook=format_application,
-            related={
-                "applicant": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "proxy_applicant": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "assigned_officer": {
-                    "exclude": [
-                        "residential_address",
-                        "postal_address",
-                        "billing_address",
-                    ]
-                },
-                "applicant_profile": {"fields": ["email", "id", "institution", "name"]},
-                "previous_application": {
-                    "exclude": [
-                        "applicant",
-                        "applicant_profile",
-                        "previous_application",
-                        "licence",
-                        "proxy_applicant",
-                        "assigned_officer",
-                    ]
-                },
-                "licence": {
-                    "related": {
-                        "holder": {
-                            "exclude": [
-                                "residential_address",
-                                "postal_address",
-                                "billing_address",
-                            ]
-                        },
-                        "issuer": {
-                            "exclude": [
-                                "residential_address",
-                                "postal_address",
-                                "billing_address",
-                            ]
-                        },
-                        "profile": {
-                            "related": {
-                                "user": {
-                                    "exclude": [
-                                        "residential_address",
-                                        "postal_address",
-                                        "billing_address",
-                                    ]
-                                }
-                            },
-                            "exclude": ["postal_address"],
-                        },
-                    },
-                    "exclude": [
-                        "holder",
-                        "issuer",
-                        "profile",
-                        "licence_ptr",
-                        "replaced_by",
-                    ],
-                },
-            },
-        )
+        kwargs["application"] = ApplicationSerializer(application).data
         kwargs["form_structure"] = application.licence_type.application_schema
 
         kwargs["assessment"] = serialize(
