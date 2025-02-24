@@ -1,9 +1,12 @@
+import logging
+
+from django import apps
 from django.conf import settings
 from django.core.cache import cache
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from ledger_api_client.managed_models import SystemGroup, SystemGroupPermission
 
-from wildlifelicensing.apps.main.models import AssessorGroup
+logger = logging.getLogger(__name__)
 
 
 def superuser_ids_list() -> list:
@@ -97,6 +100,8 @@ def get_all_assessors():
 
 
 def get_user_assessor_groups(user):
+    from wildlifelicensing.apps.main.models import AssessorGroup
+
     return AssessorGroup.objects.filter(members__in=[user])
 
 
@@ -115,3 +120,55 @@ def render_user_name(user, first_name_first=True):
         else:
             result = f"{user.email}"
     return result
+
+
+def retrieve_email_user(email_user_id):
+    if not email_user_id:
+        logger.error("Needs an email_user_id to retrieve an EmailUser object")
+        return None
+
+    cache_key = settings.CACHE_KEY_LEDGER_EMAIL_USER.format(email_user_id)
+    cache_timeout = settings.CACHE_TIMEOUT_10_SECONDS
+    email_user = cache.get(cache_key)
+
+    if email_user is None:
+        try:
+            email_user = EmailUser.objects.get(id=email_user_id)
+        except EmailUser.DoesNotExist:
+            logger.error(f"EmailUser with id {email_user_id} does not exist")
+            # Cache an empty EmailUser object to prevent repeated queries
+            cache.set(cache_key, EmailUser(), cache_timeout)
+            return None
+        else:
+            cache.set(cache_key, email_user, cache_timeout)
+            return email_user
+    elif not email_user.email:
+        return None
+    else:
+        return email_user
+
+
+def retrieve_group_members(group_object, app_label="wl_main"):
+    """Retrieves m2m-field members that belong to a group-object
+    (single object or queryset),using the associated through model"""
+
+    if hasattr(group_object, "_meta"):
+        # group_object is a model object
+        try:
+            # The group object's model name
+            model_name = group_object._meta.model_name
+        except AttributeError:
+            raise ValueError("The model object does not have a model name attribute")
+        # Get the group object's Members through-model
+        class_name = f"{model_name.lower()}members"
+        InstanceClass = apps.get_model(app_label=app_label, model_name=f"{class_name}")
+
+        return InstanceClass.objects.filter(
+            **{f"{model_name.lower()}_id": group_object.id}
+        ).values_list("emailuser_id", flat=True)
+    else:
+        # group_object is a QuerySet
+        class_name = group_object.model.__name__
+        return group_object.values_list(
+            f"{class_name.lower()}_members__emailuser__id", flat=True
+        )

@@ -1,7 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
-from wildlifelicensing.apps.main.helpers import is_assessor, is_customer, is_officer
+from wildlifelicensing.apps.main.helpers import (
+    is_assessor,
+    is_customer,
+    is_officer,
+    retrieve_email_user,
+    retrieve_group_members,
+)
 
 
 class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -79,3 +85,25 @@ class OfficerOrAssessorRequiredMixin(BaseAccessMixin):
     def test_func(self):
         user = self.request.user
         return is_officer(user) or is_assessor(user)
+
+
+class MembersPropertiesMixin:
+    @property
+    def all_members(self):
+        all_members = []
+        all_members.extend(retrieve_group_members(group_object=self))
+        return all_members
+
+    @property
+    def filtered_members(self):
+        all_members = []
+        all_members.extend(retrieve_group_members(group_object=self))
+        emailuser = [retrieve_email_user(m) for m in all_members]
+        return [u for u in emailuser if u]
+
+    @property
+    def members_list(self):
+        all_members = []
+        all_members.extend(retrieve_group_members(group_object=self))
+        emailuser = [retrieve_email_user(m) for m in all_members]
+        return [u.email for u in emailuser if u]

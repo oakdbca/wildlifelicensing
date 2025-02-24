@@ -15,6 +15,8 @@ from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from reversion import revisions
 from reversion.models import Version
 
+from wildlifelicensing.apps.main.helpers import retrieve_email_user
+from wildlifelicensing.apps.main.mixins import MembersPropertiesMixin
 from wildlifelicensing.apps.main.oscar_abstract_models import (
     AbstractCountry,
     AbstractUserAddress,
@@ -674,7 +676,7 @@ class WildlifeLicenceVariantLink(models.Model):
     order = models.IntegerField()
 
 
-class AssessorGroup(models.Model):
+class AssessorGroup(models.Model, MembersPropertiesMixin):
     name = models.CharField(max_length=50)
     email = models.EmailField()
     members = models.ManyToManyField(EmailUser, blank=True)
@@ -699,3 +701,48 @@ class UserAction(models.Model):
 
     class Meta:
         abstract = True
+
+
+def m2m_field_through_model_factory(model_name, m2m_field_name="members"):
+    """Returns a through model for a m2m field (e.g. members) that mirrors
+    the existing django-managed through table of the m2m field"""
+
+    class MembersThroughModel(models.Model):
+        class Meta:
+            app_label = "wl_main"
+            # Mirror the existing django-managed through table of the m2m field
+            db_table = f"wl_main_{model_name.lower()}_{m2m_field_name}"
+            abstract = True
+            managed = False
+            unique_together = (f"{model_name.lower()}", "emailuser")
+
+        @property
+        def emailuser_object(self):
+            return retrieve_email_user(self.emailuser_id)
+
+    # Fk to model instance
+    MembersThroughModel.add_to_class(
+        f"{model_name.lower()}",
+        models.ForeignKey(
+            f"{model_name}",
+            on_delete=models.PROTECT,
+            related_name=f"{model_name.lower()}_{m2m_field_name}",
+        ),
+    )
+    # Fk to EmailUserRO
+    MembersThroughModel.add_to_class(
+        "emailuser",
+        models.ForeignKey(
+            EmailUser,
+            on_delete=models.PROTECT,
+            related_name=f"{model_name.lower()}_{m2m_field_name}",
+        ),
+    )
+    return MembersThroughModel
+
+
+class AssessorGroupMembers(m2m_field_through_model_factory("AssessorGroup")):
+    pass
+
+    class Meta:
+        abstract = False
