@@ -35,10 +35,14 @@ class ApplicationApplicantSerializer(serializers.ModelSerializer):
         )
 
     def get_identification2(self, obj):
-        return obj.identification2.upload.url if obj.identification2 else None
+        # TODO: ledger api client PrivateDocument model does
+        # not have an upload field: return obj.identification2.upload.url if obj.identification2 else None
+        return "TODO: ledger api client PrivateDocument model does not have an upload field"
 
     def get_senior_card2(self, obj):
-        return obj.senior_card2.upload.url if obj.senior_card2 else None
+        # TODO: ledger api client PrivateDocument model does
+        # not have an upload field: return obj.senior_card2.upload.url if obj.senior_card2 else None
+        return "TODO: ledger api client PrivateDocument model does not have an upload field"
 
 
 class ApplicationProfileSerializer(serializers.ModelSerializer):
@@ -93,10 +97,7 @@ class ApplicationWildlifeLicenceTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_default_conditions(self, obj):
-        return [
-            ap.condition
-            for ap in obj.licence_type.defaultcondition_set.order_by("order")
-        ]
+        return [dc for dc in obj.default_conditions.order_by("defaultcondition__order")]
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
