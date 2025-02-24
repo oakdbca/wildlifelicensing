@@ -46,7 +46,6 @@ def profile_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Profile)
 def profile_post_save(sender, instance, **kwargs):
-    print(" --- > profile_post_save")
     if not hasattr(instance, "auth_identity"):
         # not triggered by user.
         return
@@ -162,7 +161,6 @@ def address_pre_save(sender, instance, **kwargs):
                 hash=check_address.generate_hash(), user=check_address.user
             )
         except UserAddress.DoesNotExist:
-            print("UserAddress does not exist")
             print(check_address)
             check_address.save()
         instance.oscar_address = check_address

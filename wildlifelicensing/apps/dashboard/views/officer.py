@@ -361,12 +361,13 @@ class DataTableApplicationsOfficerView(
             )
 
         if obj.invoice_reference:
-            url = "{}?invoice={}".format(
-                reverse("payments:invoice-payment"), obj.invoice_reference
-            )
-            action += r'<br \><a target="_blank" href="{}"> View Payment</a>'.format(
-                url
-            )
+            # url = "{}?invoice={}".format(
+            #     reverse("payments:invoice-payment"), obj.invoice_reference
+            # )
+            # action += r'<br \><a target="_blank" href="{}"> View Payment</a>'.format(
+            #     url
+            # )
+            action += r'<br \><a href="#">TODO: Replace</a>'
 
         return action
 

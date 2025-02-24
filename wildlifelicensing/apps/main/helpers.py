@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.core.cache import cache
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
-from ledger_api_client.managed_models import SystemGroup
+from ledger_api_client.managed_models import SystemGroup, SystemGroupPermission
+
+from wildlifelicensing.apps.main.models import AssessorGroup
 
 
 def superuser_ids_list() -> list:
@@ -75,15 +77,27 @@ def is_assessor(user):
 
 
 def get_all_officers():
-    return EmailUser.objects.filter(groups__name=settings.GROUP_NAME_OFFICERS)
+    system_group_permissions = SystemGroupPermission.objects.filter(
+        system_group__name=settings.GROUP_NAME_OFFICERS
+    )
+    email_user_ids = list(
+        system_group_permissions.values_list("emailuser_id", flat=True)
+    )
+    return EmailUser.objects.filter(id__in=email_user_ids)
 
 
 def get_all_assessors():
-    return EmailUser.objects.filter(groups__name=settings.GROUP_NAME_ASSESSORS)
+    system_group_permissions = SystemGroupPermission.objects.filter(
+        system_group__name=settings.GROUP_NAME_ASSESSORS
+    )
+    email_user_ids = list(
+        system_group_permissions.values_list("emailuser_id", flat=True)
+    )
+    return EmailUser.objects.filter(id__in=email_user_ids)
 
 
 def get_user_assessor_groups(user):
-    return user.assessorgroup_set.all()
+    return AssessorGroup.objects.filter(members__in=[user])
 
 
 def render_user_name(user, first_name_first=True):
