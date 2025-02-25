@@ -316,9 +316,7 @@ class CurateReturnView(UserCanCurateReturnMixin, EnterReturnView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ret = ctx["return"]
-        ctx["return"] = ReturnSerializer(
-            ret,
-        ).data
+        ctx["return"] = ReturnSerializer(ret).data
 
         if ret.proxy_customer is None:
             to = ret.licence.holder
@@ -415,11 +413,10 @@ class ReturnLogListView(UserCanCurateReturnMixin, View):
     def get(self, request, *args, **kwargs):
         ret = get_object_or_404(Return, pk=args[0])
         data = ReturnLogEntrySerializer(
-            ReturnLogEntry.objects.filter(ret=ret),
+            ReturnLogEntry.objects.filter(ret=ret), many=True
         ).data
-
         return JsonResponse(
-            {"data": data[0]}, safe=False, encoder=WildlifeLicensingJSONEncoder
+            {"data": data}, safe=False, encoder=WildlifeLicensingJSONEncoder
         )
 
 
