@@ -1,14 +1,54 @@
 from rest_framework import serializers
 
-from wildlifelicensing.apps.returns.models import Return, ReturnAmendmentRequest
+from wildlifelicensing.apps.main.models import Licence, LicenceType
+from wildlifelicensing.apps.main.serializers import EmailUserWithoutAddressesSerializer
+from wildlifelicensing.apps.returns.models import (
+    Return,
+    ReturnAmendmentRequest,
+    ReturnLogEntry,
+)
 
 
-class ReturnSerializer(serializers.Serializer):
+class LicenceTypeReturnSerializer(serializers.Serializer):
+    name = serializers.CharField()
+
+    class Meta:
+        model = LicenceType
+        fields = ("name",)
+
+
+class LicenceReturnSerializer(serializers.ModelSerializer):
+    licence_type = LicenceTypeReturnSerializer()
+    holder = EmailUserWithoutAddressesSerializer()
+
+    class Meta:
+        model = Licence
+        fields = (
+            "id",
+            "licence_number",
+            "licence_sequence",
+            "licence_type",
+            "holder",
+        )
+
+
+class ReturnSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source="get_status_display")
+    licence = LicenceReturnSerializer()
 
     class Meta:
         model = Return
-        exclude = ("application", "applicationrequest_ptr", "licence")
+        fields = (
+            "id",
+            "licence",
+            "status",
+            "lodgement_number",
+            "lodgement_date",
+            "due_date",
+            "proxy_customer",
+            "nil_return",
+            "comments",
+        )
 
 
 class ReturnAmendmentRequestSerializer(serializers.Serializer):
@@ -19,13 +59,13 @@ class ReturnAmendmentRequestSerializer(serializers.Serializer):
         fields = ("status", "reason")
 
 
-class ReturnLogEntrySerializer(serializers.Serializer):
+class ReturnLogEntrySerializer(serializers.ModelSerializer):
     type = serializers.CharField(source="get_type_display")
     documents = serializers.SerializerMethodField()
 
     class Meta:
-        model = Return
-        exclude = ("ret", "communicationslogentry_ptr", "customer", "officer")
+        model = ReturnLogEntry
+        exclude = ("ret", "customer")
 
     def get_documents(self, obj):
         return [(str(document), document.file.url) for document in obj.documents.all()]
