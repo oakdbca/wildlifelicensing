@@ -4,7 +4,8 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from django.db.models import CharField, Q, Value
+from django.db.models.functions import Concat
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -44,30 +45,34 @@ from wildlifelicensing.apps.main.signals import identification_uploaded
 
 class SearchCustomersView(OfficerRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        query = request.GET.get("q")
+        search_term = request.GET.get("q", "")
 
-        if query is not None:
-            q = (Q(first_name__icontains=query) | Q(last_name__icontains=query)) & Q(
-                groups__isnull=True
+        # Allow for search of first name, last name and concatenation of both
+        users = EmailUser.objects.annotate(
+            search_term=Concat(
+                "first_name",
+                Value(" "),
+                "last_name",
+                Value(" "),
+                "email",
+                output_field=CharField(),
             )
-            qs = EmailUser.objects.filter(q)
-        else:
-            qs = EmailUser.objects.none()
+        )
 
-        users = []
-        for email_user in qs:
-            users.append(
-                {
-                    "id": email_user.id,
-                    "text": (
-                        email_user.get_full_name_dob()
-                        if email_user.dob is not None
-                        else email_user.get_full_name()
-                    ),
-                }
-            )
+        users = users.filter(search_term__icontains=search_term).values(
+            "id", "email", "first_name", "last_name"
+        )[:10]
 
-        return JsonResponse(users, safe=False, encoder=WildlifeLicensingJSONEncoder)
+        data_transform = [
+            {
+                "id": person["id"],
+                "text": f"{person['first_name']} {person['last_name']} ({person['email']})",
+            }
+            for person in users
+        ]
+        return JsonResponse(
+            data_transform, safe=False, encoder=WildlifeLicensingJSONEncoder
+        )
 
 
 class ListProfilesView(CustomerRequiredMixin, TemplateView):
