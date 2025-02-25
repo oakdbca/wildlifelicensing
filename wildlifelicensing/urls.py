@@ -58,6 +58,7 @@ urlpatterns = [
             namespace="wl_payments",
         ),
     ),
+    re_path(r"^taxonomy/", include("wildlifelicensing.apps.taxonomy.urls")),
 ]
 
 if settings.DEBUG:

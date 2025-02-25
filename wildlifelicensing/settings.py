@@ -37,6 +37,7 @@ INSTALLED_APPS += [
     "wildlifelicensing.apps.customer_management",
     "wildlifelicensing.apps.reports",
     "wildlifelicensing.apps.payments",
+    "wildlifelicensing.apps.taxonomy",
     "appmonitor_client",
 ]
 
