@@ -27,6 +27,7 @@ ROOT_URLCONF = "wildlifelicensing.urls"
 SITE_ID = 1
 INSTALLED_APPS += [
     "bootstrap3",
+    "webtemplate_dbca",
     "reversion",
     "ledger_api_client",
     "wildlifelicensing.apps.dashboard",
@@ -196,3 +197,26 @@ if DEBUG:
 REST_FRAMEWORK = {
     "DATE_FORMAT": "%d/%m/%Y",
 }
+
+TEMPLATE_GROUP = config("TEMPLATE_GROUP", default="parkswildlife")
+TEMPLATE_TITLE = config("TEMPLATE_TITLE", default="Wildlife Licensing")
+LEDGER_TEMPLATE = "bootstrap5"
+
+LEDGER_UI_ACCOUNTS_MANAGEMENT = [
+    {"email": {"options": {"view": True, "edit": False}}},
+    {"first_name": {"options": {"view": True, "edit": True}}},
+    {"last_name": {"options": {"view": True, "edit": True}}},
+    {"title": {"options": {"view": True, "edit": True}}},
+    {"dob": {"options": {"view": True, "edit": True}}},
+    {"phone_number": {"options": {"view": True, "edit": True}}},
+    {"mobile_number": {"options": {"view": True, "edit": True}}},
+    {"fax_number": {"options": {"view": True, "edit": True}}},
+]
+
+LEDGER_UI_ACCOUNTS_MANAGEMENT_KEYS = []
+for am in LEDGER_UI_ACCOUNTS_MANAGEMENT:
+    LEDGER_UI_ACCOUNTS_MANAGEMENT_KEYS.append(list(am.keys())[0])
+
+TEMPLATES[0]["OPTIONS"]["context_processors"].append(
+    "wildlifelicensing.context_processors.config"
+)

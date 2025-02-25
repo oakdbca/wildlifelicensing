@@ -3,12 +3,14 @@ from django.conf.urls import include, static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
+from ledger_api_client.urls import urlpatterns as ledger_api_client_urlpatterns
 
 from wildlifelicensing.apps.dashboard.views.base import DashBoardRoutingView
 
 urlpatterns = [
     path(r"admin/", admin.site.urls),
     re_path(r"^$", DashBoardRoutingView.as_view(), name="wl_home"),
+    re_path(r"^$", DashBoardRoutingView.as_view(), name="home"),
     re_path(
         r"",
         include(("wildlifelicensing.apps.main.urls", "wl_main"), namespace="wl_main"),
@@ -59,7 +61,7 @@ urlpatterns = [
         ),
     ),
     re_path(r"^taxonomy/", include("wildlifelicensing.apps.taxonomy.urls")),
-]
+] + ledger_api_client_urlpatterns
 
 if settings.DEBUG:
     urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
