@@ -191,8 +191,10 @@ class IdentificationView(LoginRequiredMixin, TemplateView):
         if self.request.user.identification2:
             # kwargs['existing_id_image_url'] = self.request.user.identification.file.url
             kwargs["existing_id_image_url"] = (
-                self.request.user.identification2.upload.url
+                "TODO: Replace with ledger api client"  # (
             )
+            # self.request.user.identification2.upload.url
+            # )
             kwargs["existing_id_image_link"] = (
                 f"/ledger-private/identification/{self.request.user.id}/"
             )
