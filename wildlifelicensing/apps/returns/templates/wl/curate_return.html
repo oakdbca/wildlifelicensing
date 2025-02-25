@@ -28,8 +28,9 @@
 {% endblock %}
 
 {% block requirements %}
-    require([ "{% static
-        'wl/js/curate_return.js' %}", 'js/logs'
+    require([
+        "{% static 'wl/js/curate_return.js' %}",
+        'js/logs'
     ], function (module, logs) {
         module.init({
             selectors: {
@@ -42,7 +43,7 @@
         });
         logs.initCommunicationLog({
             logListURL: "{% url 'wl_returns:log_list' return.id %}",
-            addLogEntryURL: "{% url'wl_returns:add_log_entry' return.id %}"
+            addLogEntryURL: "{% url 'wl_returns:add_log_entry' return.id %}"
         });
     });
 {% endblock %}
@@ -64,11 +65,14 @@
     </div>
   </div>
 </div>
-{% endblock %} {% block intro_title %}
+{% endblock %}
+{% block intro_title %}
 <h3>Curate Return</h3>
-{% endblock %} {% block intro_subtitle %}
+{% endblock %}
+    {% block intro_subtitle %}
 <h4 class="inline">{{ return.licence.licence_type.name }}</h4>
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
 <div class="container">
   <div class="row">
     <div class="col-md-3">
@@ -91,7 +95,7 @@
             >
               <label>Customer</label>
               {% with customer=return.licence.holder %}
-              <p>{{ customer.first_name }} {{ customer.last_name }}</p>
+              <p>{{ customer.first_name|title }} {{ customer.last_name|title }}</p>
               {% endwith %}
               <div class="row">
                 <div class="col-md-6">
@@ -100,7 +104,7 @@
                 </div>
                 <div class="col-md-6">
                   <label>Lodged on</label>
-                  <p>{{ return.lodgement_date|date:'d/m/Y' }}</p>
+                  <p>{{ return.lodgement_date|date:"d\/m\/Y" }}</p>
                 </div>
               </div>
               <div class="row">
@@ -113,8 +117,7 @@
                 <div class="col-md-6">
                   <label>Licence</label>
                   <p>
-                    {{ return.licence.licence_number }}-{{
-                    return.licence.licence_sequence }}
+                    {{ return.licence.licence_number }}-{{return.licence.licence_sequence }}
                   </p>
                 </div>
               </div>
@@ -176,7 +179,8 @@
     </div>
     <div class="col-md-9">
       <form id="curationForm" method="POST">
-        {% csrf_token %} {% for table in tables %}
+        {% csrf_token %}
+        {% for table in tables %}
         <div class="row top-buffer">
           <div class="col-md-12">
             <h3 class="no-margin">{{ table.title }}</h3>
@@ -196,18 +200,16 @@
                 <tbody>
                   {% for row in table.data %}
                   <tr>
-                    {% for header in table.headers %} {% with
-                    value=row|get_item:header.title|get_item:'value'
-                    error=row|get_item:header.title|get_item:'error' %}
+                    {% for header in table.headers %}
+                    {% with value=row|get_item:header.title|get_item:'value' error=row|get_item:header.title|get_item:'error' %}
                     <td>
                       <input name="{{ table.name }}::{{ header.title }}"
-                      value="{{ value|default_if_none:"" }}" {% if
-                      header.species %} data-species="{{ header.species }}" {%
-                      endif %} /> {% if error %}
+                      value="{{ value|default_if_none:"" }}" {% if header.species %} data-species="{{ header.species }}" {% endif %} /> {% if error %}
                       <div><span class="text-danger">{{ error }}</span></div>
                       {% endif %}
                     </td>
-                    {% endwith %} {% endfor %}
+                    {% endwith %}
+                    {% endfor %}
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -229,7 +231,8 @@
     </div>
   </div>
 </div>
-{% endblock %} {% block modals %}
+{% endblock %}
+{% block modals %}
 <div class="modal fade" id="requestAmendmentModal" tabindex="-1">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -258,4 +261,5 @@
     </div>
   </div>
 </div>
-{% include 'wl/logs_comm_entry_modal.html' %} {% endblock %}
+{% include 'wl/logs_comm_entry_modal.html' %}
+{% endblock %}
