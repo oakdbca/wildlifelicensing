@@ -192,3 +192,7 @@ if DEBUG:
             },
         },
     }
+
+REST_FRAMEWORK = {
+    "DATE_FORMAT": "%d/%m/%Y",
+}

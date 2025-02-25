@@ -8,6 +8,9 @@ from django.views.generic import View
 
 logger = logging.getLogger("log")
 
+if settings.DEBUG:
+    requests.packages.urllib3.disable_warnings()
+
 
 def add_filter(cql_filter, params):
     if "cql_filter" not in params:
