@@ -175,7 +175,7 @@ class ApplicationLogEntrySerializer(serializers.Serializer):
 
     class Meta:
         model = ApplicationLogEntry
-        exclude = ("application", "communicationslogentry_ptr", "customer", "staff")
+        exclude = ("application", "customer", "staff")
 
     def get_documents(self, obj):
         return [(str(document), document.file.url) for document in obj.documents.all()]
