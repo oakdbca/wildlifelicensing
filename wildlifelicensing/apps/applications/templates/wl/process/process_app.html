@@ -1,11 +1,37 @@
-{% extends 'wl/applications_base.html' %} {% load static %} {% load bootstrap3 %} {% load jsonify %} {% block extra_css %}
+{% extends 'wl/applications_base.html' %}
+
+{% load static %}
+{% load bootstrap3 %}
+{% load jsonify %}
+
+{% block extra_css %}
   <link href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.10/css/dataTables.bootstrap.css" rel="stylesheet" />
   <link href="//static.dpaw.wa.gov.au/static/libs/select2/3.5.3/select2.min.css" rel="stylesheet" />
   <link href="//static.dpaw.wa.gov.au/static/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css" rel="stylesheet" />
   {{ block.super }}
-{% endblock %} {% block requirements %}
-  require(['js/process/process_app', 'js/logs'], function (app, logs) { $(function () { data = {{ data|jsonify }}; app.initialiseApplicationProcesssing(data); logs.initCommunicationLog({ logListURL: "{% url 'wl_applications:log_list' data.application.id %}", addLogEntryURL: "{% url 'wl_applications:add_log_entry' data.application.id %}" }); logs.initActionLog({ logListURL: "{% url 'wl_applications:action_list' data.application.id %}", }); $('#mainContainer').removeClass('hidden'); }); });
-{% endblock %} {% block breadcrumbs %}
+{% endblock %}
+
+{% block requirements %}
+  require(
+    [
+    'js/process/process_app',
+    'js/logs'
+    ],
+    function (app, logs) {
+        $(function () {
+            data = {{ data|jsonify }};
+            app.initialiseApplicationProcesssing(data);
+            logs.initCommunicationLog({
+                logListURL: "{% url 'wl_applications:log_list' data.application.id %}",
+                addLogEntryURL: "{% url 'wl_applications:add_log_entry' data.application.id %}" });
+                logs.initActionLog({ logListURL: "{% url 'wl_applications:action_list' data.application.id %}", });
+                $('#mainContainer').removeClass('hidden');
+            });
+        }
+    );
+{% endblock %}
+
+{% block breadcrumbs %}
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -21,11 +47,17 @@
       </div>
     </div>
   </div>
-{% endblock %} {% block intro_title %}
+{% endblock %}
+
+{% block intro_title %}
   <h3>Process Application</h3>
-{% endblock %} {% block intro_subtitle %}
+{% endblock %}
+
+{% block intro_subtitle %}
   <h4 class="inline">{{ data.application.licence_type.name }}</h4>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
   <div id="mainContainer" class="container hidden">
     <div class="row">
       <div class="col-md-3">
@@ -46,8 +78,9 @@
                         {% if applicant.user.identification2 %}
                           <a data-toggle="modal" data-target="#idModal">Show ID</a>
                         {% else %}
-                          ID Unavailable
-                        {% endif %} {% if applicant.user.senior_card2 %}
+                          ID Unavaiable
+                        {% endif %}
+                        {% if applicant.user.senior_card2 %}
                           /
                           <a data-toggle="modal" data-target="#seniorCardModal">Senior Card</a>
                         {% endif %}
@@ -63,13 +96,15 @@
                         <div>
                           <span class="fa fa-phone phone"></span> {{ applicant.user.phone_number }}
                         </div>
-                      {% endif %} {% if applicant.user.mobile_number %}
+                      {% endif %}
+                      {% if applicant.user.mobile_number %}
                         <div>
                           <span class="fa fa-mobile mobile"></span> {{ applicant.user.mobile_number }}
                         </div>
                       {% endif %}
                     </div>
-                  {% endwith %} {% with proxy=data.application.proxy_applicant %}
+                  {% endwith %}
+                  {% with proxy=data.application.proxy_applicant %}
                     {% if proxy %}
                       <div class="row bottom-buffer-xs">
                         <div class="col-md-12">
@@ -82,7 +117,7 @@
                   <div class="row">
                     <div class="col-md-5">
                       <label>Lodged on</label>
-                      <p>{{ data.application.lodgement_date|date:'d/m/Y' }}</p>
+                      <p>{{ data.application.lodgement_date }}</p>
                     </div>
                     <div class="col-md-7">
                       <label>Status</label>
@@ -96,7 +131,8 @@
                   </div>
                   <label>Payment Status</label>
                   <p class="no-margin">
-                    {{ data.payment_status }} {% if data.payment_status == 'Awaiting Payment' %}
+                    {{ data.payment_status }}
+                    {% if data.payment_status == 'Awaiting Payment' %}
                       <a href="{% url 'wl_payments:manual_payment' data.application.id %}?redirect_url={{ request.build_absolute_uri }}" class="pull-right">Enter Payment</a>
                     {% endif %}
                   </p>
@@ -312,7 +348,8 @@
             </div>
           </div>
         </div>
-      {% endif %} {% if user.senior_card2 %}
+      {% endif %}
+      {% if user.senior_card2 %}
         <div class="modal fade" id="seniorCardModal" tabindex="-1">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
