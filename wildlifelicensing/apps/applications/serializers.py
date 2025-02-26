@@ -229,6 +229,7 @@ class ApplicationRequestSerializer(serializers.ModelSerializer):
 
 class AmendmentRequestSerializer(serializers.ModelSerializer):
     applicationrequest_ptr = serializers.SerializerMethodField()
+    application = serializers.SerializerMethodField()
 
     class Meta:
         model = AmendmentRequest
@@ -238,3 +239,8 @@ class AmendmentRequestSerializer(serializers.ModelSerializer):
         if not obj:
             return None
         return ApplicationRequestSerializer(obj.applicationrequest_ptr).data
+
+    def get_application(self, obj):
+        if not obj or not hasattr(obj, "applicationrequest_ptr"):
+            return None
+        return ApplicationSerializer(obj.applicationrequest_ptr.application).data
