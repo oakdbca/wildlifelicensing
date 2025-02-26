@@ -9,7 +9,7 @@ This is a reminder that your licence
 
 {{ licence.get_title_with_variants }} <{{ licence.reference }}>
 
-is due to expire on {{ licence.end_date|date:'d/m/Y' }}.
+is due to expire on {{ licence.end_date }}.
 
 Please note that if you have oustanding returns, these are required to be submitted before the licence can be renewed.
 
