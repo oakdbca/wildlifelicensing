@@ -144,14 +144,13 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
         convert_documents_to_url(application.data, application.documents.all(), "")
 
         data = {
-            "user": EmailUserWithoutResidentialAddressSerializer(request.user),
+            "user": EmailUserWithoutResidentialAddressSerializer(request.user).data,
             "application": ApplicationSerializer(application).data,
             "form_structure": application.licence_type.application_schema,
             "officers": officers,
             "amendment_requests": AmendmentRequestSerializer(
                 AmendmentRequest.objects.filter(application=application),
-                related=self.amendment_requests_filter,
-            ),
+            ).data,
             "assessor_groups": ass_groups,
             "assessments": AssessmentSerializer(
                 Assessment.objects.filter(application=application), many=True
