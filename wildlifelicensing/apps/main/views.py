@@ -525,10 +525,10 @@ def getLedgerIdentificationFile(request, emailuser_id):
                 )
         else:
             messages.error(request, "Unable to find the document")
-            return redirect("wc_home")
+            return redirect("wl_home")
     except Exception as e:
         messages.error(request, "Unable to find the document: " + str(e))
-        return redirect("wc_home")
+        return redirect("wl_home")
 
 
 def getLedgerSeniorCardFile(request, emailuser_id):
@@ -578,7 +578,7 @@ def getLedgerSeniorCardFile(request, emailuser_id):
                 )
         else:
             messages.error(request, "Unable to find the document")
-            return redirect("wc_home")
+            return redirect("wl_home")
     except Exception as e:
         messages.error(request, "Unable to find the document: " + str(e))
-        return redirect("wc_home")
+        return redirect("wl_home")
