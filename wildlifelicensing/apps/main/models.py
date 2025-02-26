@@ -690,7 +690,6 @@ class UserAction(models.Model):
     who = models.ForeignKey(
         EmailUser, null=False, blank=False, on_delete=models.PROTECT
     )
-    who = models.IntegerField(null=False, blank=False)
     when = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     what = models.TextField(blank=False)
 
