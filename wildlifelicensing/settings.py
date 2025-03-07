@@ -217,6 +217,8 @@ LEDGER_UI_ACCOUNTS_MANAGEMENT_KEYS = []
 for am in LEDGER_UI_ACCOUNTS_MANAGEMENT:
     LEDGER_UI_ACCOUNTS_MANAGEMENT_KEYS.append(list(am.keys())[0])
 
+LEDGER_UI_URL = config("LEDGER_UI_URL", "")
+
 TEMPLATES[0]["OPTIONS"]["context_processors"].append(
     "wildlifelicensing.context_processors.config"
 )

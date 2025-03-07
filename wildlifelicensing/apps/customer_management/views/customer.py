@@ -17,6 +17,7 @@ from wildlifelicensing.apps.main.forms import (
 )
 from wildlifelicensing.apps.main.mixins import OfficerRequiredMixin
 from wildlifelicensing.apps.main.models import Profile
+from wildlifelicensing.apps.main.serializers import EmailUserSerializer
 from wildlifelicensing.apps.main.signals import identification_uploaded
 
 
@@ -180,7 +181,11 @@ class CustomerLookupView(
         if len(self.args) > 0:
             customer = get_object_or_404(EmailUser, pk=self.args[0])
 
-            kwargs["customer"] = customer
+            kwargs["customer"] = EmailUserSerializer(
+                customer, context={"request": request}
+            ).data
+
+            print(kwargs["customer"])
 
             kwargs["log_entry_form"] = CommunicationsLogEntryForm(
                 to=customer.get_full_name(), fromm=self.request.user.get_full_name()

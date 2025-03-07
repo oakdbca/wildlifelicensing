@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.core.serializers.json import (  # to handle the datetime serialization
     DjangoJSONEncoder,
 )
@@ -9,6 +10,7 @@ from django_countries.fields import Country
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from rest_framework import serializers
 
+from wildlifelicensing.apps.main.helpers import is_officer
 from wildlifelicensing.apps.main.models import (
     Address,
     CommunicationsLogEntry,
@@ -82,9 +84,28 @@ class DocumentSerializer(serializers.Serializer):
 
 
 class EmailUserSerializer(serializers.ModelSerializer):
+    pk = serializers.IntegerField(source="id", read_only=True)
+    acc_mgmt_url = serializers.SerializerMethodField()
+
     class Meta:
         model = EmailUser
         fields = "__all__"
+
+    def get_acc_mgmt_url(self, obj):
+        request = self.context.get("request")
+        if (
+            settings.LEDGER_UI_URL
+            and request
+            and request.user
+            and is_officer(request.user)
+        ):
+            return (
+                settings.LEDGER_UI_URL
+                + "/ledger/account-management/"
+                + str(obj.id)
+                + "/change/"
+            )
+        return ""
 
 
 class EmailUserWithoutResidentialAddressSerializer(serializers.ModelSerializer):
