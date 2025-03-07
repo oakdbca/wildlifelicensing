@@ -36,6 +36,7 @@ from wildlifelicensing.apps.main.pdf import (
     create_licence_renewal_pdf_bytes,
 )
 from wildlifelicensing.apps.main.serializers import (
+    CommunicationsLogEntrySerializer,
     DocumentSerializer,
     ProfileSerializer,
     WildlifeLicensingJSONEncoder,
@@ -407,7 +408,7 @@ class CommunicationsLogListView(OfficerRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         q = Q(staff=args[0]) | Q(customer=args[0])
 
-        data = CommunicationsLogEntry(
+        data = CommunicationsLogEntrySerializer(
             CommunicationsLogEntry.objects.filter(q).order_by("created"), many=True
         ).data
 
