@@ -173,11 +173,11 @@
                 </tr>
               </thead>
               <tbody>
-                {% for profile in customer.profiles.all|dictsort:'pk' %}
+                {% for profile in customer.profiles %}
                   <tr>
                     <td>{{ profile.name }}</td>
                     <td>{{ profile.email }}</td>
-                    <td>{{ profile.postal_address }}</td>
+                    <td>{{ profile.postal_address.display }}</td>
                     <td>{{ profile.institution }}</td>
                     <td>
                       <a href="{% url 'wl_customer_management:edit_customer_profile' customer.pk profile.pk %}">Edit</a>
