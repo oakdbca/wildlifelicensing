@@ -19,10 +19,6 @@ JSON_REQUEST_HEADER_PARAMS = {
     "Accept": "application/json",
 }
 
-PAYMENT_SYSTEM_ID = settings.WL_PAYMENT_SYSTEM_ID
-
-SENIOR_VOUCHER_CODE = settings.WL_SENIOR_VOUCHER_CODE
-
 
 class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
     def get(self, request, *args, **kwargs):
@@ -36,15 +32,15 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
         basket_params = {
             "products": [{"id": product.id if product is not None else None}],
             "vouchers": [],
-            "system": PAYMENT_SYSTEM_ID,
+            "system": settings.PAYMENT_SYSTEM_ID,
         }
         # senior discount
         if application.is_senior_offer_applicable:
-            basket_params["vouchers"].append({"code": SENIOR_VOUCHER_CODE})
+            basket_params["vouchers"].append({"code": settings.SENIOR_VOUCHER_CODE})
         # TODO: Replace: basket, basket_hash = create_basket_session(request, basket_params)
 
         checkout_params = {
-            "system": PAYMENT_SYSTEM_ID,
+            "system": settings.PAYMENT_SYSTEM_ID,
             "basket_owner": user,
             "associate_invoice_with_token": True,
             "fallback_url": error_url,
@@ -69,7 +65,7 @@ class ManualPaymentView(LoginRequiredMixin, RedirectView):
 
         # url = reverse('payments:invoice-payment', args=(application.invoice_reference,))
         url = "{}?invoice={}".format(
-            reverse("payments:invoice-payment"), application.invoice_reference
+            reverse("wl_payments:invoice-payment"), application.invoice_reference
         )
 
         params = {"redirect_url": request.GET.get("redirect_url", reverse("wl_home"))}
@@ -104,9 +100,9 @@ class PaymentsReportView(LoginRequiredMixin, View):
                 else banked_end
             )
 
-            url = request.build_absolute_uri(reverse("payments:ledger-report"))
+            url = request.build_absolute_uri(reverse("wl_payments:ledger-report"))
             data = {
-                "system": PAYMENT_SYSTEM_ID,
+                "system": settings.PAYMENT_SYSTEM_ID,
                 "start": start,
                 "end": end,
                 "banked_start": banked_start,
