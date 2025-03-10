@@ -110,6 +110,11 @@ class EmailUserSerializer(serializers.ModelSerializer):
         model = EmailUser
         fields = "__all__"
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["profiles"] = sorted(response["profiles"], key=lambda x: x["id"])
+        return response
+
     def get_acc_mgmt_url(self, obj):
         request = self.context.get("request")
         if (
