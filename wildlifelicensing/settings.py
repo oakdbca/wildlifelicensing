@@ -81,10 +81,14 @@ HERBIE_SPECIES_WFS_URL = config(
     "request=GetFeature&typeNames=public:herbie_hbvspecies_public&outputFormat=application/json",
 )
 
-WL_PAYMENT_SYSTEM_ID = config("WL_PAYMENT_SYSTEM_ID", default="S369")
+PAYMENT_SYSTEM_ID = config("PAYMENT_SYSTEM_ID", default="S369")
 if not VALID_SYSTEMS:
-    VALID_SYSTEMS = [WL_PAYMENT_SYSTEM_ID]
-WL_SENIOR_VOUCHER_CODE = config("WL_SENIOR_VOUCHER_CODE", default="WL_SENIOR_VOUCHER")
+    VALID_SYSTEMS = [PAYMENT_SYSTEM_ID]
+SENIOR_VOUCHER_CODE = config("WL_SENIOR_VOUCHER_CODE", default="WL_SENIOR_VOUCHER")
+
+PAYMENT_SYSTEM_PREFIX = config(
+    "PAYMENT_SYSTEM_PREFIX", PAYMENT_SYSTEM_ID.replace("S", "0")
+)  # '369'
 
 # next setting is necessary to resolve absolute URL for the emails sent by the tasks running in cron.
 DEFAULT_HOST = config(
@@ -211,6 +215,7 @@ LEDGER_UI_ACCOUNTS_MANAGEMENT = [
     {"phone_number": {"options": {"view": True, "edit": True}}},
     {"mobile_number": {"options": {"view": True, "edit": True}}},
     {"fax_number": {"options": {"view": True, "edit": True}}},
+    {"identification": {"options": {"view": True, "edit": True}}},
 ]
 
 LEDGER_UI_ACCOUNTS_MANAGEMENT_KEYS = []
