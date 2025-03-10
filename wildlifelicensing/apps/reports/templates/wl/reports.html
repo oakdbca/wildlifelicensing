@@ -107,33 +107,5 @@ require(
         </form>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <h3>Payments</h3>
-        <form method="get" id="payments-form" action="{{ actions.payments }}">
-          {% csrf_token %}
-          <div class="row">
-            <div class="col-md-3">
-              {% bootstrap_field payments_form.start %}
-            </div>
-            <div class="col-md-3">
-              {% bootstrap_field payments_form.end %}
-            </div>
-            <div class="col-md-3">
-              {% bootstrap_field payments_form.banked_start %}
-            </div>
-            <div class="col-md-3">
-              {% bootstrap_field payments_form.banked_end %}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-8">
-              <button type="submit" class="btn btn-primary pull-left" name="items">Generate Report By Accounts</button>
-              <button type="submit" class="btn btn-primary pull-right" name="flat">Generate Report Flat</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 {% endblock %}
