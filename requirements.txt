@@ -46,7 +46,7 @@ psycopg2-binary==2.9.10
 py4j==0.10.2.1
 pycountry==17.1.8
 PyPDF2==1.26.0
-python-dateutil==2.6.1
+python-dateutil==2.9.0.post0
 python-decouple==3.8
 reportlab==4.3.1
 unicodecsv==0.14.1
