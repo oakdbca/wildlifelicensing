@@ -61,13 +61,31 @@ class UserAddressSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     # oscar_address_id = serializers.CharField(source="id")
     oscar_address = UserAddressSerializer()
+    display = serializers.SerializerMethodField()
 
     class Meta:
         model = Address
         exclude = ("user",)
 
+    def get_display(self, obj):
+        display_fields = [
+            "line1",
+            "line2",
+            "line3",
+            "locality",
+            "state",
+            "postcode",
+            "country",
+        ]
+        display_address = ""
+        for field in display_fields:
+            if getattr(obj, field):
+                display_address += str(getattr(obj, field)) + " "
+        return display_address
+
 
 class ProfileSerializer(serializers.ModelSerializer):
+    pk = serializers.IntegerField(source="id", read_only=True)
     user = EmailUserSerializer()
     postal_address = AddressSerializer()
 
@@ -86,6 +104,7 @@ class DocumentSerializer(serializers.Serializer):
 class EmailUserSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(source="id", read_only=True)
     acc_mgmt_url = serializers.SerializerMethodField()
+    profiles = ProfileSerializer(many=True, read_only=True)
 
     class Meta:
         model = EmailUser
