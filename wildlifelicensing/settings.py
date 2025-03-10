@@ -202,7 +202,7 @@ REST_FRAMEWORK = {
     "DATE_FORMAT": "%d/%m/%Y",
 }
 
-TEMPLATE_GROUP = config("TEMPLATE_GROUP", default="parkswildlife")
+TEMPLATE_GROUP = config("TEMPLATE_GROUP", default="wildlife_licensing")
 TEMPLATE_TITLE = config("TEMPLATE_TITLE", default="Wildlife Licensing")
 LEDGER_TEMPLATE = "bootstrap5"
 
