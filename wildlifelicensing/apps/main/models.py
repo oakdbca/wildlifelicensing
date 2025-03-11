@@ -1,5 +1,6 @@
 import os
 import zlib
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -428,19 +429,6 @@ class WildlifeLicenceType(LicenceType):
 
             raise ValidationError(msg)
 
-        if (
-            self.senior_applicable
-            and payment_utils.get_voucher(settings.WL_SENIOR_VOUCHER_CODE) is None
-        ):
-            msg = mark_safe(
-                "The senior voucher with code={} cannot be found. It must be created before setting a "
-                "licence type to be senior applicable.<br>"
-                "Note: the senior voucher code can be changed in the settings of the application.".format(
-                    settings.WL_SENIOR_VOUCHER_CODE
-                )
-            )
-            raise ValidationError(msg)
-
 
 class Licence(RevisionedMixin, ActiveMixin):
     holder = models.ForeignKey(
@@ -754,3 +742,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def free_of_charge(self):
+        return self.price == Decimal("0.00")
