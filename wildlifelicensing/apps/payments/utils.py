@@ -78,6 +78,7 @@ def get_application_payment_status(application):
 
     invoice = PAYMENT_STATUS_PAID
     return invoice
+    # TODO: Fix ths method
     # get_object_or_404(Invoice, reference=application.invoice_reference)
 
     if invoice.amount > 0:
