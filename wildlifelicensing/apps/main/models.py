@@ -1,5 +1,6 @@
 import os
 import zlib
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -383,6 +384,7 @@ class LicenceType(RevisionedMixin, ActiveMixin):
 
 class WildlifeLicenceType(LicenceType):
     product_title = models.CharField(max_length=64, unique=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal("0.00"))
     identification_required = models.BooleanField(default=False)
     senior_applicable = models.BooleanField(default=False)
     default_period = models.PositiveIntegerField(
