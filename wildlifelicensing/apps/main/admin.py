@@ -4,10 +4,10 @@ from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from reversion.admin import VersionAdmin
 
-from wildlifelicensing.apps.main.forms import BetterJSONField
 from wildlifelicensing.apps.main.models import (
     Condition,
     DefaultCondition,
+    Product,
     Region,
     Variant,
     VariantGroup,
@@ -39,7 +39,7 @@ class WildlifeLicenceCategoryAdmin(VersionAdmin):
 
 
 class WildlifeLicenceTypeAdminForm(forms.ModelForm):
-    application_schema = BetterJSONField()
+    # application_schema = BetterJSONField()
     replaced_by = PreviousLicenceTypeChoiceField(
         queryset=WildlifeLicenceType.objects.all()
     )
@@ -198,3 +198,10 @@ class ConditionAdmin(VersionAdmin):
         return False
 
     make_obsolete.short_description = "Mark selected conditions as obsolete"
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    model = Product
+    list_display = ("name", "partner_sku", "price")
+    ordering = ("id",)
