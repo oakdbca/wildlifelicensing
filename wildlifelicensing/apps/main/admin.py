@@ -203,5 +203,5 @@ class ConditionAdmin(VersionAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     model = Product
-    list_display = ("name", "partner_sku", "price")
+    list_display = ("title", "partner_sku", "price")
     ordering = ("id",)
