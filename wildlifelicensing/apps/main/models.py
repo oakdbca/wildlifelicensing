@@ -748,7 +748,7 @@ class AssessorGroupMembers(m2m_field_through_model_factory("AssessorGroup")):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    title = models.CharField(max_length=200, unique=True)
     partner_sku = models.CharField(max_length=200, unique=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
