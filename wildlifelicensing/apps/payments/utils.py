@@ -1,5 +1,7 @@
 import json
+from decimal import Decimal
 
+from wildlifelicensing.apps.main.models import Product
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments.exceptions import PaymentException
 
@@ -57,15 +59,22 @@ def generate_product_title(application):
 
 
 def get_product(product_title):
-    return "TODO: Replace with call to oscar api client to get product"
+    try:
+        return Product.objects.get(title=product_title)
+    except Product.DoesNotExist:
+        return None
+    except Product.MultipleObjectsReturned:
+        return None
 
 
 def is_licence_free(product_title):
-    return "TODO: Replace with code that finds out if the licence is free from the local system."
+    product = get_product(product_title)
+    return True if product is None else product.free_of_charge
 
 
 def get_licence_price(product_title):
-    return "TODO: Replace with code that gets the price of the product from the local system."
+    product = get_product(product_title)
+    return Decimal("0.00") if product is None else product.price
 
 
 def get_application_payment_status(application):
@@ -108,7 +117,3 @@ def invoke_credit_card_payment(application):
 
     if get_application_payment_status(application) != PAYMENT_STATUS_PAID:
         raise PaymentException(f"Payment was unsuccessful. Reason({txn.response_txt})")
-
-
-def get_voucher(voucher_code):
-    return "TODO: Replace with local Voucher model"  # Voucher.objects.filter(code=voucher_code).first()
