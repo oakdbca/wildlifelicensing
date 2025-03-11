@@ -4,12 +4,11 @@ from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from reversion.admin import VersionAdmin
 
 from wildlifelicensing.apps.applications.models import Application, ApplicationCondition
-from wildlifelicensing.apps.main.forms import BetterJSONField
 from wildlifelicensing.apps.main.models import AssessorGroup, AssessorGroupMembers
 
 
 class ApplicationAdminForm(forms.ModelForm):
-    data = BetterJSONField()
+    # data = BetterJSONField()
 
     class Meta:
         model = Application
