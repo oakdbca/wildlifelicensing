@@ -739,6 +739,13 @@ class Product(models.Model):
     title = models.CharField(max_length=200, unique=True)
     partner_sku = models.CharField(max_length=200, unique=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    oracle_code = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+        default=settings.DEFAULT_ORACLE_CODE,
+    )
+    is_discountable = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
