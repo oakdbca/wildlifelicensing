@@ -185,8 +185,6 @@ class CustomerLookupView(
                 customer, context={"request": request}
             ).data
 
-            print(kwargs["customer"])
-
             kwargs["log_entry_form"] = CommunicationsLogEntryForm(
                 to=customer.get_full_name(), fromm=self.request.user.get_full_name()
             )

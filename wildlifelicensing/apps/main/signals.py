@@ -161,7 +161,6 @@ def address_pre_save(sender, instance, **kwargs):
                 hash=check_address.generate_hash(), user=check_address.user
             )
         except UserAddress.DoesNotExist:
-            print(check_address)
             check_address.save()
         instance.oscar_address = check_address
 
