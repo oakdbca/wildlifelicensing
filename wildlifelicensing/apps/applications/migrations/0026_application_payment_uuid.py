@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wl_applications', '0025_alter_applicationuseraction_who'),
+        ("wl_applications", "0025_alter_applicationuseraction_who"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='application',
-            name='payment_uuid',
+            model_name="application",
+            name="payment_uuid",
             field=models.UUIDField(default=uuid.uuid4, editable=False, null=True),
         ),
     ]
