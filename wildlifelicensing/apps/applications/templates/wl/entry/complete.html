@@ -50,7 +50,6 @@
             {% if show_invoice %}
               <p>
                 <label>Invoice:</label>
-                <a href="{% url 'wl_payments:invoice-detail' application.invoice_reference %}" target="_blank">View as HTML</a>
                 <a class="left-buffer" href="{% url 'wl_payments:invoice-pdf' application.invoice_reference %}" target="_blank">
                   Download as PDF
                   <img height="20px" src="{% static 'wl/img/pdf.png' %}" />
