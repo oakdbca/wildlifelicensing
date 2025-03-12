@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="application",
             name="payment_uuid",
-            field=models.UUIDField(default=uuid.uuid4, editable=False, null=True),
+            field=models.UUIDField(editable=False, null=True),
         ),
     ]
