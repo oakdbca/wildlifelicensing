@@ -1,13 +1,17 @@
+import logging
+from decimal import Decimal
+
 import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.views.generic.base import RedirectView, View
+from ledger_api_client.utils import create_basket_session, create_checkout_session
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main.helpers import is_officer
@@ -20,43 +24,82 @@ JSON_REQUEST_HEADER_PARAMS = {
 }
 
 
+logger = logging.getLogger(__name__)
+
+
 class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         application = get_object_or_404(Application, pk=args[0])
-        product = get_product(generate_product_title(application))
-        user = application.applicant.id
+        product_title = generate_product_title(application)
+        product = get_product(product_title)
 
         error_url = request.build_absolute_uri(reverse("wl_applications:preview"))
         success_url = request.build_absolute_uri(reverse("wl_applications:complete"))
 
+        products = [
+            {
+                "ledger_description": product_title,
+                "quantity": 1,
+                "price_excl_tax": str(product.price),
+                "price_incl_tax": str(product.price),
+                "oracle_code": product.oracle_code,
+                "line_status": settings.LEDGER_DEFAULT_LINE_STATUS,
+            }
+        ]
+
+        if application.applicant.is_senior:
+            discount = product.price * Decimal(
+                "0.1"
+            )  # TODO: What type of discount do seniors get?
+            products.append(
+                {
+                    "ledger_description": "Senior Discount",
+                    "quantity": 1,
+                    "price_excl_tax": str(-abs(discount)),
+                    "price_incl_tax": str(-abs(discount)),
+                    "oracle_code": settings.SENIOR_VOUCHER_ORACLE_CODE,
+                    "line_status": settings.LEDGER_DEFAULT_LINE_STATUS,
+                }
+            )
+
+        booking_reference = f"wl-app-{application.id}"
+
         basket_params = {
-            "products": [{"id": product.id if product is not None else None}],
+            "products": products,
             "vouchers": [],
-            "system": settings.PAYMENT_SYSTEM_ID,
+            "system": settings.PAYMENT_SYSTEM_PREFIX,
+            "custom_basket": True,
+            "tax_override": True,
+            "no_payment": False,
+            "booking_reference": booking_reference,
         }
-        # senior discount
-        if application.is_senior_offer_applicable:
-            basket_params["vouchers"].append({"code": settings.SENIOR_VOUCHER_CODE})
-        # TODO: Replace: basket, basket_hash = create_basket_session(request, basket_params)
+
+        logger.info("Creating basket session with params: %s", basket_params)
+
+        create_basket_session(
+            request,
+            application.applicant.id,
+            basket_params,
+        )
 
         checkout_params = {
             "system": settings.PAYMENT_SYSTEM_ID,
-            "basket_owner": user,
-            "associate_invoice_with_token": True,
             "fallback_url": error_url,
             "return_url": success_url,
+            "return_preload_url": success_url,
             "force_redirect": True,
-            "template": "wl/payment_information.html",
             "proxy": is_officer(request.user),
+            "invoice_text": booking_reference,
+            "session_type": "ledger_api",
+            "basket_owner": request.user.id,
         }
 
-        # TODO: Replace: create_checkout_session(request, checkout_params)
+        logger.info("Creating checkout session with params: %s", checkout_params)
 
-        if checkout_params["proxy"]:
-            response = "TODO: Replace: place_order_submission(request)"
-        else:
-            response = HttpResponseRedirect(reverse("checkout:index"))
-        return response
+        create_checkout_session(request, checkout_params)
+
+        logger.info("Redirecting user to ledgergw payment details page.")
+        return redirect(reverse("ledgergw-payment-details"))
 
 
 class ManualPaymentView(LoginRequiredMixin, RedirectView):
