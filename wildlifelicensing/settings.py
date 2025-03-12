@@ -227,3 +227,12 @@ LEDGER_UI_URL = config("LEDGER_UI_URL", "")
 TEMPLATES[0]["OPTIONS"]["context_processors"].append(
     "wildlifelicensing.context_processors.config"
 )
+
+LEDGER_DEFAULT_LINE_STATUS = config("LEDGER_DEFAULT_LINE_STATUS", default=1, cast=int)
+DEFAULT_ORACLE_CODE = config(
+    "DEFAULT_ORACLE_CODE", default="WILDLIFE_LICENSING_DEFAULT_ORACLE_CODE"
+)
+SENIOR_VOUCHER_ORACLE_CODE = config(
+    "SENIOR_VOUCHER_ORACLE_CODE",
+    default="WILDLIFE_LICENSING_SENIOR_VOUCHER_ORACLE_CODE",
+)
