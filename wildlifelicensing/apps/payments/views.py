@@ -1,4 +1,5 @@
 import logging
+import uuid
 from decimal import Decimal
 
 import requests
@@ -12,11 +13,19 @@ from django.utils import timezone
 from django.utils.http import urlencode
 from django.views.generic.base import RedirectView, View
 from ledger_api_client.utils import create_basket_session, create_checkout_session
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.views import APIView
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main.helpers import is_officer
 from wildlifelicensing.apps.payments.forms import PaymentsReportForm
-from wildlifelicensing.apps.payments.utils import generate_product_title, get_product
+from wildlifelicensing.apps.payments.utils import (
+    generate_product_title,
+    get_ledger_invoice_pdf,
+    get_product,
+)
 
 JSON_REQUEST_HEADER_PARAMS = {
     "Content-Type": "application/json",
@@ -33,8 +42,18 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
         product_title = generate_product_title(application)
         product = get_product(product_title)
 
-        error_url = request.build_absolute_uri(reverse("wl_applications:preview"))
-        success_url = request.build_absolute_uri(reverse("wl_applications:complete"))
+        # Create a uuid to identify the application so that users can't guess a sequential id
+        application.payment_uuid = uuid.uuid4()
+        application.save()
+
+        fallback_url = request.build_absolute_uri(reverse("wl_applications:preview"))
+        return_url = request.build_absolute_uri(reverse("wl_applications:complete"))
+        return_preload_url = request.build_absolute_uri(
+            reverse(
+                "wl_payments:ledger-api-payment-success-callback",
+                kwargs={"payment_uuid": application.payment_uuid},
+            )
+        )
 
         products = [
             {
@@ -84,9 +103,9 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
 
         checkout_params = {
             "system": settings.PAYMENT_SYSTEM_ID,
-            "fallback_url": error_url,
-            "return_url": success_url,
-            "return_preload_url": success_url,
+            "fallback_url": fallback_url,
+            "return_url": return_url,
+            "return_preload_url": return_preload_url,
             "force_redirect": True,
             "proxy": is_officer(request.user),
             "invoice_text": booking_reference,
@@ -178,3 +197,51 @@ class PaymentsReportView(LoginRequiredMixin, View):
         else:
             messages.error(request, form.errors)
             return redirect(self.error_url)
+
+
+class PaymentSuccessView(APIView):
+    throttle_classes = [AnonRateThrottle]
+
+    def get(self, request, payment_uuid, format=None):
+        logger.info("Wildlife Licensing SuccessView get method called.")
+
+        invoice_reference = request.GET.get("invoice", None)
+
+        if not payment_uuid or not invoice_reference:
+            # If there isn't a payment_uuid or invoice_reference then send a bad request status back in case ledger can
+            # do something with this in future
+            logger.info(
+                "Returning status.HTTP_400_BAD_REQUEST bad request as both payment_uuid and invoice_reference."
+            )
+
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        logger.info(
+            f"payment_uuid: {uuid}, invoice_reference: {invoice_reference}.",
+        )
+
+        try:
+            application = Application.objects.get(payment_uuid=uuid.UUID(payment_uuid))
+        except Application.DoesNotExist:
+            logger.info(
+                f"Returning status.HTTP_404_NOT_FOUND. Application not found with payment_uuid: {payment_uuid}.",
+            )
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        logger.info(f"Setting invoice reference for application id: {application.id}.")
+
+        application.invoice_reference = invoice_reference
+        application.save()
+
+        logger.info(
+            "Returning status.HTTP_200_OK. Order created successfully.",
+        )
+        # this end-point is called by an unmonitored get request in ledger so there is no point having a
+        # a response body however we will return a status in case this is used on the ledger end in future
+        return Response(status=status.HTTP_200_OK)
+
+
+class InvoicePDFView(LoginRequiredMixin, View):
+    def get(self, request, invoice_reference):
+        ledger_invoice_pdf = get_ledger_invoice_pdf(invoice_reference)
+        return HttpResponse(ledger_invoice_pdf.content, content_type="application/pdf")
