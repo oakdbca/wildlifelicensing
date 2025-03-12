@@ -1,6 +1,11 @@
 import json
 from decimal import Decimal
 
+import requests
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+from ledger_api_client.ledger_models import Invoice
+
 from wildlifelicensing.apps.main.models import Product
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments.exceptions import PaymentException
@@ -9,6 +14,7 @@ PAYMENT_STATUS_PAID = "paid"
 PAYMENT_STATUS_CC_READY = "cc_ready"
 PAYMENT_STATUS_AWAITING = "awaiting"
 PAYMENT_STATUS_NOT_REQUIRED = "not_required"
+PAYMENT_STATUS_OVER_PAID = "over_paid"
 
 PAYMENT_STATUSES = {
     PAYMENT_STATUS_PAID: "Paid",
@@ -85,15 +91,15 @@ def get_application_payment_status(application):
     if not application.invoice_reference:
         return PAYMENT_STATUS_NOT_REQUIRED
 
-    invoice = PAYMENT_STATUS_PAID
-    return invoice
-    # TODO: Fix ths method
-    # get_object_or_404(Invoice, reference=application.invoice_reference)
+    invoice = get_object_or_404(Invoice, reference=application.invoice_reference)
 
-    if invoice.amount > 0:
+    if invoice.balance > Decimal("0.00"):
         payment_status = invoice.payment_status
 
-        if payment_status == "paid" or payment_status == "over_paid":
+        if (
+            payment_status == PAYMENT_STATUS_PAID
+            or payment_status == PAYMENT_STATUS_OVER_PAID
+        ):
             return PAYMENT_STATUS_PAID
         elif invoice.token:
             return PAYMENT_STATUS_CC_READY
@@ -104,8 +110,7 @@ def get_application_payment_status(application):
 
 
 def invoke_credit_card_payment(application):
-    invoice = "TODO: Replace with call to ledger api client to get invoice"
-    # get_object_or_404(Invoice, reference=application.invoice_reference)
+    invoice = get_object_or_404(Invoice, reference=application.invoice_reference)
 
     if not invoice.token:
         raise PaymentException("Application invoice does have a credit payment token")
@@ -117,3 +122,22 @@ def invoke_credit_card_payment(application):
 
     if get_application_payment_status(application) != PAYMENT_STATUS_PAID:
         raise PaymentException(f"Payment was unsuccessful. Reason({txn.response_txt})")
+
+
+def get_ledger_invoice_pdf(invoice_reference):
+    api_key = settings.LEDGER_API_KEY
+    url = (
+        settings.LEDGER_API_URL
+        + "/ledgergw/invoice-pdf/"
+        + api_key
+        + "/"
+        + invoice_reference
+    )
+    response = requests.get(url=url)
+
+    if not response.ok:
+        raise Exception(
+            f"Error retrieving invoice PDF with reference {invoice_reference}"
+        )
+
+    return response
