@@ -2,13 +2,23 @@ from django.urls import re_path
 
 from wildlifelicensing.apps.payments.views import (
     CheckoutApplicationView,
+    InvoicePDFView,
     ManualPaymentView,
     PaymentsReportView,
+    PaymentSuccessView,
 )
 
 urlpatterns = [
-    # TODO: Make sure user can view invoice via ledger api client then remove this
-    # url(r'wl/invoice-pdf/(?P<reference>\d+)',InvoicePDFView.as_view(), name='invoice-pdf'),
+    re_path(
+        r"ledger-api-payment-success-callback/(?P<payment_uuid>.+)/",
+        PaymentSuccessView.as_view(),
+        name="ledger-api-payment-success-callback",
+    ),
+    re_path(
+        r"wl/invoice-pdf/(?P<invoice_reference>\d+)",
+        InvoicePDFView.as_view(),
+        name="invoice-pdf",
+    ),
     re_path(
         "^checkout_application/([0-9]+)/$",
         CheckoutApplicationView.as_view(),
