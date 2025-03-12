@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -205,7 +203,7 @@ class Application(RevisionedMixin):
     variants = models.ManyToManyField(
         Variant, blank=True, through="ApplicationVariantLink"
     )
-    payment_uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=True)
+    payment_uuid = models.UUIDField(editable=False, null=True)
 
     def __str__(self):
         return self.reference
