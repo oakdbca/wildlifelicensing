@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal
 from io import BytesIO
 
 from django.conf import settings
@@ -484,8 +485,9 @@ def _create_invoice(invoice_buffer, invoice):
     )
     elements.append(t)
     elements.append(Spacer(1, SECTION_BUFFER_HEIGHT * 2))
+
     # /Products Table
-    if invoice.payment_status != "paid" and invoice.payment_status != "over_paid":
+    if invoice.balance > Decimal("0.00"):
         elements.append(Paragraph(settings.INVOICE_UNPAID_WARNING, styles["Left"]))
 
     elements.append(Spacer(1, SECTION_BUFFER_HEIGHT * 6))
