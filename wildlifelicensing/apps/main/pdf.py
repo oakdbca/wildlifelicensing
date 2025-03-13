@@ -69,8 +69,6 @@ PARAGRAPH_BOTTOM_MARGIN = 5
 
 SECTION_BUFFER_HEIGHT = 10
 
-DATE_FORMAT = "%d/%m/%Y"
-
 HEADER_MARGIN = 10
 HEADER_SMALL_BUFFER = 3
 
@@ -393,15 +391,27 @@ def _create_licence(
         Paragraph("Date of Expiry", styles["BoldLeft"]),
     ]
     date_values = [
-        Paragraph(licence.issue_date.strftime(DATE_FORMAT), styles["Left"]),
-        Paragraph(licence.start_date.strftime(DATE_FORMAT), styles["Left"]),
-        Paragraph(licence.end_date.strftime(DATE_FORMAT), styles["Left"]),
+        Paragraph(
+            licence.issue_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
+            styles["Left"],
+        ),
+        Paragraph(
+            licence.start_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
+            styles["Left"],
+        ),
+        Paragraph(
+            licence.end_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT), styles["Left"]
+        ),
     ]
 
     if original_issue_date is not None:
         date_headings.insert(0, Paragraph("Original Date of Issue", styles["BoldLeft"]))
         date_values.insert(
-            0, Paragraph(original_issue_date.strftime(DATE_FORMAT), styles["Left"])
+            0,
+            Paragraph(
+                original_issue_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
+                styles["Left"],
+            ),
         )
 
     delegation.append(
@@ -712,7 +722,10 @@ def _create_letter_signature():
     signature_elements.append(Spacer(1, SECTION_BUFFER_HEIGHT))
 
     signature_elements.append(
-        Paragraph(date.today().strftime(DATE_FORMAT), styles["LetterLeft"]),
+        Paragraph(
+            date.today().strftime(settings.DEFAULT_FORM_DATE_FORMAT),
+            styles["LetterLeft"],
+        ),
     )
 
     return signature_elements
@@ -792,7 +805,7 @@ def _create_licence_renewal_elements(licence):
     )
 
     licence_renewal_elements += _create_letter_paragraph(
-        f"is due to expire on {licence.end_date.strftime(DATE_FORMAT)}."
+        f"is due to expire on {licence.end_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT)}."
     )
 
     licence_renewal_elements += _create_letter_paragraph(

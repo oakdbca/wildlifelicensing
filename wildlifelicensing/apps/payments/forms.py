@@ -3,30 +3,30 @@ import datetime
 import pytz
 from dateutil.relativedelta import FR, relativedelta
 from django import forms
+from django.conf import settings
 from django.utils import timezone
 
 
 class PaymentsReportForm(forms.Form):
-    date_format = "%d/%m/%Y %H:%M:%S"
     start = forms.DateTimeField(
-        input_formats=[date_format],
+        input_formats=[settings.DEFAULT_FORM_DATETIME_FORMAT],
         required=True,
-        widget=forms.DateTimeInput(format=date_format),
+        widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATETIME_FORMAT),
     )
     end = forms.DateTimeField(
-        input_formats=[date_format],
+        input_formats=[settings.DEFAULT_FORM_DATETIME_FORMAT],
         required=True,
-        widget=forms.DateTimeInput(format=date_format),
+        widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATETIME_FORMAT),
     )
     banked_start = forms.DateTimeField(
-        input_formats=[date_format],
+        input_formats=[settings.DEFAULT_FORM_DATETIME_FORMAT],
         required=True,
-        widget=forms.DateTimeInput(format=date_format),
+        widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATETIME_FORMAT),
     )
     banked_end = forms.DateTimeField(
-        input_formats=[date_format],
+        input_formats=[settings.DEFAULT_FORM_DATETIME_FORMAT],
         required=True,
-        widget=forms.DateTimeInput(format=date_format),
+        widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATETIME_FORMAT),
     )
 
     def __init__(self, *args, **kwargs):

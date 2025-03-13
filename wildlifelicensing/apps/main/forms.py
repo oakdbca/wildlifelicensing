@@ -4,6 +4,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 from django import forms
+from django.conf import settings
 from django.forms.widgets import SelectMultiple
 from django_countries.widgets import CountrySelectWidget
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
@@ -15,8 +16,6 @@ from wildlifelicensing.apps.main.models import (
     Region,
     WildlifeLicence,
 )
-
-DATE_FORMAT = "%d/%m/%Y"
 
 
 class BetterJSONField(forms.JSONField):
@@ -100,6 +99,12 @@ class IssueLicenceForm(forms.ModelForm):
         help_text="A comma separated list of email addresses you want the licence email to be CC'ed",
     )
 
+    start_date = forms.DateField(
+        input_formats=[settings.DEFAULT_FORM_DATE_FORMAT],
+        required=True,
+        widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATE_FORMAT),
+    )
+
     class Meta:
         model = WildlifeLicence
         fields = [
@@ -155,14 +160,18 @@ class IssueLicenceForm(forms.ModelForm):
         if "instance" not in kwargs and len(args) == 0:
             today_date = date.today()
 
-            self.fields["start_date"].initial = today_date.strftime(DATE_FORMAT)
+            self.fields["start_date"].initial = today_date.strftime(
+                settings.DEFAULT_FORM_DATE_FORMAT
+            )
 
             if end_date is not None:
                 self.fields["end_date"].initial = end_date
             elif default_period is not None:
                 end_date = today_date + relativedelta(days=default_period)
 
-                self.fields["end_date"].initial = end_date.strftime(DATE_FORMAT)
+                self.fields["end_date"].initial = end_date.strftime(
+                    settings.DEFAULT_FORM_DATE_FORMAT
+                )
 
             self.fields["regions"].initial = regions
             self.fields["is_renewable"].initial = is_renewable

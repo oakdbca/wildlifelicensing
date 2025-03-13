@@ -53,8 +53,6 @@ LODGEMENT_NUMBER_NUM_CHARS = 6
 
 RETURNS_APP_PATH = os.path.join(os.path.dirname(__file__), "excel_templates")
 
-DATE_FORMAT = "%d/%m/%Y"
-
 
 def _is_post_data_valid(ret, tables_info, post_data):
     for table in tables_info:
@@ -151,7 +149,7 @@ class EnterReturnView(UserCanEditReturnMixin, TemplateView):
             next_ret.save()
 
             message += " The next return for this licence can now be entered and is due on {}.".format(
-                next_ret.due_date.strftime(DATE_FORMAT)
+                next_ret.due_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT)
             )
 
         return_submitted.send(sender=self.__class__, ret=ret)
@@ -243,7 +241,7 @@ class EnterReturnView(UserCanEditReturnMixin, TemplateView):
                                         value, datetime.datetime
                                     ) or isinstance(value, datetime.date):
                                         validation["value"] = value.strftime(
-                                            DATE_FORMAT
+                                            settings.DEFAULT_FORM_DATE_FORMAT
                                         )
                             table["data"] = validated_rows
                         else:
@@ -336,6 +334,7 @@ class CurateReturnView(UserCanCurateReturnMixin, EnterReturnView):
         ctx["amendment_requests"] = ReturnAmendmentRequestSerializer(
             amendment_requests, many=True
         ).data
+        print(ctx["amendment_requests"])
         return ctx
 
     def post(self, request, *args, **kwargs):

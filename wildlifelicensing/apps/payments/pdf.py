@@ -56,8 +56,6 @@ PARAGRAPH_BOTTOM_MARGIN = 5
 
 SECTION_BUFFER_HEIGHT = 10
 
-DATE_FORMAT = "%d/%m/%Y"
-
 styles = getSampleStyleSheet()
 styles.add(
     ParagraphStyle(
@@ -277,7 +275,9 @@ class Remittance(Flowable):
         canvas.setFont(DEFAULT_FONTNAME, MEDIUM_FONTSIZE)
         canvas.drawString(current_x, current_y, self.invoice.reference)
         canvas.drawString(
-            PAGE_WIDTH / 4, current_y, self.invoice.created.strftime(DATE_FORMAT)
+            PAGE_WIDTH / 4,
+            current_y,
+            self.invoice.created.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
         )
         canvas.drawString((PAGE_WIDTH / 4) * 2, current_y, currency(total_gst_tax))
         canvas.drawString(
@@ -343,7 +343,7 @@ def _create_header(canvas, doc, draw_page_number=True):
     canvas.drawString(
         current_x + invoice_details_offset,
         current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER),
-        invoice.created.strftime(DATE_FORMAT),
+        invoice.created.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
     )
     canvas.drawString(
         current_x, current_y - (SMALL_FONTSIZE + HEADER_SMALL_BUFFER) * 2, "Page"

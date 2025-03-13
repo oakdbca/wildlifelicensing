@@ -1,13 +1,13 @@
 import datetime
 
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
 from django_dynamic_fixture import G
 
 from wildlifelicensing.apps.applications.tests import helpers as app_helpers
-from wildlifelicensing.apps.main.forms import DATE_FORMAT
 from wildlifelicensing.apps.main.models import Region
 from wildlifelicensing.apps.main.tests import helpers as main_helpers
 
@@ -189,7 +189,7 @@ class TestIssueLicence(TestCase):
 
         todays_date_string = (
             datetime.date.today() + relativedelta(days=default_period)
-        ).strftime(DATE_FORMAT)
+        ).strftime(settings.DEFAULT_FORM_DATE_FORMAT)
 
         self.assertIn(
             todays_date_string,
