@@ -6,12 +6,13 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.views.generic.base import RedirectView, View
+from ledger_api_client.ledger_models import Invoice
 from ledger_api_client.utils import create_basket_session, create_checkout_session
 from rest_framework import status
 from rest_framework.response import Response
@@ -243,5 +244,8 @@ class PaymentSuccessView(APIView):
 
 class InvoicePDFView(LoginRequiredMixin, View):
     def get(self, request, invoice_reference):
+        invoice = get_object_or_404(Invoice, reference=invoice_reference)
+        if not is_officer(request.user) and invoice.owner.id != request.user.id:
+            return HttpResponseNotFound()
         ledger_invoice_pdf = get_ledger_invoice_pdf(invoice_reference)
         return HttpResponse(ledger_invoice_pdf.content, content_type="application/pdf")
