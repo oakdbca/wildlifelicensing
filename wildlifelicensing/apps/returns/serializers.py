@@ -9,7 +9,7 @@ from wildlifelicensing.apps.returns.models import (
 )
 
 
-class LicenceTypeReturnSerializer(serializers.Serializer):
+class LicenceTypeReturnSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
 
     class Meta:
@@ -51,12 +51,12 @@ class ReturnSerializer(serializers.ModelSerializer):
         )
 
 
-class ReturnAmendmentRequestSerializer(serializers.Serializer):
+class ReturnAmendmentRequestSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source="get_status_display")
 
     class Meta:
         model = ReturnAmendmentRequest
-        fields = ("status", "reason")
+        fields = "__all__"
 
 
 class ReturnLogEntrySerializer(serializers.ModelSerializer):

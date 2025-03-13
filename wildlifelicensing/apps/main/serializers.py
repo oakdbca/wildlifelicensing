@@ -94,7 +94,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class DocumentSerializer(serializers.Serializer):
+class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
