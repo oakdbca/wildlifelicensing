@@ -250,8 +250,9 @@
         {% csrf_token %}
         <div class="modal-body">
           <div class="modal-body">
-            {% if amendment_request_form %} {% bootstrap_form
-            amendment_request_form %} {% endif %}
+            {% if amendment_request_form %}
+                {% bootstrap_form amendment_request_form %}
+            {% endif %}
           </div>
         </div>
         <div class="modal-footer">
