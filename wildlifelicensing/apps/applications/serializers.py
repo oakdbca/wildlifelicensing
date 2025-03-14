@@ -242,7 +242,7 @@ class AmendmentRequestSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_applicationrequest_ptr(self, obj):
-        if not obj:
+        if not obj or not hasattr(obj, "applicationrequest_ptr"):
             return None
         return ApplicationRequestSerializer(obj.applicationrequest_ptr).data
 
