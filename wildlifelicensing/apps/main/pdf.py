@@ -399,10 +399,15 @@ def _create_licence(
             licence.start_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
             styles["Left"],
         ),
-        Paragraph(
-            licence.end_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT), styles["Left"]
-        ),
     ]
+
+    if licence.end_date:
+        date_values.append(
+            Paragraph(
+                licence.end_date.strftime(settings.DEFAULT_FORM_DATE_FORMAT),
+                styles["Left"],
+            ),
+        )
 
     if original_issue_date is not None:
         date_headings.insert(0, Paragraph("Original Date of Issue", styles["BoldLeft"]))
