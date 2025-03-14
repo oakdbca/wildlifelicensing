@@ -745,7 +745,15 @@ class Product(models.Model):
         blank=False,
         default=settings.DEFAULT_ORACLE_CODE,
     )
-    is_discountable = models.BooleanField(default=False)
+    is_discountable = models.BooleanField(
+        models.BooleanField(
+            _("Is discountable?"),
+            default=True,
+            help_text=_(
+                "This flag indicates if this product can be used in an offer " "or not"
+            ),
+        )
+    )
 
     def __str__(self):
         return self.name
