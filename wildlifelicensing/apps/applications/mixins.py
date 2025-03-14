@@ -5,12 +5,9 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from wildlifelicensing.apps.applications.models import Application, Assessment
-from wildlifelicensing.apps.main.helpers import (
-    get_user_assessor_groups,
-    is_assessor,
-    is_officer,
-)
+from wildlifelicensing.apps.main.helpers import is_assessor, is_officer
 from wildlifelicensing.apps.main.mixins import BaseAccessMixin
+from wildlifelicensing.apps.main.models import AssessorGroupMembers
 
 
 class UserCanEditApplicationMixin(BaseAccessMixin):
@@ -167,7 +164,9 @@ class CanPerformAssessmentMixin(BaseAccessMixin):
         assessment = self.get_assessment()
         return (
             assessment is not None
-            and assessment.assessor_group in get_user_assessor_groups(user)
+            and AssessorGroupMembers.objects.filter(
+                assessorgroup=assessment.assessor_group, emailuser_id=user.id
+            ).exists()  # assessment.assessor_group in get_user_assessor_groups(user)
         )
 
 
