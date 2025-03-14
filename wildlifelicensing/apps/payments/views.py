@@ -90,7 +90,7 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
             "system": settings.PAYMENT_SYSTEM_PREFIX,
             "custom_basket": True,
             "tax_override": True,
-            "no_payment": False,
+            "no_payment": product.price == Decimal("0.00"),
             "booking_reference": booking_reference,
         }
 
@@ -108,7 +108,8 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
             "return_url": return_url,
             "return_preload_url": return_preload_url,
             "force_redirect": True,
-            "proxy": is_officer(request.user),
+            "proxy": False,  # When user ledger api client, this doesn't need to be set to True
+            # even if it is in fact a proxy application
             "invoice_text": booking_reference,
             "session_type": "ledger_api",
             "basket_owner": request.user.id,
