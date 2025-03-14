@@ -104,6 +104,11 @@ class IssueLicenceForm(forms.ModelForm):
         required=True,
         widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATE_FORMAT),
     )
+    end_date = forms.DateField(
+        input_formats=[settings.DEFAULT_FORM_DATE_FORMAT],
+        required=True,
+        widget=forms.DateTimeInput(format=settings.DEFAULT_FORM_DATE_FORMAT),
+    )
 
     class Meta:
         model = WildlifeLicence
