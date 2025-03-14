@@ -163,11 +163,17 @@ class AssessmentConditionSerializer(serializers.ModelSerializer):
         fields = ("acceptance_status", "id", "condition")
 
 
+class AssessorGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssessorGroup
+        exclude = ("members",)
+
+
 class AssessmentSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source="get_status_display")
     officer = AssessmentOfficerSerializer()
     assigned_assessor = AssessmentOfficerSerializer()
-    assessor_group = serializers.SerializerMethodField()
+    assessor_group = AssessorGroupSerializer()
     conditions = serializers.SerializerMethodField()
 
     class Meta:
