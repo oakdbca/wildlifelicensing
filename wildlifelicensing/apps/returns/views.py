@@ -1,13 +1,10 @@
 import datetime
 import os
-import shutil
-import tempfile
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.base import TemplateView, View
@@ -207,49 +204,45 @@ class EnterReturnView(UserCanEditReturnMixin, TemplateView):
             form = UploadSpreadsheetForm(request.POST, request.FILES)
 
             if form.is_valid():
-                temp_file_dir = tempfile.mkdtemp(dir=settings.MEDIA_ROOT)
-                try:
-                    data = form.cleaned_data.get("spreadsheet_file")
-                    path = default_storage.save(
-                        os.path.join(temp_file_dir, str(data)), ContentFile(data.read())
-                    )
+                data = form.cleaned_data.get("spreadsheet_file")
+                file = InMemoryUploadedFile(
+                    data, None, data.name, None, data.size, None
+                )
+                workbook = excel.load_workbook_content(file)
 
-                    workbook = excel.load_workbook_content(path)
-
-                    for table in context["tables"]:
-                        worksheet = excel.get_sheet(
-                            workbook, table.get("title")
-                        ) or excel.get_sheet(workbook, table.get("name"))
-                        if worksheet is not None:
-                            table_data = excel.TableData(worksheet)
-                            schema = Schema(
-                                ret.return_type.get_schema_by_name(table.get("name"))
+                for table in context["tables"]:
+                    worksheet = excel.get_sheet(
+                        workbook, table.get("title")
+                    ) or excel.get_sheet(workbook, table.get("name"))
+                    if worksheet is not None:
+                        table_data = excel.TableData(worksheet)
+                        schema = Schema(
+                            ret.return_type.get_schema_by_name(table.get("name"))
+                        )
+                        excel_rows = list(table_data.rows_by_col_header_it())
+                        has_errors = not schema.is_all_valid(excel_rows)
+                        if has_errors:
+                            messages.error(
+                                request,
+                                "Your return contains some errors. See below.",
                             )
-                            excel_rows = list(table_data.rows_by_col_header_it())
-                            has_errors = not schema.is_all_valid(excel_rows)
-                            if has_errors:
-                                messages.error(
-                                    request,
-                                    "Your return contains some errors. See below.",
-                                )
-                            validated_rows = list(schema.rows_validator(excel_rows))
-                            # We want to stringify the datetime/date that might have been created by the excel parser
-                            for vr in validated_rows:
-                                for col, validation in vr.items():
-                                    value = validation.get("value")
-                                    if isinstance(
-                                        value, datetime.datetime
-                                    ) or isinstance(value, datetime.date):
-                                        validation["value"] = value.strftime(
-                                            settings.DEFAULT_FORM_DATE_FORMAT
-                                        )
-                            table["data"] = validated_rows
-                        else:
-                            messages.warning(
-                                request, "Missing worksheet " + table.get("name")
-                            )
-                finally:
-                    shutil.rmtree(temp_file_dir)
+                        validated_rows = list(schema.rows_validator(excel_rows))
+                        # We want to stringify the datetime/date that might have been created by the excel parser
+                        for vr in validated_rows:
+                            for col, validation in vr.items():
+                                value = validation.get("value")
+                                if isinstance(value, datetime.datetime) or isinstance(
+                                    value, datetime.date
+                                ):
+                                    validation["value"] = value.strftime(
+                                        settings.DEFAULT_FORM_DATE_FORMAT
+                                    )
+                        table["data"] = validated_rows
+                    else:
+                        messages.warning(
+                            request, "Missing worksheet " + table.get("name")
+                        )
+                    file.close()
             else:
                 context["upload_spreadsheet_form"] = form
 
