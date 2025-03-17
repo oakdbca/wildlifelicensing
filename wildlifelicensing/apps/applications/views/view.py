@@ -185,7 +185,7 @@ class ApplicationLogListView(OfficerOrAssessorRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         application = get_object_or_404(Application, pk=args[0])
         data = ApplicationLogEntrySerializer(
-            ApplicationLogEntry.objects.filter(application=application)
+            ApplicationLogEntry.objects.filter(application=application), many=True
         ).data
         return JsonResponse(
             {"data": data}, safe=False, encoder=WildlifeLicensingJSONEncoder
