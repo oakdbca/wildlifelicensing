@@ -1,5 +1,6 @@
 import logging
 import uuid
+from datetime import datetime
 from decimal import Decimal
 
 import requests
@@ -71,8 +72,8 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
         ]
 
         if application.applicant.is_senior:
-            discount = product.price * Decimal(
-                "0.1"
+            discount = Decimal(product.price * Decimal("0.1")).quantize(
+                Decimal("0.00")
             )  # TODO: What type of discount do seniors get?
             products.append(
                 {
@@ -84,8 +85,8 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
                     "line_status": settings.LEDGER_DEFAULT_LINE_STATUS,
                 }
             )
-
-        booking_reference = f"wl-app-{application.id}"
+        now_timestamp = str(datetime.timestamp(timezone.now())).replace(".", "-")
+        booking_reference = f"wl-app-{application.id}-{now_timestamp}"
 
         basket_params = {
             "products": products,
