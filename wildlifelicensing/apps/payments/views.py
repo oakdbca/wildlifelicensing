@@ -48,7 +48,10 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
         application.save()
 
         fallback_url = request.build_absolute_uri(reverse("wl_applications:preview"))
-        return_url = request.build_absolute_uri(reverse("wl_applications:complete"))
+        return_url = request.GET.get(
+            "redirect_url",
+            request.build_absolute_uri(reverse("wl_applications:complete")),
+        )
         return_preload_url = request.build_absolute_uri(
             reverse(
                 "wl_payments:ledger-api-payment-success-callback",
@@ -124,17 +127,19 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
 
 
 class ManualPaymentView(LoginRequiredMixin, RedirectView):
+    """ """
+
     def get(self, request, *args, **kwargs):
         application = get_object_or_404(Application, pk=args[0])
 
-        # url = reverse('payments:invoice-payment', args=(application.invoice_reference,))
-        url = "{}?invoice={}".format(
-            reverse("wl_payments:invoice-payment"), application.invoice_reference
+        url = reverse(
+            "wl_payments:checkout_application",
+            args=[application.id],
         )
 
         params = {"redirect_url": request.GET.get("redirect_url", reverse("wl_home"))}
 
-        return redirect(f"{url}&{urlencode(params)}")
+        return redirect(f"{url}?{urlencode(params)}")
 
 
 class PaymentsReportView(LoginRequiredMixin, View):
