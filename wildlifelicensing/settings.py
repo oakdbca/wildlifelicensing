@@ -119,6 +119,8 @@ CACHES = {
     }
 }
 
+CACHE_KEY_LEDGER_EMAIL_USER = "ledger-email-user-{}"
+
 # Address settings
 OSCAR_REQUIRED_ADDRESS_FIELDS = (
     "first_name",
