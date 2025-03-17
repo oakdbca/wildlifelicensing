@@ -202,6 +202,7 @@ class ConditionSerializer(serializers.ModelSerializer):
 
 class ApplicationLogEntrySerializer(serializers.ModelSerializer):
     communicationslogentry_ptr = serializers.SerializerMethodField()
+    documents = serializers.SerializerMethodField()
 
     class Meta:
         model = ApplicationLogEntry
@@ -211,6 +212,9 @@ class ApplicationLogEntrySerializer(serializers.ModelSerializer):
         if not obj or not hasattr(obj, "communicationslogentry_ptr"):
             return None
         return CommunicationsLogEntrySerializer(obj.communicationslogentry_ptr).data
+
+    def get_documents(self, obj):
+        return [(str(document), document.file.url) for document in obj.documents.all()]
 
 
 class ApplicationUserActionSerializer(serializers.ModelSerializer):
