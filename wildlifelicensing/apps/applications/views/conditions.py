@@ -38,7 +38,7 @@ from wildlifelicensing.apps.main.mixins import (
     OfficerOrAssessorRequiredMixin,
     OfficerRequiredMixin,
 )
-from wildlifelicensing.apps.main.models import Condition
+from wildlifelicensing.apps.main.models import AssessorGroupMembers, Condition
 from wildlifelicensing.apps.main.serializers import WildlifeLicensingJSONEncoder
 from wildlifelicensing.apps.payments import utils as payment_utils
 
@@ -131,7 +131,7 @@ class EnterConditionsAssessorView(CanPerformAssessmentMixin, TemplateView):
         kwargs["application"] = ApplicationSerializer(application).data
         kwargs["form_structure"] = application.licence_type.application_schema
 
-        kwargs["assessment"] = Assessment
+        kwargs["assessment"] = AssessmentSerializer(assessment).data
 
         kwargs["other_assessments"] = AssessmentSerializer(
             Assessment.objects.filter(application=application)
@@ -140,11 +140,17 @@ class EnterConditionsAssessorView(CanPerformAssessmentMixin, TemplateView):
             many=True,
         ).data
 
+        assessor_group_member_ids = list(
+            AssessorGroupMembers.objects.filter(
+                assessorgroup=assessment.assessor_group
+            ).values_list("id", flat=True)
+        )
+
         assessors = [
-            {"id": assessor.id, "text": assessor.get_full_name()}
-            for assessor in assessment.assessor_group.members.all().order_by(
-                "first_name"
-            )
+            {"id": emailuser.id, "text": emailuser.get_full_name()}
+            for emailuser in EmailUser.objects.filter(
+                id__in=assessor_group_member_ids
+            ).order_by("first_name")
         ]
         assessors.insert(0, {"id": 0, "text": "Unassigned"})
 
