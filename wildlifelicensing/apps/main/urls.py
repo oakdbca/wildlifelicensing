@@ -5,7 +5,6 @@ from wildlifelicensing.apps.main.views import (
     AddCommunicationsLogEntryView,
     CommunicationsLogListView,
     CreateProfilesView,
-    EditAccountView,
     EditProfilesView,
     IdentificationView,
     LicenceRenewalPDFView,
@@ -29,7 +28,6 @@ urlpatterns = [
         ),
         name="further_information",
     ),
-    re_path("^account/$", EditAccountView.as_view(), name="edit_account"),
     re_path(
         "^search_customers/$", SearchCustomersView.as_view(), name="search_customers"
     ),
