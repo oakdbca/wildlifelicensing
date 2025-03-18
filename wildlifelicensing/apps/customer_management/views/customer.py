@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.views.generic.base import TemplateView
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 
-from wildlifelicensing.apps.customer_management.forms import CustomerDetailsForm
 from wildlifelicensing.apps.dashboard.views.officer import (
     TablesApplicationsOfficerView,
     TablesLicencesOfficerView,
@@ -18,7 +17,6 @@ from wildlifelicensing.apps.main.forms import (
 from wildlifelicensing.apps.main.mixins import OfficerRequiredMixin
 from wildlifelicensing.apps.main.models import Profile
 from wildlifelicensing.apps.main.serializers import EmailUserSerializer
-from wildlifelicensing.apps.main.signals import identification_uploaded
 
 
 class CustomerLookupView(
@@ -192,91 +190,6 @@ class CustomerLookupView(
             context = super().get_context_data(**kwargs)
 
         return render(request, self.template_name, context)
-
-
-class EditDetailsView(OfficerRequiredMixin, TemplateView):
-    template_name = "wl/officer_edit_customer_details.html"
-    login_url = "/"
-
-    def get_context_data(self, **kwargs):
-        customer = get_object_or_404(EmailUser, pk=self.args[0])
-        if "customer" not in kwargs:
-            kwargs["customer"] = customer
-        if "form" not in kwargs:
-            kwargs["form"] = CustomerDetailsForm(instance=customer)
-
-        # if 'form_id' not in kwargs:
-        #     kwargs['form_id'] = IdentificationForm()
-        if "id_url" not in kwargs and bool(customer.identification2):
-            # kwargs['id_url'] = customer.identification.file.url
-            kwargs["id_url"] = customer.identification2.upload.url
-
-        if "senior_card_url" not in kwargs and bool(customer.senior_card2):
-            # kwargs['senior_card_url'] = customer.senior_card.file.url
-            kwargs["senior_card_url"] = customer.senior_card2.upload.url
-
-        return super().get_context_data(**kwargs)
-
-    def post(self, request, *args, **kwargs):
-        customer = get_object_or_404(EmailUser, pk=self.args[0])
-
-        ctx = {"customer": customer}
-
-        if "save_details" in request.POST:
-            emailuser_form = CustomerDetailsForm(request.POST, instance=customer)
-            if emailuser_form.is_valid():
-                emailuser_form.save()
-                messages.success(
-                    request,
-                    "The details were updated. Please note that this may require any "
-                    "licences held by the user to be reissued.",
-                )
-                return redirect("wl_customer_management:customer_lookup", customer.pk)
-
-            else:
-                ctx["form"] = emailuser_form
-                return self.get(request, **ctx)
-
-        if "id" in self.request.FILES:
-            # previous_id = customer.identification
-            previous_id = customer.identification2
-            # customer.identification = Document.objects.create(file=self.request.FILES['id'])
-            customer.identification2 = "TODO: Replace with call to ledger api client"
-            # PrivateDocument.objects.create(
-            #     upload=self.request.FILES["id"]
-            # )
-            customer.save()
-            if bool(previous_id):
-                previous_id.delete()
-            # ctx['id_url'] = customer.identification.file.url
-            ctx["id_url"] = customer.identification2.upload.url
-            identification_uploaded.send(sender=self.__class__, request=self.request)
-
-        if "delete_id" in request.POST:
-            if bool(customer.identification2):
-                customer.identification2.delete()
-
-        if "senior_card" in self.request.FILES:
-            # previous = customer.senior_card
-            previous = customer.senior_card2
-            # customer.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
-            customer.senior_card2 = "TODO: Replace with call to ledger api client"
-            # PrivateDocument.objects.create(
-            #     upload=self.request.FILES["senior_card"]
-            # )
-            customer.save()
-            if bool(previous):
-                previous.delete()
-            # ctx['senior_card_url'] = customer.senior_card.file.url
-            ctx["senior_card_url"] = customer.senior_card2.upload.url
-
-        if "delete_senior_card" in request.POST:
-            # if bool(customer.senior_card):
-            #     customer.senior_card.delete()
-            if bool(customer.senior_card2):
-                customer.senior_card2.delete()
-
-        return self.get(request, **ctx)
 
 
 class EditProfileView(OfficerRequiredMixin, TemplateView):
