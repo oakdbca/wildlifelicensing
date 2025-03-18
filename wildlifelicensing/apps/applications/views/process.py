@@ -155,7 +155,7 @@ class ProcessView(OfficerOrAssessorRequiredMixin, TemplateView):
             "assessments": AssessmentSerializer(
                 Assessment.objects.filter(application=application), many=True
             ).data,
-            "previous_versions": previous_lodgements,  # TODO: Make sure still works serialize(previous_lodgements),
+            "previous_versions": previous_lodgements,
             "returns_outstanding": previous_application_returns_outstanding,
             "payment_status": payment_utils.PAYMENT_STATUSES.get(
                 payment_utils.get_application_payment_status(application)
