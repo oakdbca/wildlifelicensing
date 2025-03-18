@@ -540,9 +540,6 @@ class AbstractShippingAddress(AbstractAddress):
     ShippingAddress is a model of the order app. But moving it there is tricky
     due to circular import issues that are amplified by get_model/get_class
     calls pre-Django 1.7 to register receivers. So...
-    TODO: Once Django 1.6 support is dropped, move AbstractBillingAddress and
-    AbstractShippingAddress to the order app, and move
-    PartnerAddress to the partner app.
     """
 
     phone_number = PhoneNumberField(
