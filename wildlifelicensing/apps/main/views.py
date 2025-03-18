@@ -82,12 +82,6 @@ class ListProfilesView(CustomerRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        def posthook(instance, attr):
-            # TODO: Take a look if these still work in django 5
-            attr["auth_identity"] = instance.auth_identity
-            return attr
-
         context["data"] = ProfileSerializer(
             Profile.objects.filter(user=self.request.user), many=True
         ).data
