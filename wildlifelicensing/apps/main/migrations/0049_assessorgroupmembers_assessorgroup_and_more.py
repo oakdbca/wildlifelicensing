@@ -8,7 +8,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("wl_main", "0048_assessorgroupmembers_assessorgroup_and_more"),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
