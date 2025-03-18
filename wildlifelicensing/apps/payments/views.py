@@ -71,7 +71,7 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
             }
         ]
 
-        if application.applicant.is_senior:
+        if product.is_discountable and application.applicant.is_senior:
             discount = Decimal(product.price * Decimal("0.1")).quantize(
                 Decimal("0.00")
             )  # TODO: What type of discount do seniors get?
