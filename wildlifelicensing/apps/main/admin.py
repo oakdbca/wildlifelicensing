@@ -102,7 +102,6 @@ class WildlifeLicenceTypeAdminForm(forms.ModelForm):
 @admin.register(WildlifeLicenceType)
 class WildlifeLicenceTypeAdmin(VersionAdmin):
     list_display = ("name", "display_name", "version", "code")
-    # TODO: Make this or equivalent work filter_horizontal = ('default_conditions',)
     inlines = (DefaultConditionInline,)
     form = WildlifeLicenceTypeAdminForm
 
