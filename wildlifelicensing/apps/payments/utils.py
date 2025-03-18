@@ -104,10 +104,6 @@ def get_application_payment_status(application):
 
     return PAYMENT_STATUS_AWAITING
 
-    # TODO: Make sure new system can handle this scenario?
-    # elif invoice.token:
-    #     return PAYMENT_STATUS_CC_READY
-
 
 def invoke_credit_card_payment(application):
     invoice = get_object_or_404(Invoice, reference=application.invoice_reference)
