@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if amendment_request.application.proxy_applicant %}
-        The Wildlife Licensing application you made on behalf of {{ amendment_request.application.applicant_profile.user.get_full_name }} 
+        The Wildlife Licensing application you made on behalf of {{ amendment_request.application.applicant_profile.user.get_full_name }}
         has been reviewed and requires an amendment before approval.
     {% else %}
         Your Wildlife Licensing application has been reviewed and requires an amendment before approval.

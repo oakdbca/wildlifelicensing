@@ -30,7 +30,7 @@
 {% block intro_subtitle %}
     <h4 class="inline">
         {{ licence_type.name }} {% if is_renewal %}(Renewal) {% endif %} {% if is_amendment %}(Amendment) {% endif %}
-    </h4> 
+    </h4>
     {% if customer %}
             <h4 class="pull-right">Customer: {{ customer.get_full_name }}</h4>
     {% endif %}

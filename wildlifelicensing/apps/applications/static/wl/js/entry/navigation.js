@@ -31,7 +31,7 @@ define(['jQuery'], function($) {
                         type: 'POST',
                         url: '/applications/delete-application-session/',
                         async: false,
-                        data: { 
+                        data: {
                             applicationId: applicationId,
                             csrfmiddlewaretoken: csrfToken
                         }

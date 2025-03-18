@@ -32,7 +32,7 @@
 {% block intro_subtitle %}
     <h4 class="inline">
         {{ licence_type.name }} {% if is_renewal %}(Renewal) {% endif %} {% if is_amendment %}(Amendment) {% endif %}
-    </h4> 
+    </h4>
     {% if customer %}
         <h4 class="pull-right">Customer: {{ customer.get_full_name }}</h4>
     {% endif %}
@@ -64,7 +64,7 @@
                     {% with field=form.identification_file %}
                         <div class="form-group">
                             <div class="{% if field.errors %} has-error has-feedback {% endif %}">
-                            <label for="{{ field.auto_id }}">{{ field.label }}</label> 
+                            <label for="{{ field.auto_id }}">{{ field.label }}</label>
                             <input id="{{ field.auto_id }}" name="{{ field.name }}" type="file" class="form-control" {% if file_types %}accept="{{ file_types }}"{% endif %}>
                             {% if field.errors %}
                                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>

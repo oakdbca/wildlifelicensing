@@ -16,7 +16,7 @@ define(['jQuery'], function($) {
             $("#" + address_type + "_address_panel #" + address_type + "_address_body").appendTo("#" + address_type + "_address_cache");
         } else if ($(button).val() == "postal_address") {
             $("#" + address_type + "_address_panel #" + address_type + "_address_body").appendTo("#" + address_type + "_address_cache");
-        } 
+        }
     }
     return {
         init: function() {
@@ -47,7 +47,7 @@ define(['jQuery'], function($) {
                 $("#" + address_type + "_address-source_types :button[value='" + source_type + "']").click();
             });
             */
-            
+
         }
 
     }
