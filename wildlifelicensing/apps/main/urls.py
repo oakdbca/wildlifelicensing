@@ -6,7 +6,6 @@ from wildlifelicensing.apps.main.views import (
     CommunicationsLogListView,
     CreateProfilesView,
     EditProfilesView,
-    IdentificationView,
     LicenceRenewalPDFView,
     ListProfilesView,
     SearchCustomersView,
@@ -37,7 +36,6 @@ urlpatterns = [
     re_path(
         "^profiles/edit/([0-9]+)/$", EditProfilesView.as_view(), name="edit_profile"
     ),
-    re_path("^identification/$", IdentificationView.as_view(), name="identification"),
     re_path(
         "^licence-renewal-pdf/([0-9]+)/$",
         LicenceRenewalPDFView.as_view(),

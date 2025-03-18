@@ -3,7 +3,6 @@ import os
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import CharField, Q, Value
 from django.db.models.functions import Concat
 from django.http import HttpResponse, JsonResponse
@@ -15,9 +14,7 @@ from ledger_api_client.ledger_models import EmailUserRO as EmailUser
 from wildlifelicensing.apps.main.forms import (
     AddressForm,
     CommunicationsLogEntryForm,
-    IdentificationForm,
     ProfileForm,
-    SeniorCardForm,
 )
 from wildlifelicensing.apps.main.mixins import (
     CustomerRequiredMixin,
@@ -39,7 +36,6 @@ from wildlifelicensing.apps.main.serializers import (
     ProfileSerializer,
     WildlifeLicensingJSONEncoder,
 )
-from wildlifelicensing.apps.main.signals import identification_uploaded
 
 
 class SearchCustomersView(OfficerRequiredMixin, View):
@@ -176,86 +172,6 @@ class EditProfilesView(CustomerRequiredMixin, TemplateView):
         messages.success(request, "The profile '%s' was updated." % profile.name)
 
         return redirect("wl_main:list_profiles")
-
-
-class IdentificationView(LoginRequiredMixin, TemplateView):
-    template_name = "wl/manage_identification.html"
-    login_url = "/"
-
-    def get_context_data(self, **kwargs):
-        if "form_id" not in kwargs:
-            kwargs["form_id"] = IdentificationForm()
-        # if self.request.user.identification:
-        if self.request.user.identification2:
-            # kwargs['existing_id_image_url'] = self.request.user.identification.file.url
-            kwargs["existing_id_image_url"] = (
-                "TODO: Replace with ledger api client"  # (
-            )
-            # self.request.user.identification2.upload.url
-            # )
-            kwargs["existing_id_image_link"] = (
-                f"/ledger-private/identification/{self.request.user.id}/"
-            )
-
-        if self.request.user.is_senior:
-            if "form_senior" not in kwargs:
-                kwargs["form_senior"] = SeniorCardForm()
-            # if self.request.user.senior_card:
-            #     kwargs['existing_senior_card_image_url'] = self.request.user.senior_card.file.url
-            if self.request.user.senior_card2:
-                kwargs["existing_senior_card_image_url"] = (
-                    self.request.user.senior_card2.upload.url
-                )
-                kwargs["existing_senior_card_image_link"] = (
-                    f"/ledger-private/senior-card/{self.request.user.id}/"
-                )
-
-        if "file_types" not in kwargs:
-            kwargs["file_types"] = ", ".join(
-                ["." + file_ext for file_ext in IdentificationForm.VALID_FILE_TYPES]
-            )
-        return super().get_context_data(**kwargs)
-
-    def post(self, request, *args, **kwargs):
-        ctx = {}
-        if "identification" in request.POST:
-            form = IdentificationForm(request.POST, files=request.FILES)
-            ctx["form_id"] = form
-            if form.is_valid():
-                # previous_id = self.request.user.identification
-                previous_id = self.request.user.identification2
-                self.request.user.identification2 = (
-                    "TODO: Replace with call to ledger api client"
-                )
-                # PrivateDocument.objects.create(
-                #     upload=self.request.FILES["identification_file"]
-                # )
-                self.request.user.save()
-                if bool(previous_id):
-                    previous_id.delete()
-                identification_uploaded.send(
-                    sender=self.__class__, request=self.request
-                )
-
-                messages.success(request, "ID was successfully uploaded")
-        if "senior_card" in request.POST:
-            form = SeniorCardForm(request.POST, files=request.FILES)
-            ctx["form_senior"] = form
-            if form.is_valid():
-                # previous_senior_card = self.request.user.senior_card
-                previous_senior_card = self.request.user.senior_card2
-                self.request.user.senior_card2 = (
-                    "TODO: Replace with call to ledger api client"
-                )
-                # PrivateDocument.objects.create(
-                #     upload=self.request.FILES["senior_card"]
-                # )
-                self.request.user.save()
-                if bool(previous_senior_card):
-                    previous_senior_card.delete()
-                messages.success(request, "Seniors card was successfully uploaded")
-
-        return redirect("wl_home")
 
 
 class ListDocumentView(CustomerRequiredMixin, TemplateView):
