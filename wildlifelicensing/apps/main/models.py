@@ -749,7 +749,7 @@ class Product(models.Model):
         _("Is discountable?"),
         default=True,
         help_text=_(
-            "This flag indicates if this product can be used in an offer " "or not"
+            "This flag indicates if the user can have a seniors discount on this product"
         ),
     )
 
