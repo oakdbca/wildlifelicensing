@@ -1,7 +1,6 @@
 import json
 import re
 
-# TODO: fix the deprecation of SchemaModel. Use jsontableschema.model.Schema, but there is a problem (see below)
 from dateutil.parser import parse as date_parse
 from future.utils import raise_with_traceback
 from jsontableschema import types
@@ -126,7 +125,6 @@ class SchemaField:
     """
 
     # For most of the type we use the jsontableschema ones
-    # TODO: SchemaModel is deprecated in favor of of jsontableschema.schema.Schema but there's no _type_map!
     BASE_TYPE_MAP = SchemaModel._type_map()
     # except for anything date.
     BASE_TYPE_MAP["date"] = DayFirstDateType
