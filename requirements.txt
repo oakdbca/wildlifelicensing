@@ -1,5 +1,6 @@
 babel==2.17.0
 cchardet==2.2.0a2
+click>=3.3, <7 # Restricted by jsontableschema
 coverage==4.3.1
 coveralls==1.1
 cython==3.0.12
@@ -38,7 +39,7 @@ openpyxl==2.4.8
 phonenumbers==8.12.15
 psycopg2-binary==2.9.10
 pycountry==17.1.8
-PyPDF2==1.26.0
+PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 reportlab==4.3.1
