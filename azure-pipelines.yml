@@ -29,8 +29,8 @@ stages:
               command: buildAndPush
               dockerfile: "$(Build.SourcesDirectory)/Dockerfile"
               tags: |
-                latest
-                $(tagDate)
+                django5_latest
+                django5_$(tagDate)
               containerRegistry: DockerHub
               repository: dbcawa/wildlifelicensing
             env:
