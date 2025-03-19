@@ -31,7 +31,7 @@ git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
 git+https://github.com/dbca-wa/django5-utils-six.git#egg=django5_six
 git+https://github.com/dbca-wa/ledger_api_client.git#egg=ledger_api_client
 git+https://github.com/dbca-wa/webtemplate2.git#egg=webtemplate_dbca
-gunicorn==22.0.0
+gunicorn==23.0.0
 ipython==8.32.0
 jsontableschema==0.10.1
 openpyxl==2.4.8
