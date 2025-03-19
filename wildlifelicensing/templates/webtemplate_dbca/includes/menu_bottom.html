@@ -1,0 +1,18 @@
+{% load users %}
+
+{% if request.user|is_customer %}
+<li><a class="dropdown-item" href="/ledger-ui/accounts">Manage Account</a></li>
+<li><a class="dropdown-item" href="{% url 'wl_main:list_profiles' %}">Manage Profiles</a></li>
+<li><a class="dropdown-item" href="{% url 'wl_main:identification' %}">Manage ID</a></li>
+<li role="separator" class="divider"></li>
+{% endif %}
+{% if request.user|is_officer %}
+<li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+<li role="separator" class="divider"></li>
+{% endif %}
+{% if request.user|is_officer %}
+<li><a class="dropdown-item" href="{{ LEDGER_UI_URL }}/reports?system_id={{ PAYMENT_SYSTEM_PREFIX }} ">Financial Reports</a></li>
+<li><a class="dropdown-item" href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/payment-totals?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Payment Totals</a></li>
+<li><a class="dropdown-item" href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/failed-transactions?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Failed Refunds {% if ledger_totals.total_failed > 0 %}<span class="badge bg-danger">{{ ledger_totals.total_failed }}</span>{% endif %}</li>
+<li role="separator" class="divider"></li>
+{% endif %}

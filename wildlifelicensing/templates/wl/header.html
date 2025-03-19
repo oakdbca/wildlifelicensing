@@ -1,18 +1,16 @@
-{% load bootstrap3 %}
-
-{% load static %}
+{% load bootstrap3 %} {% load static %}
 
 <div class="container-fluid">
-    <div class="wl-header">
-        <div class="container">
-            <div class="wl-banner">
-                <a href="{% url 'home' %}">
-                    <img src="{% static 'wl/img/dpaw_logo.png' %}" alt="DPaW Logo" />
-                    <div>
-                        <h1>Wildlife Licensing</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
+  <div class="wl-header">
+    <div class="container">
+      <div class="wl-banner">
+        <a style="text-decoration: none;" href="{% url 'wl_home' %}">
+          <img src="{% static 'wl/img/dpaw_logo.png' %}" alt="DPaW Logo" />
+          <div>
+            <h1>Wildlife Licensing</h1>
+          </div>
+        </a>
+      </div>
     </div>
+  </div>
 </div>

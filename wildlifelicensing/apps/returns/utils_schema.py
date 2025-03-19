@@ -1,27 +1,20 @@
-from __future__ import absolute_import, unicode_literals, print_function, division
-from future.utils import raise_with_traceback
-
 import json
 import re
 
 from dateutil.parser import parse as date_parse
-
-# TODO: fix the deprecation of SchemaModel. Use jsontableschema.model.Schema, but there is a problem (see below)
-from jsontableschema.model import SchemaModel
+from future.utils import raise_with_traceback
 from jsontableschema import types
 from jsontableschema.exceptions import InvalidDateType
-
+from jsontableschema.model import SchemaModel
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.write_only import WriteOnlyCell
-from django.utils import six
-from django.utils.encoding import python_2_unicode_compatible
 
 from wildlifelicensing.apps.main.excel import is_blank_value
 
 COLUMN_HEADER_FONT = Font(bold=True)
 
-YYYY_MM_DD_REGEX = re.compile(r'^\d{4}-\d{2}-\d{2}')
+YYYY_MM_DD_REGEX = re.compile(r"^\d{4}-\d{2}-\d{2}")
 
 
 class FieldSchemaError(Exception):
@@ -76,10 +69,10 @@ class NotBlankStringType(types.StringType):
     """
     The default StringType accepts empty string when required = True
     """
-    null_values = ['null', 'none', 'nil', 'nan', '-', '']
+
+    null_values = ["null", "none", "nil", "nan", "-", ""]
 
 
-@python_2_unicode_compatible
 class WLSchema:
     """
     The utility class for the wildlife licensing data within a schema field
@@ -93,9 +86,10 @@ class WLSchema:
           }
     }
     """
-    SPECIES_TYPE_NAME = 'species'
-    SPECIES_TYPE_FLORA_NAME = 'flora'
-    SPECIES_TYPE_FAUNA_NAME = 'fauna'
+
+    SPECIES_TYPE_NAME = "species"
+    SPECIES_TYPE_FLORA_NAME = "flora"
+    SPECIES_TYPE_FAUNA_NAME = "fauna"
 
     def __init__(self, data):
         self.data = data or {}
@@ -105,15 +99,15 @@ class WLSchema:
         return self.data.__getitem__(item)
 
     def __str__(self):
-        return "WLSchema: {}".format(self.data)
+        return f"WLSchema: {self.data}"
 
     @property
     def type(self):
-        return self.get('type')
+        return self.get("type")
 
     @property
     def species_type(self):
-        return self.get('speciesType')
+        return self.get("speciesType")
 
     def get(self, k, d=None):
         return self.data.get(k, d)
@@ -122,7 +116,6 @@ class WLSchema:
         return self.type == self.SPECIES_TYPE_NAME
 
 
-@python_2_unicode_compatible
 class SchemaField:
     """
     Utility class for a field in a schema.
@@ -130,30 +123,31 @@ class SchemaField:
     https://github.com/frictionlessdata/jsontableschema-py#types
     for validation.
     """
+
     # For most of the type we use the jsontableschema ones
-    # TODO: SchemaModel is deprecated in favor of of jsontableschema.schema.Schema but there's no _type_map!
     BASE_TYPE_MAP = SchemaModel._type_map()
     # except for anything date.
-    BASE_TYPE_MAP['date'] = DayFirstDateType
-    BASE_TYPE_MAP['datetime'] = DayFirstDateTimeType
+    BASE_TYPE_MAP["date"] = DayFirstDateType
+    BASE_TYPE_MAP["datetime"] = DayFirstDateTimeType
     # and string
-    BASE_TYPE_MAP['string'] = NotBlankStringType
+    BASE_TYPE_MAP["string"] = NotBlankStringType
 
-    WL_TYPE_MAP = {
-    }
+    WL_TYPE_MAP = {}
 
     def __init__(self, data):
         self.data = data
-        self.name = self.data.get('name')
+        self.name = self.data.get("name")
         # We want to throw an exception if there is no name
         if not self.name:
-            raise FieldSchemaError("A field without a name: {}".format(json.dumps(data)))
+            raise FieldSchemaError(f"A field without a name: {json.dumps(data)}")
         # wl specific
-        self.wl = WLSchema(self.data.get('wl'))
+        self.wl = WLSchema(self.data.get("wl"))
         # set the type: wl type as precedence
-        type_class = self.WL_TYPE_MAP.get(self.wl.type) or self.BASE_TYPE_MAP.get(self.data.get('type'))
+        type_class = self.WL_TYPE_MAP.get(self.wl.type) or self.BASE_TYPE_MAP.get(
+            self.data.get("type")
+        )
         self.type = type_class(self.data)
-        self.constraints = SchemaConstraints(self.data.get('constraints', {}))
+        self.constraints = SchemaConstraints(self.data.get("constraints", {}))
 
     # implement some dict like methods
     def __getitem__(self, item):
@@ -164,7 +158,7 @@ class SchemaField:
 
     @property
     def title(self):
-        return self.data.get('title')
+        return self.data.get("title")
 
     @property
     def column_name(self):
@@ -182,7 +176,7 @@ class SchemaField:
     def species_type(self):
         result = None
         if self.is_species:
-            return self.wl.species_type or 'all'
+            return self.wl.species_type or "all"
         return result
 
     def cast(self, value):
@@ -194,11 +188,11 @@ class SchemaField:
         :param value:
         :return:
         """
-        if isinstance(value, six.string_types) and not isinstance(value, six.text_type):
+        if isinstance(value, str) and not isinstance(value, str):
             # the StringType accepts only unicode
-            value = six.u(value)
-        elif isinstance(value,six.integer_types):
-            value = '{}'.format(value)
+            value = value
+        elif isinstance(value, int):
+            value = f"{value}"
         return self.type.cast(value)
 
     def validate(self, value):
@@ -226,19 +220,19 @@ class SchemaField:
                 except Exception:
                     not_integer = True
                 if not_integer:
-                    return 'The field "{}" must be a whole number.'.format(self.name)
+                    return f'The field "{self.name}" must be a whole number.'
         try:
             self.cast(value)
         except Exception as e:
-            error = "{}".format(e)
+            error = f"{e}"
             # Override the default enum exception message to include all possible values
-            if error.find('enum array') and self.constraints.enum:
+            if error.find("enum array") and self.constraints.enum:
                 values = [str(v) for v in self.constraints.enum]
-                error = "The value must be one the following: {}".format(values)
+                error = f"The value must be one the following: {values}"
         return error
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return f"{self.name}"
 
 
 class SchemaConstraints:
@@ -258,11 +252,11 @@ class SchemaConstraints:
 
     @property
     def required(self):
-        return self.get('required', False)
+        return self.get("required", False)
 
     @property
     def enum(self):
-        return self.get('enum')
+        return self.get("enum")
 
 
 class Schema:
@@ -319,8 +313,11 @@ class Schema:
         if field is not None:
             return field.validation_error(value)
         else:
-            raise Exception("The field '{}' doesn't exists in the schema. Should be one of {}"
-                            .format(field_name, self.field_names))
+            raise Exception(
+                "The field '{}' doesn't exists in the schema. Should be one of {}".format(
+                    field_name, self.field_names
+                )
+            )
 
     def is_field_valid(self, field_name, value):
         return self.field_validation_error(field_name, value) is None
@@ -331,13 +328,15 @@ class Schema:
         :return:
         """
         field_names = [name.lower() for name in self.field_names]
-        return all([
-            'latitude' in field_names,
-            'longitude' in field_names,
-            'easting' in field_names,
-            'northing' in field_names,
-            'zone' in field_names
-        ])
+        return all(
+            [
+                "latitude" in field_names,
+                "longitude" in field_names,
+                "easting" in field_names,
+                "northing" in field_names,
+                "zone" in field_names,
+            ]
+        )
 
     def post_validate_lat_long_easting_northing(self, field_validation):
         """
@@ -348,7 +347,8 @@ class Schema:
         If northing and no latitude remove latitude error.
         If long and no easting remove easting error and zone error
         If easting and no longitude remove longitude error.
-        :param field_validation: We expect that the data has been validated at the field level and the argument should be
+        :param field_validation: We expect that the data has been
+        validated at the field level and the argument should be
         the result of this validation (see validate_row()).
         Expected format:
         {field_name: { 'value': value, 'error': None|msg}}
@@ -356,23 +356,33 @@ class Schema:
         """
         if not self.is_lat_long_easting_northing_schema():
             return field_validation
-        lat_validation = field_validation.get(self.get_field_by_mame('latitude', icase=True).name, {})
-        north_validation = field_validation.get(self.get_field_by_mame('northing', icase=True).name, {})
-        long_validation = field_validation.get(self.get_field_by_mame('longitude', icase=True).name, {})
-        east_validation = field_validation.get(self.get_field_by_mame('easting', icase=True).name, {})
-        zone_validation = field_validation.get(self.get_field_by_mame('zone', icase=True).name, {})
-        if lat_validation.get('value') and long_validation.get('value'):
-            if not north_validation.get('value'):
-                north_validation['error'] = None
-                zone_validation['error'] = None
-            if not east_validation.get('value'):
-                east_validation['error'] = None
-                zone_validation['error'] = None
-        if east_validation.get('value') and north_validation.get('value'):
-            if not lat_validation.get('value'):
-                lat_validation['error'] = None
-            if not long_validation.get('value'):
-                long_validation['error'] = None
+        lat_validation = field_validation.get(
+            self.get_field_by_mame("latitude", icase=True).name, {}
+        )
+        north_validation = field_validation.get(
+            self.get_field_by_mame("northing", icase=True).name, {}
+        )
+        long_validation = field_validation.get(
+            self.get_field_by_mame("longitude", icase=True).name, {}
+        )
+        east_validation = field_validation.get(
+            self.get_field_by_mame("easting", icase=True).name, {}
+        )
+        zone_validation = field_validation.get(
+            self.get_field_by_mame("zone", icase=True).name, {}
+        )
+        if lat_validation.get("value") and long_validation.get("value"):
+            if not north_validation.get("value"):
+                north_validation["error"] = None
+                zone_validation["error"] = None
+            if not east_validation.get("value"):
+                east_validation["error"] = None
+                zone_validation["error"] = None
+        if east_validation.get("value") and north_validation.get("value"):
+            if not lat_validation.get("value"):
+                lat_validation["error"] = None
+            if not long_validation.get("value"):
+                long_validation["error"] = None
         return field_validation
 
     def validate_row(self, row):
@@ -391,10 +401,7 @@ class Schema:
         # field validation
         for field_name, value in row.items():
             error = self.field_validation_error(field_name, value)
-            result[field_name] = {
-                'value': value,
-                'error': error
-            }
+            result[field_name] = {"value": value, "error": error}
         # Special case for lat/long easting/northing
         if self.is_lat_long_easting_northing_schema():
             result = self.post_validate_lat_long_easting_northing(result)
@@ -413,7 +420,7 @@ class Schema:
         validated_row = self.validate_row(row)
         errors = []
         for field, data in validated_row.items():
-            if data.get('error'):
+            if data.get("error"):
                 errors.append((field, data))
         return errors
 
@@ -430,9 +437,9 @@ class Schema:
 def create_return_template_workbook(return_type):
     wb = Workbook(write_only=True)
     for resource in return_type.resources:
-        schema = Schema(resource.get('schema'))
+        schema = Schema(resource.get("schema"))
         ws = wb.create_sheet()
-        ws.title = resource.get('title', resource.get('name'))
+        ws.title = resource.get("title", resource.get("name"))
         headers = []
         for header in schema.headers:
             cell = WriteOnlyCell(ws, value=header)

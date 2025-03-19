@@ -10,14 +10,15 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wl_applications', '0013_auto_20170224_1111'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='assessment',
-            name='assigned_assessor',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            name='assigned_assessor_id',
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(blank=True, null=True),
         ),
     ]

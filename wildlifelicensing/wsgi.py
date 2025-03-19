@@ -2,15 +2,22 @@
 WSGI config for ledger project.
 It exposes the WSGI callable as a module-level variable named ``application``.
 """
+
 import os
+
+# This import will automatically find the .env file and load the environment variables
+from decouple import config  # noqa
 from django.core.wsgi import get_wsgi_application
-from dj_static import Cling, MediaCling
 
-import confy
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-confy.read_environment_file(BASE_DIR+"/.env")
-os.environ.setdefault("BASE_DIR", BASE_DIR)
+path = os.path.dirname(os.path.abspath(__file__))
+# Remove trailing slash
+if path.endswith("/"):
+    path = path[:-1]
+project_folder_name = os.path.basename(path)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "wildlifelicensing.settings")
-#application = get_wsgi_application()
-application = Cling(MediaCling(get_wsgi_application()))
+os.environ.setdefault(
+    "BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"{project_folder_name}.settings")
+
+application = get_wsgi_application()

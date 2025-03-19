@@ -1,6 +1,5 @@
-from django.contrib import admin
 from django import forms
-
+from django.contrib import admin
 from reversion.admin import VersionAdmin
 
 from wildlifelicensing.apps.main.forms import BetterJSONField
@@ -17,5 +16,5 @@ class ReturnTypeAdminForm(forms.ModelForm):
 
 @admin.register(ReturnType)
 class ReturnTypeAdmin(VersionAdmin):
-    list_display = ('licence_type',)
+    list_display = ("licence_type",)
     form = ReturnTypeAdminForm

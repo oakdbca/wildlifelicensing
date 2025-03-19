@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 
 def migrate_comm_log_document(apps, schema_editor):
-    model = apps.get_model('wl_main', 'CommunicationsLogEntry')
+    model = apps.get_model("wl_main", "CommunicationsLogEntry")
     for entry in model.objects.all():
         if bool(entry.document):
             entry.documents.add(entry.document)
@@ -14,19 +14,21 @@ def migrate_comm_log_document(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('accounts', '0001_initial'),
-        ('wl_main', '0012_auto_20160824_1614'),
+        # ('accounts', '0001_initial'),
+        ("wl_main", "0012_auto_20160824_1614"),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='communicationslogentry',
-            name='documents',
-            field=models.ManyToManyField(blank=True, to='accounts.Document'),
-        ),
+        # m2m fields to no longer existing applications are recreated and the data is copied
+        # from the old table to the new one with SQL.
+        # migrations.AddField(
+        #     model_name='communicationslogentry',
+        #     name='documents',
+        #     field=models.ManyToManyField(blank=True, to='accounts.Document'),
+        # ),
         migrations.RunPython(migrate_comm_log_document),
         migrations.RemoveField(
-            model_name='communicationslogentry',
-            name='document',
+            model_name="communicationslogentry",
+            name="document",
         ),
     ]

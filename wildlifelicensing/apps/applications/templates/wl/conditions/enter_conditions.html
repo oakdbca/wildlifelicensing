@@ -21,7 +21,12 @@
         'js/logs'
     ],
     function (enterConditions, logs) {
-        enterConditions.init({{ application|jsonify }}, {{ assessments|jsonify }}, {{form_structure|jsonify}}, '{{ csrf_token }}');
+        enterConditions.init(
+            {{ application|jsonify }},
+            {{ assessments|jsonify }},
+            {{form_structure|jsonify}},
+            '{{ csrf_token }}'
+        );
 
         logs.initCommunicationLog({
             logListURL: "{% url 'wl_applications:log_list' application.id %}",
@@ -38,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ol class="breadcrumb wl-breadcrumbs">
-                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'wl_home' %}">Home</a></li>
                     <li><a href="{% url 'wl_dashboard:tables_applications_officer' %}">Applications</a></li>
                     <li><a href="{% url 'wl_applications:process' application.id %}">Process Application</a></li>
                     <li class="active">Enter Licence Conditions</li>
@@ -55,7 +60,7 @@
 {% block intro_subtitle %}
     <h4 class="inline">
         {{ application.licence_type.name }}
-    </h4> 
+    </h4>
 {% endblock %}
 
 {% block content %}
@@ -108,7 +113,7 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <label>Lodged on</label>
-                                        <p>{{ application.lodgement_date|date:'d/m/Y' }}</p>
+                                        <p>{{ application.lodgement_date }}</p>
                                     </div>
                                     <div class="col-md-7">
                                         <label>Status</label>
@@ -117,7 +122,7 @@
                                 </div>
                                 <label>Currently assigned to</label>
                                 <p>
-                                    {% if application.assigned_officer %} 
+                                    {% if application.assigned_officer %}
                                         {{ application.assigned_officer.first_name }} {{ application.assigned_officer.last_name }}
                                     {% else %}
                                         Unassigned
@@ -253,7 +258,7 @@
                         </div>
                         <div class="form-group">
                             <label>Condition Code</label>
-                            <input type="text" name="code" class="form-control" required></input>
+                            <input type="text" name="code" class="form-control" required maxlength="10"></input>
                          </div>
                         <div class="form-group">
                             <label>Condition Text</label>
@@ -263,7 +268,7 @@
                             <label>
                                 <input name="addToGeneralList" type="checkbox" />
                                 Add to general condition list
-                            </label> 
+                            </label>
                          </div>
                     </div>
                     <div class="modal-footer">

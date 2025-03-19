@@ -1,33 +1,64 @@
-from django.conf.urls import url
-from django.views.generic.base import TemplateView, RedirectView
+from django.urls import re_path
+from django.views.generic.base import RedirectView, TemplateView
 
-from wildlifelicensing.apps.main.views import ListProfilesView, CreateProfilesView, EditProfilesView, \
-    IdentificationView, EditAccountView, SearchCustomersView, LicenceRenewalPDFView, \
-    CommunicationsLogListView, AddCommunicationsLogEntryView, getPrivateFile, \
-    getLedgerIdentificationFile, getLedgerSeniorCardFile
+from wildlifelicensing.apps.main.views import (
+    AddCommunicationsLogEntryView,
+    CommunicationsLogListView,
+    CreateProfilesView,
+    EditProfilesView,
+    LicenceRenewalPDFView,
+    ListProfilesView,
+    SearchCustomersView,
+    getLedgerIdentificationFile,
+    getLedgerSeniorCardFile,
+    getPrivateFile,
+)
 
 urlpatterns = [
-    url(r'contact-us/$', TemplateView.as_view(template_name="wl/contact_us.html"), name='contact_us'),
-    url(r'further-information/$', RedirectView.as_view(url='https://www.dpaw.wa.gov.au/plants-and-animals/licences-and-authorities'),
-        name='further_information'),
-
-    url('^account/$', EditAccountView.as_view(), name='edit_account'),
-    url('^search_customers/$', SearchCustomersView.as_view(), name='search_customers'),
-
-    url('^profiles/$', ListProfilesView.as_view(), name='list_profiles'),
-    url('^profiles/create/$', CreateProfilesView.as_view(), name='create_profile'),
-    url('^profiles/edit/$', EditProfilesView.as_view(), name='edit_profile_prefix'),
-    url('^profiles/edit/([0-9]+)/$', EditProfilesView.as_view(), name='edit_profile'),
-
-    url('^identification/$', IdentificationView.as_view(), name='identification'),
-
-    url('^licence-renewal-pdf/([0-9]+)/$', LicenceRenewalPDFView.as_view(), name='licence_renewal_pdf'),
-
+    re_path(
+        r"contact-us/$",
+        TemplateView.as_view(template_name="wl/contact_us.html"),
+        name="contact_us",
+    ),
+    re_path(
+        r"further-information/$",
+        RedirectView.as_view(
+            url="https://www.dpaw.wa.gov.au/plants-and-animals/licences-and-authorities"
+        ),
+        name="further_information",
+    ),
+    re_path(
+        "^search_customers/$", SearchCustomersView.as_view(), name="search_customers"
+    ),
+    re_path("^profiles/$", ListProfilesView.as_view(), name="list_profiles"),
+    re_path("^profiles/create/$", CreateProfilesView.as_view(), name="create_profile"),
+    re_path("^profiles/edit/$", EditProfilesView.as_view(), name="edit_profile_prefix"),
+    re_path(
+        "^profiles/edit/([0-9]+)/$", EditProfilesView.as_view(), name="edit_profile"
+    ),
+    re_path(
+        "^licence-renewal-pdf/([0-9]+)/$",
+        LicenceRenewalPDFView.as_view(),
+        name="licence_renewal_pdf",
+    ),
     # general communications log
-    url('^add-log-entry/([0-9]+)/$', AddCommunicationsLogEntryView.as_view(), name='add_log_entry'),
-    url('^log-list/([0-9]+)/$', CommunicationsLogListView.as_view(), name='log_list'),
-
-    url(r'^private-media/', getPrivateFile, name='view_private_file'),
-    url(r'^ledger-private/identification/(?P<emailuser_id>\d+)', getLedgerIdentificationFile, name='view_ledger_identification_file'),
-    url(r'^ledger-private/senior-card/(?P<emailuser_id>\d+)', getLedgerSeniorCardFile, name='view_ledger_senior_card_file'),
+    re_path(
+        "^add-log-entry/([0-9]+)/$",
+        AddCommunicationsLogEntryView.as_view(),
+        name="add_log_entry",
+    ),
+    re_path(
+        "^log-list/([0-9]+)/$", CommunicationsLogListView.as_view(), name="log_list"
+    ),
+    re_path(r"^private-media/", getPrivateFile, name="view_private_file"),
+    re_path(
+        r"^ledger-private/identification/(?P<emailuser_id>\d+)",
+        getLedgerIdentificationFile,
+        name="view_ledger_identification_file",
+    ),
+    re_path(
+        r"^ledger-private/senior-card/(?P<emailuser_id>\d+)",
+        getLedgerSeniorCardFile,
+        name="view_ledger_senior_card_file",
+    ),
 ]

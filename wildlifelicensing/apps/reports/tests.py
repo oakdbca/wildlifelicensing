@@ -1,17 +1,17 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from wildlifelicensing.apps.main.tests import helpers
 
 
 class ReportsViewTestCase(helpers.BasePermissionViewTestCase):
-    view_url = reverse('wl_reports:reports')
+    view_url = reverse("wl_reports:reports")
 
     @property
     def permissions(self):
         return {
-            'get': {
-                'allowed': [self.officer],
-                'forbidden': [self.customer, self.assessor],
+            "get": {
+                "allowed": [self.officer],
+                "forbidden": [self.customer, self.assessor],
             },
         }
 

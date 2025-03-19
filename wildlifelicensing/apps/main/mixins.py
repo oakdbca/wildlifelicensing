@@ -1,9 +1,13 @@
-from __future__ import unicode_literals
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
 
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
-
-from wildlifelicensing.apps.main.helpers import is_customer, is_officer, is_assessor
+from wildlifelicensing.apps.main.helpers import (
+    is_assessor,
+    is_customer,
+    is_officer,
+    retrieve_email_user,
+    retrieve_group_members,
+)
 
 
 class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -12,15 +16,16 @@ class BaseAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
     If the user is authenticated it should throw a PermissionDenied (status 403), but if the user is not authenticated
     it should return to the login page.
     """
-    login_url = reverse_lazy('home')
+
+    login_url = reverse_lazy("home")
     permission_denied_message = "You don't have the permission to access this resource."
     raise_exception = True
 
     def handle_no_permission(self):
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             self.raise_exception = False
-        return super(BaseAccessMixin, self).handle_no_permission()
+        return super().handle_no_permission()
 
     def test_func(self):
         """
@@ -80,3 +85,25 @@ class OfficerOrAssessorRequiredMixin(BaseAccessMixin):
     def test_func(self):
         user = self.request.user
         return is_officer(user) or is_assessor(user)
+
+
+class MembersPropertiesMixin:
+    @property
+    def all_members(self):
+        all_members = []
+        all_members.extend(retrieve_group_members(group_object=self))
+        return all_members
+
+    @property
+    def filtered_members(self):
+        all_members = []
+        all_members.extend(retrieve_group_members(group_object=self))
+        emailuser = [retrieve_email_user(m) for m in all_members]
+        return [u for u in emailuser if u]
+
+    @property
+    def members_list(self):
+        all_members = []
+        all_members.extend(retrieve_group_members(group_object=self))
+        emailuser = [retrieve_email_user(m) for m in all_members]
+        return [u.email for u in emailuser if u]

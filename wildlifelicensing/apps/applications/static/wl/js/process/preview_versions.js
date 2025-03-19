@@ -183,7 +183,7 @@ define(['jQuery', 'handlebars.runtime', 'bootstrap', 'js/handlebars_helpers', 'j
             }
 
             childrenAnchorPoint.append(_layoutItem(child, false, childDataCurrent, childDataPrevious));
-            
+
             childrenAnchorPoint.append(repeatItemsAnchorPoint);
 
             if((itemDataCurrent !== undefined && child.name in itemDataCurrent && itemDataCurrent[child.name].length > 1) ||

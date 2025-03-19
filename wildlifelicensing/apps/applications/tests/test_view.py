@@ -1,16 +1,20 @@
-import os
-
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.client import Client
+from django.urls import reverse
 
-from wildlifelicensing.apps.main.tests.helpers import SocialClient, get_or_create_default_customer, \
-    get_or_create_default_officer, create_licence, create_random_customer, get_or_create_default_assessor
-from wildlifelicensing.apps.applications.tests.helpers import create_and_lodge_application
-from ledger.payments import pdf
+from wildlifelicensing.apps.applications.tests.helpers import (
+    create_and_lodge_application,
+)
+from wildlifelicensing.apps.main.tests.helpers import (
+    create_random_customer,
+    get_or_create_default_assessor,
+    get_or_create_default_customer,
+    get_or_create_default_officer,
+)
 
 
 class ViewApplicationTestCase(TestCase):
-    fixtures = ['licences.json', 'countries.json', 'catalogue.json', 'partner.json']
+    fixtures = ["licences.json", "countries.json", "catalogue.json", "partner.json"]
 
     def setUp(self):
         self.customer = get_or_create_default_customer(include_default_profile=True)
@@ -19,7 +23,7 @@ class ViewApplicationTestCase(TestCase):
         self.not_allowed_customer = create_random_customer()
         self.assertNotEqual(self.not_allowed_customer, self.customer)
 
-        self.client = SocialClient()
+        self.client = Client()
         self.application = create_and_lodge_application(self.customer)
 
     def tearDown(self):
@@ -31,16 +35,19 @@ class ViewApplicationTestCase(TestCase):
         """
         self.client.login(self.officer.email)
 
-        response = self.client.get(reverse('wl_applications:view_application_pdf', args=(self.application.pk,)))
+        response = self.client.get(
+            reverse("wl_applications:view_application_pdf", args=(self.application.pk,))
+        )
 
-        self.assertEquals(response['content-type'], 'application/pdf')
-
+        self.assertEqual(response["content-type"], "application/pdf")
 
     def test_view_application_pdf_permissions(self):
         """
         Testing that only officers, assessors and customer that owns the application can view the application pdf
         """
-        url = reverse('wl_applications:view_application_pdf', args=(self.application.pk,))
+        url = reverse(
+            "wl_applications:view_application_pdf", args=(self.application.pk,)
+        )
         allowed = [self.officer, self.assessor, self.customer]
         forbidden = [self.not_allowed_customer]
 

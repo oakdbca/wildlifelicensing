@@ -18,20 +18,22 @@ def update_applicant(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wl_applications', '0005_assessment_date_last_reminded'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='application',
-            name='applicant',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='applicant', to=settings.AUTH_USER_MODEL),
+            name='applicant_id',
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='applicant', to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='application',
-            name='applicant_profile',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile'),
+            name='applicant_profile_id',
+            # field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Profile'),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='application',

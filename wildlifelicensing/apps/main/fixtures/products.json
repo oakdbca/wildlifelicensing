@@ -1,0 +1,115 @@
+[
+  {
+    "model": "wl_main.product",
+    "pk": 1,
+    "fields": {
+      "name": "Fauna taking (relocation) licence -",
+      "partner_sku": "121215",
+      "price": "0.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 2,
+    "fields": {
+      "name": "Fauna taking (relocation) licence - Standard 15",
+      "partner_sku": "121214",
+      "price": "80.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 3,
+    "fields": {
+      "name": "Regulation 15 (V2)",
+      "partner_sku": "121213",
+      "price": "0.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 4,
+    "fields": { "name": "regulation-17", "partner_sku": "12", "price": "0.00" }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 5,
+    "fields": {
+      "name": "Fauna taking (scientific or other purposes) licence - Standard 17",
+      "partner_sku": "1234",
+      "price": "80.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 6,
+    "fields": {
+      "name": "Regulation 13 - Special",
+      "partner_sku": "12434324",
+      "price": "300.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 7,
+    "fields": {
+      "name": "Regulation 13 - Advanced",
+      "partner_sku": "1414114",
+      "price": "200.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 8,
+    "fields": {
+      "name": "Regulation 13 - Basic",
+      "partner_sku": "1212",
+      "price": "100.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 9,
+    "fields": {
+      "name": "Regulation 5",
+      "partner_sku": "13131313",
+      "price": "0.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 10,
+    "fields": {
+      "name": "Regulation 4",
+      "partner_sku": "5656556",
+      "price": "0.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 11,
+    "fields": {
+      "name": "Regulation 17(1)",
+      "partner_sku": "14141416",
+      "price": "0.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 12,
+    "fields": {
+      "name": "Regulation 15",
+      "partner_sku": "121212",
+      "price": "0.00"
+    }
+  },
+  {
+    "model": "wl_main.product",
+    "pk": 13,
+    "fields": {
+      "name": "Fauna taking (scientific or other purposes) licence -",
+      "partner_sku": "SKU",
+      "price": "0.00"
+    }
+  }
+]

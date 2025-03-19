@@ -1,39 +1,47 @@
-from __future__ import unicode_literals
-
+import copy
 import datetime
 import json
 import logging
-import copy
 
 from dateutil.parser import parse as date_parse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.db.models.query import EmptyQuerySet
 from django.shortcuts import redirect
+from django.templatetags.static import static
+from django.urls import reverse
+from django.utils.http import urlencode
 from django.views.generic import TemplateView
 from django_datatables_view.base_datatable_view import BaseDatatableView
-from django.utils.http import urlencode
 
-from ledger.licence.models import LicenceType
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.dashboard.forms import LoginForm
-from wildlifelicensing.apps.main.helpers import is_officer, is_assessor, render_user_name
-
-from wildlifelicensing.apps.payments.utils import get_application_payment_status, PAYMENT_STATUS_AWAITING, \
-    PAYMENT_STATUSES
+from wildlifelicensing.apps.main.helpers import (
+    is_assessor,
+    is_officer,
+    render_user_name,
+)
+from wildlifelicensing.apps.main.models import LicenceType
+from wildlifelicensing.apps.payments.utils import (
+    PAYMENT_STATUS_AWAITING,
+    PAYMENT_STATUSES,
+    get_application_payment_status,
+)
 
 logger = logging.getLogger(__name__)
 
 
 def build_url(base, query):
-    return base + '?' + urlencode(query)
+    return base + "?" + urlencode(query)
 
 
 def get_processing_statuses_but_draft():
-    return [s for s in Application.PROCESSING_STATUS_CHOICES if s[0] != 'draft' and s[0] != 'temp']
+    return [
+        s
+        for s in Application.PROCESSING_STATUS_CHOICES
+        if s[0] != "draft" and s[0] != "temp"
+    ]
 
 
 # render date in dd/mm/yyyy format
@@ -41,124 +49,138 @@ def render_date(date):
     if isinstance(date, datetime.datetime) or isinstance(date, datetime.date):
         return date.strftime("%d/%m/%Y")
     if not date:
-        return ''
-    return 'not a valid date object'
+        return ""
+    return "not a valid date object"
 
 
 def render_lodgement_number(application):
-    if application is not None and application.lodgement_number and application.lodgement_sequence:
-        return '%s-%d' % (application.lodgement_number, application.lodgement_sequence)
+    if (
+        application is not None
+        and application.lodgement_number
+        and application.lodgement_sequence
+    ):
+        return "%s-%d" % (application.lodgement_number, application.lodgement_sequence)
     else:
-        return ''
+        return ""
+
 
 def render_application_document(application):
     if application is not None:
-        return '<a href="{0}" target="_blank">View <img height="20" src="{1}"></img></a>'.format(
-            reverse('wl_applications:view_application_pdf', args=(application.pk,)), static('wl/img/pdf.png'))
+        return '<a href="{}" target="_blank">View <img height="20" src="{}"></img></a>'.format(
+            reverse("wl_applications:view_application_pdf", args=(application.pk,)),
+            static("wl/img/pdf.png"),
+        )
     else:
-        return ''
+        return ""
+
 
 def render_licence_number(licence):
     if licence is not None and licence.licence_number and licence.licence_sequence:
-        return '%s-%d' % (licence.licence_number, licence.licence_sequence)
+        return "%s-%d" % (licence.licence_number, licence.licence_sequence)
     else:
-        return ''
+        return ""
 
 
 def render_licence_document(licence):
     if licence is not None and licence.licence_document is not None:
-        return '<a href="{0}" target="_blank">View PDF</a><img height="20" src="{1}"></img>'.format(
-            licence.licence_document.file.url, static('wl/img/pdf.png'))
+        return '<a href="{}" target="_blank">View PDF</a><img height="20" src="{}"></img>'.format(
+            licence.licence_document.file.url, static("wl/img/pdf.png")
+        )
     else:
-        return ''
+        return ""
 
 
 def render_download_return_template(ret):
-    url = reverse('wl_returns:download_return_template', args=[ret.return_type.pk])
-    return '<a href="{}">Download (XLSX)</a>'.format(url)
+    url = reverse("wl_returns:download_return_template", args=[ret.return_type.pk])
+    return f'<a href="{url}">Download (XLSX)</a>'
 
 
 def render_payment(application, redirect_url):
     status = get_application_payment_status(application)
-    result = '{}'.format(PAYMENT_STATUSES[status])
+    result = f"{PAYMENT_STATUSES[status]}"
     if status == PAYMENT_STATUS_AWAITING:
-        url = '{}?redirect_url={}'.format(
-            reverse('wl_payments:manual_payment', args=[application.id]),
-            redirect_url
+        url = "{}?redirect_url={}".format(
+            reverse("wl_payments:manual_payment", args=[application.id]), redirect_url
         )
-        result += ' <a href="{}">Enter payment</a>'.format(url)
+        result += f' <a href="{url}">Enter payment</a>'
     return result
 
 
 class DashBoardRoutingView(TemplateView):
-    template_name = 'wl/index.html'
+    template_name = "wl/index.html"
 
     def get(self, *args, **kwargs):
-        if self.request.user.is_authenticated():
-            if (not self.request.user.first_name) or (not self.request.user.last_name) or (not self.request.user.dob):
-                messages.info(self.request, 'Welcome! As this is your first time using the website, please enter your full name and date of birth.')
-                return redirect('wl_main:edit_account')
+        if self.request.user.is_authenticated:
+            if (
+                (not self.request.user.first_name)
+                or (not self.request.user.last_name)
+                or (not self.request.user.dob)
+            ):
+                messages.info(
+                    self.request,
+                    "Welcome! As this is your first time using the website, "
+                    "please enter your full name and date of birth.",
+                )
+                return redirect("wl_main:edit_account")
 
             if is_officer(self.request.user):
-                return redirect('wl_dashboard:tree_officer')
+                return redirect("wl_dashboard:tree_officer")
             elif is_assessor(self.request.user):
-                return redirect('wl_dashboard:tables_assessor')
+                return redirect("wl_dashboard:tables_assessor")
 
-            return redirect('wl_dashboard:tables_customer')
+            return redirect("wl_dashboard:tables_customer")
         else:
-            kwargs['form'] = LoginForm
-            return super(DashBoardRoutingView, self).get(*args, **kwargs)
+            kwargs["form"] = LoginForm
+            return super().get(*args, **kwargs)
 
 
 class DashboardTreeViewBase(TemplateView):
-    template_name = 'wl/dash_tree.html'
+    template_name = "wl/dash_tree.html"
 
     @staticmethod
     def _create_node(title, href=None, count=None):
         node_template = {
-            'text': 'Title',
-            'href': '#',
-            'tags': [],
-            'nodes': None,
-            'state': {
-                'expanded': True
-            }
+            "text": "Title",
+            "href": "#",
+            "tags": [],
+            "nodes": None,
+            "state": {"expanded": True},
         }
         result = {}
         result.update(node_template)
-        result['text'] = str(title)
+        result["text"] = str(title)
         if href is not None:
-            result['href'] = str(href)
+            result["href"] = str(href)
         if count is not None:
-            result['tags'].append(str(count))
+            result["tags"].append(str(count))
 
         return result
 
     @staticmethod
     def _add_node(parent, child):
-        if 'nodes' not in parent or type(parent['nodes']) != list:
-            parent['nodes'] = [child]
+        if "nodes" not in parent or parent["nodes"] is not list:
+            parent["nodes"] = [child]
         else:
-            parent['nodes'].append(child)
+            parent["nodes"].append(child)
         return parent
 
     def _build_tree_nodes(self):
         """
         Subclass should implement the nodes with the help of _create_node and _build_node
         """
-        parent_node = self._create_node('Parent node', href='#', count=2)
-        child1 = self._create_node('Child#1', href='#', count=1)
+        parent_node = self._create_node("Parent node", href="#", count=2)
+        child1 = self._create_node("Child#1", href="#", count=1)
         self._add_node(parent_node, child1)
-        child2 = self._create_node('Child#2', href='#', count=1)
+        child2 = self._create_node("Child#2", href="#", count=1)
         self._add_node(parent_node, child2)
         return [parent_node]
 
     def get_context_data(self, **kwargs):
-        if 'dataJSON' not in kwargs:
-            kwargs['dataJSON'] = json.dumps(self._build_tree_nodes())
-        if 'title' not in kwargs and hasattr(self, 'title'):
-            kwargs['title'] = self.title
-        return super(DashboardTreeViewBase, self).get_context_data(**kwargs)
+        if "dataJSON" not in kwargs:
+            kwargs["dataJSON"] = json.dumps(self._build_tree_nodes())
+        if "title" not in kwargs and hasattr(self, "title"):
+            kwargs["title"] = self.title
+        return super().get_context_data(**kwargs)
 
 
 class TablesBaseView(TemplateView):
@@ -173,31 +195,28 @@ class TablesBaseView(TemplateView):
     Subclass should override the @properties corresponding to the tables they want to show.
     For fine grain implementation (e.g add more data) see the get_<table>_context_data.
     """
-    template_name = 'wl/dash_tables.html'
+
+    template_name = "wl/dash_tables.html"
 
     default_table_config = {
         # global dataTable options
-        'tableOptions': {
-            'pageLength': 10,
-            'order': [[0, 'asc']],
-            'search': {
-                'search': ''
-            }
+        "tableOptions": {
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "search": {"search": ""},
         },
         # dataTable column definitions
-        'columnDefinitions': [],
+        "columnDefinitions": [],
         # default top level filters
-        'filters': {
-            'licence_type': {
-                'values': [],
+        "filters": {
+            "licence_type": {
+                "values": [],
             },
-            'status': {
-                'values': [],
-            }
+            "status": {
+                "values": [],
+            },
         },
-        'ajax': {
-            'url': ''
-        }
+        "ajax": {"url": ""},
     }
 
     #########################
@@ -244,7 +263,7 @@ class TablesBaseView(TemplateView):
             self.set_filter(result, name, values)
 
         # apply session if no query parameters
-        request = self.request if hasattr(self, 'request') else None
+        request = self.request if hasattr(self, "request") else None
         if request and not request.GET:
             session_data = self.get_applications_session_data
             if session_data:
@@ -294,7 +313,7 @@ class TablesBaseView(TemplateView):
             self.set_filter(result, name, values)
 
         # apply session if no query parameters
-        request = self.request if hasattr(self, 'request') else None
+        request = self.request if hasattr(self, "request") else None
         if request and not request.GET:
             session_data = self.get_licences_session_data
             if session_data:
@@ -344,7 +363,7 @@ class TablesBaseView(TemplateView):
             self.set_filter(result, name, values)
 
         # apply session if no query parameters
-        request = self.request if hasattr(self, 'request') else None
+        request = self.request if hasattr(self, "request") else None
         if request and not request.GET:
             session_data = self.get_returns_session_data
             if session_data:
@@ -353,57 +372,55 @@ class TablesBaseView(TemplateView):
 
     @staticmethod
     def set_data_url(table_config, url):
-        table_config['ajax'].update({
-            'url': url
-        })
+        table_config["ajax"].update({"url": url})
         return table_config
 
     @staticmethod
     def get_licence_types_values():
-        return [('all', 'All')] + [(lt.pk, lt.display_name) for lt in LicenceType.objects.all()]
+        return [("all", "All")] + [
+            (lt.pk, lt.display_name) for lt in LicenceType.objects.all()
+        ]
 
     @staticmethod
     def set_licence_type_filter(table_config):
-        return TablesBaseView.set_filter(table_config, 'licence_type', TablesBaseView.get_licence_types_values)
+        return TablesBaseView.set_filter(
+            table_config, "licence_type", TablesBaseView.get_licence_types_values
+        )
 
     @staticmethod
     def set_columns_definition(table_config, columns):
         if not isinstance(columns, list):
             columns = list(columns)
-        table_config.update({
-            'columnDefinitions': columns
-        })
+        table_config.update({"columnDefinitions": columns})
         return table_config
 
     @staticmethod
     def update_table_options(table_config, options):
-        table_config['tableOptions'].update(options)
+        table_config["tableOptions"].update(options)
         return table_config
 
     @staticmethod
     def set_table_options(table_config, table_options):
-        table_config.update({
-            'tableOptions': table_options
-        })
+        table_config.update({"tableOptions": table_options})
         return table_config
 
     @staticmethod
     def set_filter(table_config, name, values):
-        table_config['filters'].update({
-            name: {
-                'values': values,
+        table_config["filters"].update(
+            {
+                name: {
+                    "values": values,
+                }
             }
-        })
+        )
         return table_config
 
     @staticmethod
     def set_filter_selected_value(table_config, filter_name, filter_value):
-        if filter_name in table_config.get('filters', {}):
-            table_config['filters'][filter_name]['selected'] = filter_value
+        if filter_name in table_config.get("filters", {}):
+            table_config["filters"][filter_name]["selected"] = filter_value
         else:
-            table_config['filters'][filter_name] = {
-                'selected': filter_value
-            }
+            table_config["filters"][filter_name] = {"selected": filter_value}
         return table_config
 
     @staticmethod
@@ -423,19 +440,17 @@ class TablesBaseView(TemplateView):
         """
         # dataTable options
         dt_options = {}
-        if session_data.get('pageLength'):
-            dt_options['pageLength'] = session_data.get('pageLength')
-        if session_data.get('order'):
-            dt_options['order'] = session_data.get('order')
-        if session_data.get('search'):
-            dt_options['search'] = {
-                'search': session_data.get('search')
-            }
+        if session_data.get("pageLength"):
+            dt_options["pageLength"] = session_data.get("pageLength")
+        if session_data.get("order"):
+            dt_options["order"] = session_data.get("order")
+        if session_data.get("search"):
+            dt_options["search"] = {"search": session_data.get("search")}
         TablesBaseView.update_table_options(table_config, dt_options)
 
         # filters
-        if session_data.get('filters'):
-            for k, v in session_data.get('filters').items():
+        if session_data.get("filters"):
+            for k, v in session_data.get("filters").items():
                 TablesBaseView.set_filter_selected_value(table_config, k, v)
         return table_config
 
@@ -449,15 +464,15 @@ class TablesBaseView(TemplateView):
         return self.request.GET.dict()
 
     def get_context_data(self, **kwargs):
-        if 'dataJSON' not in kwargs:
+        if "dataJSON" not in kwargs:
             data = {
-                'applications': self.get_applications_context_data() or None,
-                'licences': self.get_licences_context_data() or None,
-                'returns': self.get_returns_context_data() or None,
-                'query': self.get_query_params() or None
+                "applications": self.get_applications_context_data() or None,
+                "licences": self.get_licences_context_data() or None,
+                "returns": self.get_returns_context_data() or None,
+                "query": self.get_query_params() or None,
             }
-            kwargs['dataJSON'] = json.dumps(data)
-        return super(TablesBaseView, self).get_context_data(**kwargs)
+            kwargs["dataJSON"] = json.dumps(data)
+        return super().get_context_data(**kwargs)
 
 
 def build_field_query(fields_to_search, search):
@@ -469,7 +484,7 @@ def build_field_query(fields_to_search, search):
     """
     query = Q()
     for field in fields_to_search:
-        query |= Q(**{"{0}__icontains".format(field): search})
+        query |= Q(**{f"{field}__icontains": search})
     return query
 
 
@@ -487,29 +502,31 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
     }
     17/10/2016: Added support for saving column_order/search/page_length in session
     """
+
     model = None
-    columns = [
-        'licence_type'
-    ]
+    columns = ["licence_type"]
     order_columns = [
-        ['licence_type.short_name', 'licence_type.name'],
+        ["licence_type.short_name", "licence_type.name"],
     ]
     columns_helpers = {
         # a global render and search fot the licence_type column.
         # Note: this has to be overridden if the model hasn't the licence_type related field.
-        'licence_type': {
-            'render': lambda self, instance: instance.licence_type.display_name,
-            'search': lambda self, search: build_field_query(
-                ['licence_type__short_name', 'licence_type__name'], search)
+        "licence_type": {
+            "render": lambda self, instance: instance.licence_type.display_name,
+            "search": lambda self, search: build_field_query(
+                ["licence_type__short_name", "licence_type__name"], search
+            ),
         }
     }
 
-    SESSION_SAVE_SETTINGS = True  # Set to True if you want to save order/search in the session
+    SESSION_SAVE_SETTINGS = (
+        True  # Set to True if you want to save order/search in the session
+    )
     SESSION_KEY = None  # if you don't specify a session_key one will be generated based on the class name
 
     @classmethod
     def get_session_key(cls):
-        result = cls.SESSION_KEY or 'dt_{}'.format(cls.__name__)
+        result = cls.SESSION_KEY or f"dt_{cls.__name__}"
         return result
 
     @classmethod
@@ -521,42 +538,51 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
 
     @classmethod
     def get_session_order(cls, request, default=None):
-        return cls.get_session_data(request).get('order', default)
+        return cls.get_session_data(request).get("order", default)
 
     @classmethod
-    def get_session_search_term(cls, request, default=''):
-        return cls.get_session_data(request).get('search', default)
+    def get_session_search_term(cls, request, default=""):
+        return cls.get_session_data(request).get("search", default)
 
     @classmethod
     def get_session_page_length(cls, request, default=10):
-        return cls.get_session_data(request).get('pageLength', default)
+        return cls.get_session_data(request).get("pageLength", default)
 
     @classmethod
     def get_session_filters(cls, request):
-        return cls.get_session_data(request).get('filters', {})
+        return cls.get_session_data(request).get("filters", {})
 
     def _build_global_search_query(self, search):
         # a bit of a hack for searching for date with a '/', ex 27/05/2016
         # The right way to search for a date is to use the format YYYY-MM-DD.
         # To search with dd/mm/yyyy we use the dateutil parser to infer a date
-        if search and search.find('/') >= 0:
+        if search and search.find("/") >= 0:
             try:
                 search = str(date_parse(search, dayfirst=True).date())
-            except:
+            except ValueError:
                 pass
         query = Q()
-        col_data = super(DataTableBaseView, self).extract_datatables_column_data()
+        col_data = super().extract_datatables_column_data()
         for col_no, col in enumerate(col_data):
-            if col['searchable']:
+            if col["searchable"]:
                 col_name = self.columns[col_no]
                 # special cases
-                if col_name in self.columns_helpers and 'search' in self.columns_helpers[col_name]:
-                    func = self.columns_helpers[col_name]['search']
+                if (
+                    col_name in self.columns_helpers
+                    and "search" in self.columns_helpers[col_name]
+                ):
+                    func = self.columns_helpers[col_name]["search"]
                     if callable(func):
                         q = func(self, search)
                         query |= q
                 else:
-                    query |= Q(**{'{0}__icontains'.format(self.columns[col_no].replace('.', '__')): search})
+                    query |= Q(
+                        **{
+                            "{}__icontains".format(
+                                self.columns[col_no].replace(".", "__")
+                            ): search
+                        }
+                    )
         return query
 
     def _get_filters(self):
@@ -576,11 +602,13 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
         result = {}
         querydict = self._querydict
         counter = 0
-        filter_key = 'filters[{0}][name]'.format(counter)
+        filter_key = f"filters[{counter}][name]"
         while filter_key in querydict:
-            result[querydict.get(filter_key)] = querydict.get('filters[{0}][value]'.format(counter))
+            result[querydict.get(filter_key)] = querydict.get(
+                f"filters[{counter}][value]"
+            )
             counter += 1
-            filter_key = 'filters[{0}][name]'.format(counter)
+            filter_key = f"filters[{counter}][name]"
         return result
 
     def _get_order_config_array(self):
@@ -589,7 +617,8 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
         in session. See https://datatables.net/reference/option/order
         Example:
         Received params:
-        (u'order[0][column]', u'4'), (u'order[0][dir]', u'desc'), (u'order[1][column]', u'0'), (u'order[1][dir]', u'desc')
+        (u'order[0][column]', u'4'), (u'order[0][dir]', u'desc'), (u'order[1][column]', u'0'),
+        (u'order[1][dir]', u'desc')
         Returned array:
         [[4, 'desc'], [0, 'desc']]
         :return:
@@ -597,31 +626,30 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
         result = []
         querydict = self._querydict
         counter = 0
-        order_col_number_key = 'order[{0}][column]'.format(counter)
-        order_direction_key = 'order[{0}][dir]'.format(counter)
+        order_col_number_key = f"order[{counter}][column]"
+        order_direction_key = f"order[{counter}][dir]"
         while order_col_number_key in querydict and order_direction_key in querydict:
-            result.append([
-                int(querydict[order_col_number_key]),
-                querydict[order_direction_key]
-            ])
+            result.append(
+                [int(querydict[order_col_number_key]), querydict[order_direction_key]]
+            )
             counter += 1
-            order_col_number_key = 'order[{0}][column]'.format(counter)
-            order_direction_key = 'order[{0}][dir]'.format(counter)
+            order_col_number_key = f"order[{counter}][column]"
+            order_direction_key = f"order[{counter}][dir]"
         return result
 
     def _get_search_value(self):
         # return the search value parameter
-        return self._querydict.get('search[value]')
+        return self._querydict.get("search[value]")
 
     def _get_page_length(self):
-        return int(self._querydict.get('length', 10))
+        return int(self._querydict.get("length", 10))
 
     def save_session_data(self):
         data = {
-            'order': self._get_order_config_array(),
-            'search': self._get_search_value(),
-            'pageLength': self._get_page_length(),
-            'filters': self._get_filters()
+            "order": self._get_order_config_array(),
+            "search": self._get_search_value(),
+            "pageLength": self._get_page_length(),
+            "filters": self._get_filters(),
         }
         self.request.session[self.get_session_key()] = data
 
@@ -632,7 +660,7 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
         :param kwargs:
         :return:
         """
-        result = super(DataTableBaseView, self).get_context_data(*args, **kwargs)
+        result = super().get_context_data(*args, **kwargs)
         try:
             if self.SESSION_SAVE_SETTINGS:
                 self.save_session_data()
@@ -655,26 +683,26 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
         for filter_name, filter_value in filters.items():
             # look for a filter_<filter_name> method and call it with the filter value
             # the method must return a Q instance, if it returns None or anything else it will be ignored
-            filter_method = getattr(self, 'filter_' + filter_name.lower(), None)
+            filter_method = getattr(self, "filter_" + filter_name.lower(), None)
             if callable(filter_method):
                 q_filter = filter_method(filter_value)
                 if isinstance(q_filter, Q):
                     query &= q_filter
 
-        search = self.request.GET.get('search[value]', None)
+        search = self.request.GET.get("search[value]", None)
         if search:
             query &= self._build_global_search_query(search)
         return qs.filter(query)
 
     def render_column(self, instance, column):
-        if column in self.columns_helpers and 'render' in self.columns_helpers[column]:
-            func = self.columns_helpers[column]['render']
+        if column in self.columns_helpers and "render" in self.columns_helpers[column]:
+            func = self.columns_helpers[column]["render"]
             if callable(func):
                 return func(self, instance)
             else:
-                return 'render is not a function'
+                return "render is not a function"
         else:
-            result = super(DataTableBaseView, self).render_column(instance, column)
+            result = super().render_column(instance, column)
         return result
 
     def get_initial_queryset(self):
@@ -686,43 +714,49 @@ class DataTableBaseView(LoginRequiredMixin, BaseDatatableView):
 
 class DataTableApplicationBaseView(DataTableBaseView):
     model = Application
-    columns = [
-        'licence_type',
-        'applicant',
-        'applicant_profile',
-        'processing_status'
-    ]
+    columns = ["licence_type", "applicant", "applicant_profile", "processing_status"]
     order_columns = [
-        ['licence_type.short_name', 'licence_type.name'],
-        'applicant',
-        'applicant_profile',
-        'processing_status'
+        ["licence_type.short_name", "licence_type.name"],
+        "applicant",
+        "applicant_profile",
+        "processing_status",
     ]
 
-    columns_helpers = dict(DataTableBaseView.columns_helpers.items(), **{
-        'applicant': {
-            'render': lambda self, instance: render_user_name(instance.applicant, first_name_first=False),
-            'search': lambda self, search: build_field_query(
-                ['applicant_profile__user__last_name', 'applicant_profile__user__first_name'], search)
+    columns_helpers = dict(
+        DataTableBaseView.columns_helpers.items(),
+        **{
+            "applicant": {
+                "render": lambda self, instance: render_user_name(
+                    instance.applicant, first_name_first=False
+                ),
+                "search": lambda self, search: build_field_query(
+                    [
+                        "applicant_profile__user__last_name",
+                        "applicant_profile__user__first_name",
+                    ],
+                    search,
+                ),
+            },
+            "applicant_profile": {
+                "render": lambda self, instance: f"{instance.applicant_profile}",
+                "search": lambda self, search: build_field_query(
+                    ["applicant_profile__email", "applicant_profile__name"], search
+                ),
+            },
         },
-        'applicant_profile': {
-            'render': lambda self, instance: '{}'.format(instance.applicant_profile),
-            'search': lambda self, search: build_field_query(
-                ['applicant_profile__email', 'applicant_profile__name'], search)
-        },
-    })
+    )
 
     @staticmethod
     def filter_status(value):
-        return Q(processing_status=value) if value.lower() != 'all' else None
+        return Q(processing_status=value) if value.lower() != "all" else None
 
     @staticmethod
     def filter_assignee(value):
-        return Q(assigned_officer__pk=value) if value.lower() != 'all' else None
+        return Q(assigned_officer__pk=value) if value.lower() != "all" else None
 
     @staticmethod
     def filter_licence_type(value):
-        return Q(licence_type__pk=value) if value.lower() != 'all' else None
+        return Q(licence_type__pk=value) if value.lower() != "all" else None
 
     def get_initial_queryset(self):
-        return self.model.objects.all().exclude(processing_status='temp')
+        return self.model.objects.all().exclude(processing_status="temp")

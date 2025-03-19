@@ -1,7 +1,7 @@
 {% extends 'wl/emails/base_email.txt' %}
 {% block content %}
     {% if id_request.application.proxy_applicant %}
-        The Wildlife Licensing application you made on behalf of {{ id_request.application.applicant_profile.user.get_full_name }} 
+        The Wildlife Licensing application you made on behalf of {{ id_request.application.applicant_profile.user.get_full_name }}
         has been reviewed and requires an amendment before approval.
     {% else %}
         Your Wildlife Licensing application has been reviewed and requires an amendment before approval.

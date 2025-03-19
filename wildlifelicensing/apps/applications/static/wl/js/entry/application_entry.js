@@ -157,7 +157,7 @@ define(['jQuery', 'handlebars.runtime', 'parsley', 'bootstrap', 'bootstrap-datet
         if(item.type === 'species') {
             var species_type_arg = '';
             if(item.speciesType !== undefined) {
-                species_type_arg = '&type=' + item.speciesType; 
+                species_type_arg = '&type=' + item.speciesType;
             }
 
             // initialise species typeahead

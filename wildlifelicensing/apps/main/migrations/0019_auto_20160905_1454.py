@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='communicationslogentry',
-            name='staff',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='staff', to=settings.AUTH_USER_MODEL),
+            name='staff_id',
+            # field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='staff', to=settings.AUTH_USER_MODEL),
+            field=models.IntegerField(null=True),
         ),
     ]

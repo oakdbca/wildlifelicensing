@@ -7,7 +7,7 @@
 	"workspaceFolder": "/data/data/projects/wildlifelicensing",
 	"mounts": ["type=bind,source=/data/,target=/data/",
 	           "type=bind,source=/data/data/containerhome/,target=/home/container/"
-	          ],	
+	          ],
 	"appPort": [ "7005:8080","9041:9041","9042:9042","9043:9043","9044:9044","9045:9045","9046:9046","9047:9047","9048:9048","9049:9049" ],
 	"runArgs": ["--env-file","${localEnv:HOME}/vscode-env/wildlifelicensing.env",
 		   "--hostname","wildlifelicensing-dev"

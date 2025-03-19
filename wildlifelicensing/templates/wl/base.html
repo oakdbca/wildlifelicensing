@@ -52,7 +52,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="{% url 'home' %}"><div style="inline"><img src="{% static 'wl/img/dpaw_small.png' %}">Home</div></a>
+                            <a class="navbar-brand" href="{% url 'wl_home' %}"><div style="inline"><img src="{% static 'wl/img/dpaw_small.png' %}">Home</div></a>
                         </div>
                         <div id="navbar" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav">
@@ -73,7 +73,7 @@
                                 {% endblock %}
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                {% if request.user.is_authenticated %}  
+                                {% if request.user.is_authenticated %}
                                     <li>
                                         <a>
                                         Welcome
@@ -95,17 +95,22 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             {% if request.user|is_customer %}
-                                                <li><a href="{% url 'wl_main:edit_account' %}">Manage Account</a></li>
+                                                <li><a href="/ledger-ui/accounts">Manage Account</a></li>
                                                 <li><a href="{% url 'wl_main:list_profiles' %}">Manage Profiles</a></li>
                                                 <li><a href="{% url 'wl_main:identification' %}">Manage ID</a></li>
                                                 <li role="separator" class="divider"></li>
                                             {% endif %}
-                                            {% if request.user.is_staff %}
+                                            {% if request.user|is_officer %}
                                                 <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                                                <li><a href="{% url 'dashboard:index' %}">Oscar Dashboard</a></li>
                                                 <li role="separator" class="divider"></li>
                                             {% endif %}
-                                            <li><a href="{% url 'accounts:logout' %}?next=/">Logout</a></li>
+                                            {% if request.user|is_officer %}
+                                                <li><a href="{{ LEDGER_UI_URL }}/reports?system_id={{ PAYMENT_SYSTEM_PREFIX }} ">Financial Reports</a></li>
+                                                <li><a href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/payment-totals?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Payment Totals</a></li>
+                                                <li><a href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/failed-transactions?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Failed Refunds {% if ledger_totals.total_failed > 0 %}<span class="badge bg-danger">{{ ledger_totals.total_failed }}</span>{% endif %}</li>
+                                                <li role="separator" class="divider"></li>
+                                            {% endif %}
+                                            <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
                                         </ul>
                                     </li>
                                 {% endif %}

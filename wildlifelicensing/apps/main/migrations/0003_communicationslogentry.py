@@ -10,8 +10,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        # ('accounts', '0001_initial'),
+        # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wl_main', '0002_fixtures'),
     ]
 
@@ -26,9 +26,12 @@ class Migration(migrations.Migration):
                 ('subject', models.CharField(blank=True, max_length=200, verbose_name='Subject / Description')),
                 ('text', models.TextField(blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='customer', to=settings.AUTH_USER_MODEL)),
-                ('document', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Document')),
-                ('officer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='officer', to=settings.AUTH_USER_MODEL)),
+                # ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='customer', to=settings.AUTH_USER_MODEL)),
+                ('customer_id', models.IntegerField(null=True)),
+                # ('document', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.Document')),
+                ('document', models.IntegerField(null=True)),
+                # ('officer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='officer', to=settings.AUTH_USER_MODEL)),
+                ('officer', models.IntegerField(null=True)),
             ],
         ),
     ]

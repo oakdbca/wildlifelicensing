@@ -1,6 +1,3 @@
-from django.core.urlresolvers import reverse_lazy
-from django.contrib.auth.mixins import UserPassesTestMixin
-
 from wildlifelicensing.apps.main.helpers import is_officer
 from wildlifelicensing.apps.main.mixins import BaseAccessMixin
 from wildlifelicensing.apps.returns.models import Return
@@ -12,6 +9,7 @@ class UserCanEditReturnMixin(BaseAccessMixin):
     in editable mode.
     Officers can edit a return
     """
+
     def get_return(self):
         if self.args:
             return Return.objects.filter(pk=self.args[0]).first()
@@ -68,5 +66,3 @@ class UserCanCurateReturnMixin(BaseAccessMixin):
         """
         user = self.request.user
         return is_officer(user)
-
-
