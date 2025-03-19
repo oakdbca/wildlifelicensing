@@ -1,9 +1,9 @@
 # Prepare the base environment.
-FROM dbcawa/wildlifelicensing:latest as builder_base_wildlifelicensingdev
+FROM dbcawa/wildlifelicensing:latest AS builder_base_wildlifelicensingdev
 
 USER root
 
-RUN apt-get update \
+RUN apt-get update && \
     apt-get install --no-install-recommends -y \
     git \
     libpq-dev \
@@ -19,12 +19,12 @@ RUN echo 'if ! [ -n "${SUDO_USER}" -a -n "${SUDO_PS1}" ]; then' >> /etc/bash.bas
     echo "fi" >> /etc/bash.bashrc
 
 # For Linux
-RUN groupadd -g 20000 container \
+RUN groupadd -g 20000 container && \
     useradd -g 20000 -u 200000 container -s /bin/bash
 
-RUN mkdir /home/container \
-    chown container.container /home/container \
-    cp /root/.bashrc /home/container \
+RUN mkdir /home/container && \
+    chown container.container /home/container && \
+    cp /root/.bashrc /home/container && \
     cp /root/.profile /home/container
 
 EXPOSE 8080
