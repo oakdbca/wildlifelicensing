@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic.base import TemplateView, View
+from openpyxl.cell import WriteOnlyCell
 from openpyxl.styles import Font
 from openpyxl.workbook import Workbook
-from openpyxl.writer.write_only import WriteOnlyCell
 
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.main import excel
