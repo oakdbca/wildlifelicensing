@@ -7,8 +7,8 @@ from jsontableschema import types
 from jsontableschema.exceptions import InvalidDateType
 from jsontableschema.model import SchemaModel
 from openpyxl import Workbook
+from openpyxl.cell import WriteOnlyCell
 from openpyxl.styles import Font
-from openpyxl.writer.write_only import WriteOnlyCell
 
 from wildlifelicensing.apps.main.excel import is_blank_value
 

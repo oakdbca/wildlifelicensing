@@ -35,7 +35,7 @@ git+https://github.com/dbca-wa/webtemplate2.git#egg=webtemplate_dbca
 gunicorn==23.0.0
 ipython==8.32.0
 jsontableschema==0.10.1
-openpyxl==2.4.8
+openpyxl==3.1.5
 phonenumbers==8.12.15
 psycopg2-binary==2.9.10
 pycountry==17.1.8
