@@ -59,15 +59,14 @@
     <div class="row top-buffer">
       <div class="col-md-12">
         <label>Create Customer</label>
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="panel">
-              <form method="post">
-                {% csrf_token %}
-                {% bootstrap_form create_customer_form %}
-                <button type="submit" class="btn btn-primary pull-right" name="create">Create Customer</button>
-              </form>
+        <div class="panel panel-default" style="padding: 10px;">
+            <div style="padding-bottom:10px;">
+                <!-- TODO: Update url once create new user page has been added to ledger -->
+                <a href="{{LEDGER_UI_URL}}/ledger/account-management/add/" target="_blank" id="accounts-management-add">Create Customer in Ledger <i class="fa fa-external-link" aria-hidden="true"></i>
+                </a>
             </div>
+          <div>
+            <p class="text-muted" style="padding-bottom:0px; margin-bottom:0px;">Once you have created the customer in the ledger, return to this window, click the drop down above and search for the user then click the 'Select Customer' button.</p>
           </div>
         </div>
       </div>
