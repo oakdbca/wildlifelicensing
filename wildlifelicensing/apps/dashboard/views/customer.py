@@ -203,9 +203,7 @@ class DataTableApplicationCustomerView(base.DataTableApplicationBaseView):
                 "Amend application",
             )
         elif status == "id_required" and obj.id_check_status == "awaiting_update":
-            result = '<a href="{}">{}</a>'.format(
-                reverse("wl_main:identification"), "Update ID"
-            )
+            result = '<a href="{}">{}</a>'.format(reverse("account"), "Update ID")
         else:
             result = '<a href="{}"">{}</a>'.format(
                 reverse("wl_applications:view_application", args=[obj.pk]),
