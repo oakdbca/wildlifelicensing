@@ -48,37 +48,42 @@
         Australian driver’s licence, passport, or proof-of-age card.
     </p>
     <p>
-        If you cannot provide identification at this point, you can skip this step of the application process. You can then, at
-        any time, upload your photo ID by selecting the Manage Account option under the Options menu on the menu bar. Alternatively,
-        you can present your photo ID in person at the Wildlife Licensing office, 17 Dick Perry Avenue, Kensington.
+        If you cannot provide identification at this point, you can continue to the next step of the application process. You can then, at
+        any time, upload your identification by selecting the Manage Account option under the Options menu on the top right of the menu bar above. Alternatively,
+        you can present your identification in person at the Wildlife Licensing office, 17 Dick Perry Avenue, Kensington.
     </p>
-    <p><strong><em>Note: your application will not be approved until identification has been submitted.</em></strong></p>
+    <p><strong><em>Note: Your application will not be approved until identification has been submitted.</em></strong></p>
 {% endblock %}
 
 {% block content %}
     <div id="contentContainer" class="container">
         <div class="row">
+
             <div class="col-md-12">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% with field=form.identification_file %}
-                        <div class="form-group">
-                            <div class="{% if field.errors %} has-error has-feedback {% endif %}">
-                            <label for="{{ field.auto_id }}">{{ field.label }}</label>
-                            <input id="{{ field.auto_id }}" name="{{ field.name }}" type="file" class="form-control" {% if file_types %}accept="{{ file_types }}"{% endif %}>
-                            {% if field.errors %}
-                                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-                                <span class='text-danger'>{{ field.errors|join:'<br />' }}</span>
-                            {% endif %}
-                            </div>
-                            {% if field.help_text %}
-                                <p class="help-block">{{ field.help_text }}</p>
-                            {% endif %}
-                        </div>
-                    {% endwith %}
-                    <button type="submit" class="btn btn-primary pull-right">Upload</button>
-                    <a class="btn btn-info pull-right right-buffer" href="{% url 'wl_applications:check_senior_card' %}">Skip this step</a>
-                </form>
+                {% if application.proxy_applicant_id %}
+                <div class="panel panel-default" style="padding: 10px;">
+                    <div style="padding-bottom:10px;">
+                        <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{customer.id}}/change/" target="_blank" id="accounts-management-change">Upload Identification for {{ customer.get_full_name }} in Ledger <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                  <div>
+                    <p class="text-muted" style="padding-bottom:0px; margin-bottom:10px;">Once you have uploaded the identification document for the customer in the ledger, return to this window and click the 'Continue to Next Step' button.</p>
+                    <p class="text-muted" style="padding-bottom:0px; margin-bottom:0px;">You can Continue to the Next Step and upload the ID later if you prefer.</p>
+                  </div>
+                </div>
+                {% else%}
+                <div class="panel panel-default" style="padding: 10px;">
+                    <div style="padding-bottom:10px;">
+                        <a href="{% url 'account' %}" target="_blank" id="account">Update Your Identification on the Manage Account page <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                  <div>
+                    <p class="text-muted" style="padding-bottom:0px; margin-bottom:10px;">Once you have updated your identification on the manage account page, return to this window and click the 'Continue to Next Step' button.</p>
+                    <p class="text-muted" style="padding-bottom:0px; margin-bottom:0px;">You can Continue to the Next Step and upload the ID later if you prefer.</p>
+                  </div>
+                </div>
+                {% endif %}
+                <a class="btn btn-primary pull-right" href="{% url 'wl_applications:check_senior_card' %}">Continue to Next Step</a>
             </div>
         </div>
     </div>
