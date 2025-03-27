@@ -441,14 +441,13 @@ class CheckIdentificationRequiredView(
     def get(self, *args, **kwargs):
         application = utils.get_session_application(self.request.session)
 
-        # if application.licence_type.identification_required and application.applicant.identification is None:
         if (
             application.licence_type.identification_required
-            and application.applicant.identification2 is None
+            and not application.applicant.identification2_id
         ):
             return super().get(*args, **kwargs)
-        else:
-            return redirect("wl_applications:check_senior_card")
+
+        return redirect("wl_applications:check_senior_card")
 
     def get_context_data(self, **kwargs):
         application = utils.get_session_application(self.request.session)
@@ -494,13 +493,10 @@ class CheckSeniorCardView(LoginRequiredMixin, ApplicationEntryBaseView, FormView
     def get(self, *args, **kwargs):
         application = utils.get_session_application(self.request.session)
 
-        # if application.licence_type.senior_applicable \
-        #         and application.applicant.is_senior \
-        #         and application.applicant.senior_card is None:
         if (
             application.licence_type.senior_applicable
             and application.applicant.is_senior
-            and application.applicant.senior_card2 is None
+            and not application.applicant.senior_card2_id
         ):
             return super().get(*args, **kwargs)
         else:
