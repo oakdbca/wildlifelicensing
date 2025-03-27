@@ -102,7 +102,7 @@ INSERT INTO wl_main_licence (id, effective_to, licence_number, licence_sequence,
 ) select id, effective_to, licence_number, licence_sequence, issue_date, start_date, end_date, is_renewable, holder_id, issuer_id, licence_type_id
 from licence_licence;
 
-# To Do: During a real environment trasfer we must copy the actual files
+To Do: During a real environment transfer we must copy the actual files
 
 Migrate to wl_main 0037_rename_user_id_address_user (so that all these new models are created)
 
