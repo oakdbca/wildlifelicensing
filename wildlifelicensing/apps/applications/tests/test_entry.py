@@ -278,6 +278,11 @@ class ApplicationEntryTestCase(TestCase):
         Testing that a user can display the identification required page in the case the user has a
         current identification.
         """
+        # Note: this will fail as we don't yet have a way to upload ID via ledger api client
+        raise NotImplementedError(
+            "This test will fail as we don't yet have a way to upload ID via ledger api client"
+        )
+
         self.client.login(self.customer.email)
 
         self.client.get(reverse("wl_applications:new_application"))
@@ -287,14 +292,6 @@ class ApplicationEntryTestCase(TestCase):
         self.client.get(reverse("wl_applications:check_identification"))
 
         with open(TEST_ID_PATH, "rb") as fp:
-            # self.customer.identification = Document.objects.create(name='test_id')
-            # self.customer.identification.file.save('test_id.jpg', File(fp), save=True)
-            self.customer.identification2 = (
-                "TODO: Replace with call to ledger api client"
-            )
-            # PrivateDocument.objects.create(
-            #     name="test_id"
-            # )
             self.customer.identification2.upload.save(
                 "test_id.jpg", File(fp), save=True
             )
