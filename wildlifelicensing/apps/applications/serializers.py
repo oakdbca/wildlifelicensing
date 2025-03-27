@@ -29,8 +29,8 @@ logger = logging.getLogger(__name__)
 
 
 class ApplicationApplicantSerializer(serializers.ModelSerializer):
-    identification2 = serializers.SerializerMethodField()
-    senior_card2 = serializers.SerializerMethodField()
+    has_identficiation = serializers.SerializerMethodField()
+    has_senior_card = serializers.SerializerMethodField()
 
     class Meta:
         model = EmailUser
@@ -40,15 +40,11 @@ class ApplicationApplicantSerializer(serializers.ModelSerializer):
             "billing_address",
         )
 
-    def get_identification2(self, obj):
-        # TODO: ledger api client PrivateDocument model does
-        # not have an upload field: return obj.identification2.upload.url if obj.identification2 else None
-        return "TODO: ledger api client PrivateDocument model does not have an upload field"
+    def get_has_identficiation(self, obj):
+        return bool(obj.identification2_id)
 
-    def get_senior_card2(self, obj):
-        # TODO: ledger api client PrivateDocument model does
-        # not have an upload field: return obj.senior_card2.upload.url if obj.senior_card2 else None
-        return "TODO: ledger api client PrivateDocument model does not have an upload field"
+    def get_has_senior_card(self, obj):
+        return bool(obj.senior_card2_id)
 
 
 class ApplicationProfileSerializer(serializers.ModelSerializer):
