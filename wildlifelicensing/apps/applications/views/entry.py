@@ -461,29 +461,9 @@ class CheckIdentificationRequiredView(
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        application = utils.get_session_application(self.request.session)
-
-        # if application.applicant.identification is not None:
-        #     application.applicant.identification.delete()
-        if application.applicant.identification2 is not None:
-            application.applicant.identification2.delete()
-
-        # application.applicant.identification = Document.objects.create(file=self.request.FILES['identification_file'])
-        application.applicant.identification2 = (
-            "TODO: Replace with call to ledger api client"
+        raise NotImplementedError(
+            "This view should not be used anymore as the ID is now managed via ledger api client."
         )
-        # PrivateDocument.objects.create(
-        #     upload=self.request.FILES["identification_file"]
-        # )
-        application.applicant.save()
-
-        # update any other applications for this user that are awaiting ID upload
-        for app in Application.objects.filter(applicant=application.applicant):
-            if app.id_check_status == "awaiting_update":
-                app.id_check_status = "updated"
-                app.save()
-
-        return redirect("wl_applications:check_senior_card")
 
 
 class CheckSeniorCardView(LoginRequiredMixin, ApplicationEntryBaseView, FormView):
@@ -511,23 +491,9 @@ class CheckSeniorCardView(LoginRequiredMixin, ApplicationEntryBaseView, FormView
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        application = utils.get_session_application(self.request.session)
-
-        # if application.applicant.senior_card is not None:
-        #     application.applicant.senior_card.delete()
-        if application.applicant.senior_card2 is not None:
-            application.applicant.senior_card2.delete()
-
-        # application.applicant.senior_card = Document.objects.create(file=self.request.FILES['senior_card'])
-        application.applicant.senior_card2 = (
-            "TODO: Replace with call to ledger api client"
+        raise NotImplementedError(
+            "This view should not be used anymore as the Seniors card is now managed via ledger api client."
         )
-        # PrivateDocument.objects.create(
-        #     upload=self.request.FILES["senior_card"]
-        # )
-        application.applicant.save()
-
-        return redirect("wl_applications:create_select_profile")
 
 
 class CreateSelectProfileView(LoginRequiredMixin, ApplicationEntryBaseView):
