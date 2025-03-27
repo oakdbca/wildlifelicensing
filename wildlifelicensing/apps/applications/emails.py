@@ -186,7 +186,7 @@ class ApplicationIDUpdateRequestedEmail(TemplateEmailBase):
 def send_id_update_request_email(id_request, request):
     application = id_request.application
     email = ApplicationIDUpdateRequestedEmail()
-    url = pdf_host_reverse("wl_main:identification")
+    url = pdf_host_reverse("account")
 
     if id_request.reason:
         id_request.reason = dict(IDRequest.REASON_CHOICES)[id_request.reason]
