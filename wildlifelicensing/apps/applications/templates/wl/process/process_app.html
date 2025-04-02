@@ -76,14 +76,14 @@
                     <p>
                       {{ applicant.user.first_name }} {{ applicant.user.last_name }}
                       <span class="pull-right">
-                        {% if applicant.user.identification2 %}
-                          <a data-toggle="modal" data-target="#idModal">Show ID</a>
+                        {% if applicant.user.has_identficiation %}
+                          <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{applicant.user.id}}/change/" target="_blank">Show ID</a>
                         {% else %}
                           ID Unavaiable
                         {% endif %}
-                        {% if applicant.user.senior_card2 %}
+                        {% if applicant.user.has_senior_card %}
                           /
-                          <a data-toggle="modal" data-target="#seniorCardModal">Senior Card</a>
+                          <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{applicant.user.id}}/change/" target="_blank">Senior Card</a>
                         {% endif %}
                       </span>
                     </p>

@@ -71,10 +71,16 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
             }
         ]
 
-        if product.is_discountable and application.applicant.is_senior:
+        if (
+            application.licence_type.senior_applicable
+            and product.is_discountable
+            and application.applicant.is_senior
+        ):
             discount = Decimal(product.price * Decimal("0.1")).quantize(
                 Decimal("0.00")
-            )  # TODO: What type of discount do seniors get?
+            )  # Note: Currently I have just hardcoded the discount to 10% of the product price
+            # However, I have found that none of the licences currently being offered allow for a senior discount
+            # so this shouldn't actually happen in practice
             products.append(
                 {
                     "ledger_description": "Senior Discount",

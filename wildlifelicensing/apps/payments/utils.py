@@ -3,7 +3,6 @@ from decimal import Decimal
 
 import requests
 from django.conf import settings
-from django.shortcuts import get_object_or_404
 from ledger_api_client.ledger_models import Invoice
 
 from wildlifelicensing.apps.main.models import Product
@@ -91,7 +90,10 @@ def get_application_payment_status(application):
     if not application.invoice_reference:
         return PAYMENT_STATUS_NOT_REQUIRED
 
-    invoice = get_object_or_404(Invoice, reference=application.invoice_reference)
+    try:
+        invoice = Invoice.objects.get(reference=application.invoice_reference)
+    except Invoice.DoesNotExist:
+        return "Invoice does not exist"
 
     if invoice.amount == Decimal("0.00"):
         return PAYMENT_STATUS_NOT_REQUIRED
@@ -106,7 +108,12 @@ def get_application_payment_status(application):
 
 
 def invoke_credit_card_payment(application):
-    invoice = get_object_or_404(Invoice, reference=application.invoice_reference)
+    try:
+        invoice = Invoice.objects.get(reference=application.invoice_reference)
+    except Invoice.DoesNotExist:
+        raise PaymentException(
+            f"Application invoice reference {application.invoice_reference} does not exist"
+        )
 
     if not invoice.token:
         raise PaymentException("Application invoice does have a credit payment token")
