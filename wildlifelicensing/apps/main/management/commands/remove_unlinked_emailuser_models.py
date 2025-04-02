@@ -14,10 +14,11 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
+        ledger_db_name = settings.DATABASES["ledger_db"]["NAME"]
         if (
             settings.EMAIL_INSTANCE.lower() == "prod"
             or settings.PRODUCTION_EMAIL is True
-            or "prod" in settings.DATABASE_URL
+            or "ledger_prod" == ledger_db_name
         ):
             self.stdout.write(
                 self.style.ERROR(
@@ -29,7 +30,7 @@ class Command(BaseCommand):
 
         proceed = input(
             "Are you sure you want to delete the models linked to email users "
-            "that don't exist in the ledger database? (y/n): "
+            f"that don't exist in the database {ledger_db_name}? (y/n): "
         )
 
         if not proceed.lower() == "y":
