@@ -199,6 +199,10 @@ DROP CONSTRAINT wl_applica_proxy_applicant_id_6338d187_fk_accounts_emailuser_id;
 ALTER TABLE wl_applications_application
 DROP CONSTRAINT wl_applications\_\_applicant_id_6e1a0480_fk_accounts_emailuser_id;
 
-**Step 11: Import the data from the products fixture::**
+**Step 11: Drop unused old m2m tables**
+DROP TABLE wl_applications_application_documents_old CASCADE;
+DROP TABLE wl_main_communicationslogentry_documents_old CASCADE;
+
+**Step 12: Import the data from the products fixture::**
 
 ./manage.py loaddata wildlifelicensing/apps/main/fixtures/products.json
