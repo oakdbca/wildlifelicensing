@@ -14,12 +14,14 @@ PAYMENT_STATUS_CC_READY = "cc_ready"
 PAYMENT_STATUS_AWAITING = "awaiting"
 PAYMENT_STATUS_NOT_REQUIRED = "not_required"
 PAYMENT_STATUS_OVER_PAID = "over_paid"
+PAYMENT_STATUS_INVOICE_NOT_FOUND = "invoice_not_found"
 
 PAYMENT_STATUSES = {
     PAYMENT_STATUS_PAID: "Paid",
     PAYMENT_STATUS_CC_READY: "Credit Card Ready",
     PAYMENT_STATUS_AWAITING: "Awaiting Payment",
     PAYMENT_STATUS_NOT_REQUIRED: "Payment Not Required",
+    PAYMENT_STATUS_INVOICE_NOT_FOUND: "Invoice Not Found",
 }
 
 
@@ -93,7 +95,7 @@ def get_application_payment_status(application):
     try:
         invoice = Invoice.objects.get(reference=application.invoice_reference)
     except Invoice.DoesNotExist:
-        return "Invoice does not exist"
+        return PAYMENT_STATUS_INVOICE_NOT_FOUND
 
     if invoice.amount == Decimal("0.00"):
         return PAYMENT_STATUS_NOT_REQUIRED
