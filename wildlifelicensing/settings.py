@@ -189,7 +189,7 @@ if DEBUG:
         },
         "root": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "DEBUG",
         },
         "loggers": {
             "django": {
@@ -241,3 +241,5 @@ SENIOR_VOUCHER_ORACLE_CODE = config(
 
 DEFAULT_FORM_DATETIME_FORMAT = "%d/%m/%Y %H:%M:%S"
 DEFAULT_FORM_DATE_FORMAT = "%d/%m/%Y"
+
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
