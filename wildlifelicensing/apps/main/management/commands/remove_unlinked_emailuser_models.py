@@ -40,72 +40,46 @@ class Command(BaseCommand):
         for a in Application.objects.all():
             if a.applicant_id:
                 if not EmailUser.objects.filter(id=a.applicant_id).exists():
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f"Application {a.id} has an applicant that doesn't exist in the ledger database."
-                        )
-                    )
                     application_ids_to_delete.append(a.id)
                     continue
 
             if a.proxy_applicant_id:
                 if not EmailUser.objects.filter(id=a.proxy_applicant_id).exists():
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f"Application {a.id} has a proxy applicant that doesn't exist in the ledger database."
-                        )
-                    )
                     application_ids_to_delete.append(a.id)
                     continue
 
             if a.assigned_officer_id:
                 if not EmailUser.objects.filter(id=a.assigned_officer_id).exists():
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f"Application {a.id} has an assigned officer that doesn't exist in the ledger database."
-                        )
-                    )
                     application_ids_to_delete.append(a.id)
 
         if application_ids_to_delete:
             self.stdout.write(
-                self.style.WARNING(
-                    f"Deleting {len(application_ids_to_delete)} applications that "
-                    "are linked to email users that don't exist in the ledger database."
-                )
+                f"Deleting {len(application_ids_to_delete)} applications that "
+                "are linked to email users that don't exist in the ledger database."
             )
-            Application.objects.filter(id__in=application_ids_to_delete).delete()
+            self.stdout.write(
+                Application.objects.filter(id__in=application_ids_to_delete).delete()
+            )
         else:
             self.stdout.write(
-                self.style.SUCCESS(
-                    "No applications found that are linked to email users that "
-                    "don't exist in the ledger database."
-                )
+                "No applications found that are linked to email users that "
+                "don't exist in the ledger database."
             )
 
         licence_ids_to_delete = []
         for licence in WildlifeLicence.objects.all():
             if licence.profile.user_id:
                 if not EmailUser.objects.filter(id=licence.profile.user_id).exists():
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f"Licence {licence.id} has an applicant that doesn't exist in the ledger database."
-                        )
-                    )
                     licence_ids_to_delete.append(licence.id)
 
         if licence_ids_to_delete:
             self.stdout.write(
-                self.style.WARNING(
-                    f"Deleting {len(licence_ids_to_delete)} licences that are linked to email users that "
-                    "don't exist in the ledger database."
-                )
+                f"Deleting {len(licence_ids_to_delete)} licences that are linked to email users that "
+                "don't exist in the ledger database."
             )
             WildlifeLicence.objects.filter(id__in=licence_ids_to_delete).delete()
         else:
             self.stdout.write(
-                self.style.SUCCESS(
-                    "No licences found that are linked to email users that don't exist in the ledger database."
-                )
+                "No licences found that are linked to email users that don't exist in the ledger database."
             )
         self.stdout.write(self.style.SUCCESS("Done!"))
