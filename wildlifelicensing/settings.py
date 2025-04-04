@@ -81,9 +81,6 @@ HERBIE_SPECIES_WFS_URL = config(
     "request=GetFeature&typeNames=public:herbie_hbvspecies_public&outputFormat=application/json",
 )
 
-EMAIL_DELIVERY = config("EMAIL_DELIVERY", "off")
-EMAIL_INSTANCE = config("EMAIL_INSTANCE", "DEV")
-
 PAYMENT_SYSTEM_ID = config("PAYMENT_SYSTEM_ID", default="S369")
 if not VALID_SYSTEMS:
     VALID_SYSTEMS = [PAYMENT_SYSTEM_ID]
