@@ -90,6 +90,17 @@ PAYMENT_SYSTEM_PREFIX = config(
     "PAYMENT_SYSTEM_PREFIX", PAYMENT_SYSTEM_ID.replace("S", "0")
 )  # '369'
 
+DEFAULT_PAYMENT_HOST = "http://wildlifelicensing.dbca.wa.gov.au"
+if EMAIL_INSTANCE.lower() == "dev":
+    DEFAULT_PAYMENT_HOST = "http://wildlifelicensing-dev.dbca.wa.gov.au"
+if EMAIL_INSTANCE.lower() == "uat":
+    DEFAULT_PAYMENT_HOST = "http://wildlifelicensing-uat.dbca.wa.gov.au"
+#
+PAYMENT_NOTIFICIATON_URL_HOST = config(
+    "PAYMENT_NOTIFICIATON_URL_HOST",
+    default=DEFAULT_PAYMENT_HOST,
+)
+
 # next setting is necessary to resolve absolute URL for the emails sent by the tasks running in cron.
 DEFAULT_HOST = config(
     "DEFAULT_HOST", default="https://wildlifelicensing.dpaw.wa.gov.au"
@@ -145,6 +156,7 @@ SYSTEM_NAME_SHORT = config("SYSTEM_NAME_SHORT", default="WLS")
 SUPPORT_EMAIL = config(
     "SUPPORT_EMAIL", default="wildlifelicensing@dpaw.wa.gov.au"
 ).lower()
+
 DEP_PHONE = config("DEP_PHONE", default="(08) 9219 9978")
 DEP_PHONE_SUPPORT = config("DEP_PHONE_SUPPORT", default="(08) 9219 9000")
 DEP_FAX = config("DEP_FAX", default="(08) 9423 8242")
