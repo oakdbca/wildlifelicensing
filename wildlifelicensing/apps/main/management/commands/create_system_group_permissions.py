@@ -9,24 +9,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         assessors_added_count = 0
         officers_added_count = 0
-        try:
-            assessors_group = SystemGroup.objects.get(name="Assessors")
-        except SystemGroup.DoesNotExist:
-            self.stdout.write(
-                self.style.ERROR(
-                    "System group 'Assessors' does not exist. Please create it and try again."
-                )
-            )
-            return
-        try:
-            officers_group = SystemGroup.objects.get(name="Officers")
-        except SystemGroup.DoesNotExist:
-            self.stdout.write(
-                self.style.ERROR(
-                    "System group 'Officers' does not exist. Please create it and try again."
-                )
-            )
-            return
+        assessors_group = SystemGroup.objects.get_or_create(name="Assessors")
+        officers_group = SystemGroup.objects.get_or_create(name="Officers")
         with connection.cursor() as cursor:
             try:
                 cursor.execute(
