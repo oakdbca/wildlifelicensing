@@ -107,10 +107,10 @@ DEFAULT_HOST = config(
 )
 # set data_upload_max params, otherwise use django default values
 DATA_UPLOAD_MAX_NUMBER_FIELDS = config(
-    "DATA_UPLOAD_MAX_NUMBER_FIELDS", default=1000, cast=int
+    "DATA_UPLOAD_MAX_NUMBER_FIELDS", default=250000, cast=int
 )
 DATA_UPLOAD_MAX_MEMORY_SIZE = config(
-    "DATA_UPLOAD_MAX_MEMORY_SIZE", default=2621440, cast=int
+    "DATA_UPLOAD_MAX_MEMORY_SIZE", default=10485760, cast=int
 )  # 2.5 MB
 WL_PDF_URL = config("WL_PDF_URL", default="https://wildlifelicensing.dpaw.wa.gov.au")
 INVOICE_UNPAID_WARNING = config(
