@@ -206,3 +206,7 @@ DROP TABLE wl_main_communicationslogentry_documents_old CASCADE;
 **Step 12: Import the data from the products fixture::**
 
 ./manage.py loaddata wildlifelicensing/apps/main/fixtures/products.json
+
+**Step 13: Create system groups from old auth group tables**
+
+./manage.py create_system_group_permissions
