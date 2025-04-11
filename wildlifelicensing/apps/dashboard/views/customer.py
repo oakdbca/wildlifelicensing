@@ -77,7 +77,7 @@ class TableCustomerView(LoginRequiredMixin, base.TablesBaseView):
             {"title": "Start Date"},
             {"title": "Expiry Date"},
             {"title": "Licence", "searchable": False, "orderable": False},
-            {"title": "Status"},
+            {"title": "Status", "searchable": False, "orderable": False},
             {"title": "Action", "searchable": False, "orderable": False},
         ]
 
