@@ -1,5 +1,5 @@
 # Prepare the base environment.
-FROM dbcawa/wildlifelicensing:latest AS builder_base_wildlifelicensingdev
+FROM dbcawa/wildlifelicensing:django5_latest AS builder_base_wildlifelicensingdev
 
 USER root
 
