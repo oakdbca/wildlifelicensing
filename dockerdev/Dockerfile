@@ -1,5 +1,5 @@
 # Prepare the base environment.
-FROM dbcawa/wildlifelicensing:django5_latest as builder_base_wildlifelicensingdev
+FROM dbcawa/wildlifelicensing:latest as builder_base_wildlifelicensingdev
 
 RUN apt-get update
 #RUN apt-get install --no-install-recommends -y npm patch
