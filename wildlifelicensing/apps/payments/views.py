@@ -124,7 +124,7 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
             # even if it is in fact a proxy application
             "invoice_text": booking_reference,
             "session_type": "ledger_api",
-            "basket_owner": request.user.id,
+            "basket_owner": application.applicant.id,
         }
 
         logger.info("Creating checkout session with params: %s", checkout_params)
