@@ -8,6 +8,7 @@ from wildlifelicensing.apps.main.mixins import (
     AssessorRequiredMixin,
     OfficerOrAssessorRequiredMixin,
 )
+from wildlifelicensing.apps.main.models import AssessorGroup
 
 
 class TableAssessorView(AssessorRequiredMixin, base.TablesBaseView):
@@ -229,6 +230,8 @@ class DataTableApplicationAssessorView(
         return Q(status=value) if value.lower() != "all" else None
 
     def get_initial_queryset(self):
-        groups = self.request.user.assessorgroup_set.all()
+        groups = AssessorGroup.objects.filter(
+            assessorgroup_members__emailuser_id=self.request.user.id
+        ).all()
         assessments = self.model.objects.filter(assessor_group__in=groups).all()
         return assessments
