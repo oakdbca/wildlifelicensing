@@ -244,7 +244,7 @@ define([
     });
 
     $.each(assessment.conditions, function (index, condition) {
-      createConditionTableRow(condition, "additional", false);
+      createConditionTableRow(condition.condition, "additional", false);
     });
   }
 
