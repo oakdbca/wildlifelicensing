@@ -190,6 +190,14 @@ class AssessmentSerializer(serializers.ModelSerializer):
         ]
 
 
+class AssessmentForAssessorsSerializer(AssessmentSerializer):
+    def get_conditions(self, obj):
+        conditions = []
+        for ac in obj.assessmentcondition_set.all():
+            conditions.append(ConditionSerializer(ac.condition).data)
+        return conditions
+
+
 class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
