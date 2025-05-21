@@ -183,8 +183,8 @@ class AssessmentSerializer(serializers.ModelSerializer):
         return [
             {
                 "acceptance_status": ac.get_acceptance_status_display(),
-                "id": ac.condition.id,
-                "condition": ConditionSerializer(ac.condition.condition).data,
+                "id": ac.id,
+                "condition": ConditionSerializer(ac.condition).data,
             }
             for ac in obj.assessmentcondition_set.all()
         ]
