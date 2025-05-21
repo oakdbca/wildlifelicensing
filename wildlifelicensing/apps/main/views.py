@@ -55,16 +55,27 @@ class SearchCustomersView(OfficerRequiredMixin, View):
         )
 
         users = users.filter(search_term__icontains=search_term).values(
-            "id", "email", "first_name", "last_name"
+            "id", "email", "first_name", "last_name", "dob"
         )[:10]
 
-        data_transform = [
-            {
-                "id": person["id"],
-                "text": f"{person['first_name']} {person['last_name']} ({person['email']})",
-            }
-            for person in users
-        ]
+        data_transform = []
+
+        for person in users:
+            # Format the date of birth
+            if person["dob"]:
+                person["dob"] = person["dob"].strftime("%d/%m/%Y")
+            dob_text = ""
+            if person["dob"]:
+                dob_text = f", DOB: {person['dob']}"
+            text = f"{person['first_name']} {person['last_name']} (email: {person['email']}{dob_text})"
+
+            data_transform.append(
+                {
+                    "id": person["id"],
+                    "text": text,
+                }
+            )
+
         return JsonResponse(
             data_transform, safe=False, encoder=WildlifeLicensingJSONEncoder
         )

@@ -221,6 +221,21 @@ class SchemaField:
                     not_integer = True
                 if not_integer:
                     return f'The field "{self.name}" must be a whole number.'
+
+        if isinstance(self.type, types.NumberType):
+            if not is_blank_value(value):
+                not_number = False
+                try:
+                    casted = self.cast(value)
+                    # there's also the case where the case where a float 1.2 is successfully casted in 1
+                    # (ex: int(1.2) = 1)
+                    if str(casted) != str(value):
+                        not_number = True
+                except Exception:
+                    not_number = True
+                if not_number:
+                    return f'The field "{self.name}" must be a number.'
+
         try:
             self.cast(value)
         except Exception as e:

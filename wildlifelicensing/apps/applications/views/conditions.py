@@ -22,6 +22,7 @@ from wildlifelicensing.apps.applications.models import (
 )
 from wildlifelicensing.apps.applications.serializers import (
     ApplicationSerializer,
+    AssessmentForAssessorsSerializer,
     AssessmentSerializer,
     ConditionSerializer,
 )
@@ -131,7 +132,7 @@ class EnterConditionsAssessorView(CanPerformAssessmentMixin, TemplateView):
         kwargs["application"] = ApplicationSerializer(application).data
         kwargs["form_structure"] = application.licence_type.application_schema
 
-        kwargs["assessment"] = AssessmentSerializer(assessment).data
+        kwargs["assessment"] = AssessmentForAssessorsSerializer(assessment).data
 
         kwargs["other_assessments"] = AssessmentSerializer(
             Assessment.objects.filter(application=application)
