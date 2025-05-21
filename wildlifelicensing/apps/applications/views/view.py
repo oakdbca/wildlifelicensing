@@ -20,6 +20,7 @@ from wildlifelicensing.apps.applications.serializers import (
     ApplicationLogEntrySerializer,
     ApplicationSerializer,
     ApplicationUserActionSerializer,
+    AssessmentForAssessorsSerializer,
     AssessmentSerializer,
 )
 from wildlifelicensing.apps.applications.utils import (
@@ -153,7 +154,7 @@ class ViewReadonlyAssessorView(CanPerformAssessmentMixin, TemplateView):
 
         assessment = get_object_or_404(Assessment, pk=self.args[1])
 
-        kwargs["assessment"] = AssessmentSerializer(assessment).data
+        kwargs["assessment"] = AssessmentForAssessorsSerializer(assessment).data
 
         kwargs["other_assessments"] = AssessmentSerializer(
             Assessment.objects.filter(application=application)
