@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
 from django.urls import reverse
 from django.views.generic import TemplateView, View
-from pypdf import PdfMerger, PdfReader
+from pypdf import PdfReader, PdfWriter
 
 from wildlifelicensing.apps.applications.emails import send_licence_issued_email
 from wildlifelicensing.apps.applications.forms import ApplicationLogEntryForm
@@ -156,15 +156,15 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
         )
         if attachments:
             other_attachments = []
-            merger = PdfMerger()
-            merger.append(PdfReader(current_attachment.file.path))
+            writer = PdfWriter()
+            writer.append(PdfReader(current_attachment.file.path))
             for a in attachments:
                 if a.file.name.endswith(".pdf"):
-                    merger.append(PdfReader(a.file.path))
+                    writer.append(PdfReader(a.file.path))
                 else:
                     other_attachments.append(a)
             output = BytesIO()
-            merger.write(output)
+            writer.write(output)
             # Delete old document
             current_attachment.delete()
             # Attach new document
