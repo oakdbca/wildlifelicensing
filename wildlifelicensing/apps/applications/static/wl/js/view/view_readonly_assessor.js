@@ -67,7 +67,7 @@ define([
 
     function initAdditionalConditions(assessment) {
         $.each(assessment.conditions, function(index, condition) {
-            createConditionTableRow(condition.condition, 'additional');
+            createConditionTableRow(condition, 'additional');
         });
     }
 
