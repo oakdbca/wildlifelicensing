@@ -1,5 +1,5 @@
 import datapackage
-import jsontableschema
+import tableschema
 from django.core.exceptions import ValidationError
 from django.db import models
 from ledger_api_client.ledger_models import EmailUserRO as EmailUser
@@ -27,6 +27,9 @@ class ReturnType(models.Model):
         default=WildlifeLicence.DEFAULT_FREQUENCY,
     )
 
+    def __str__(self):
+        return self.licence_type.name
+
     def clean(self):
         """
         Validate the data descriptor
@@ -35,10 +38,16 @@ class ReturnType(models.Model):
         validator = datapackage.DataPackage(self.data_descriptor)
         try:
             validator.validate()
-        except Exception:
-            raise ValidationError(
-                f"Data package errors: {[str(e[0]) for e in validator.iter_errors()]}"
-            )
+        except tableschema.ValidationError as e:
+            if hasattr(e, "errors"):
+                raise ValidationError(
+                    "Data descriptor errors: {}".format(
+                        ", ".join(str(error) for error in e.errors)
+                    )
+                )
+            else:
+                raise ValidationError(f"Data descriptor errors: {[str(e)]}")
+
         # Check that there is at least one resources defined (not required by the standard)
         if len(self.resources) == 0:
             raise ValidationError("You must define at least one resource")
@@ -49,17 +58,22 @@ class ReturnType(models.Model):
             else:
                 schema = resource.get("schema")
                 try:
-                    jsontableschema.validate(schema)
-                except Exception:
-                    raise ValidationError(
-                        'Schema errors for resource "{}": {}'.format(
-                            resource.get("name"),
-                            [
-                                str(e[0])
-                                for e in jsontableschema.validator.iter_errors(schema)
-                            ],
+                    tableschema.validate(schema)
+                except Exception as e:
+                    if hasattr(e, "errors"):
+                        raise ValidationError(
+                            'Schema errors for resource "{}": {}'.format(
+                                resource.get("name"),
+                                ", ".join(str(error) for error in e.errors),
+                            )
                         )
-                    )
+                    else:
+                        raise ValidationError(
+                            'Schema errors for resource "{}": {}'.format(
+                                resource.get("name"),
+                                str(e),
+                            )
+                        )
 
     @property
     def resources(self):
