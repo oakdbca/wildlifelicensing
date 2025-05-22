@@ -11,11 +11,7 @@ from wildlifelicensing.apps.applications.models import (
     IDRequest,
     ReturnsRequest,
 )
-from wildlifelicensing.apps.emails.emails import (
-    TemplateEmailBase,
-    host_reverse,
-    pdf_host_reverse,
-)
+from wildlifelicensing.apps.emails.emails import TemplateEmailBase, host_reverse
 
 SYSTEM_NAME = "Wildlife Licensing Automated Message"
 MAX_SUBJECT_LENGTH = 76
@@ -44,7 +40,7 @@ class ApplicationAmendmentRequestedEmail(TemplateEmailBase):
 def send_amendment_requested_email(amendment_request, request):
     application = amendment_request.application
     email = ApplicationAmendmentRequestedEmail()
-    url = pdf_host_reverse("wl_applications:edit_application", args=[application.pk])
+    url = host_reverse("wl_applications:edit_application", args=[application.pk])
 
     context = {"amendment_request": amendment_request, "url": url}
 
@@ -186,7 +182,7 @@ class ApplicationIDUpdateRequestedEmail(TemplateEmailBase):
 def send_id_update_request_email(id_request, request):
     application = id_request.application
     email = ApplicationIDUpdateRequestedEmail()
-    url = pdf_host_reverse("account")
+    url = host_reverse("account")
 
     if id_request.reason:
         id_request.reason = dict(IDRequest.REASON_CHOICES)[id_request.reason]
@@ -211,7 +207,7 @@ class ApplicationReturnsRequestedEmail(TemplateEmailBase):
 def send_returns_request_email(returns_request, request):
     application = returns_request.application
     email = ApplicationReturnsRequestedEmail()
-    url = pdf_host_reverse("wl_dashboard:home")
+    url = host_reverse("wl_dashboard:home")
 
     if returns_request.reason:
         returns_request.reason = dict(ReturnsRequest.REASON_CHOICES)[
@@ -245,7 +241,7 @@ def send_licence_issued_email(
     additional_attachments=None,
 ):
     email = LicenceIssuedEmail()
-    url = request.build_absolute_uri(reverse("wl_dashboard:home"))
+    url = host_reverse("wl_dashboard:home")
     context = {"url": url, "licence": licence}
     if licence.licence_document is not None:
         file_name = "WL_licence_" + smart_str(licence.licence_type.product_title)

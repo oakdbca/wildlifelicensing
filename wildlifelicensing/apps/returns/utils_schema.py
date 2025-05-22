@@ -1,14 +1,19 @@
 import json
 import re
+from decimal import Decimal
 
 from dateutil.parser import parse as date_parse
 from future.utils import raise_with_traceback
-from jsontableschema import types
-from jsontableschema.exceptions import InvalidDateType
-from jsontableschema.model import SchemaModel
 from openpyxl import Workbook
 from openpyxl.cell import WriteOnlyCell
 from openpyxl.styles import Font
+from tableschema.types import (
+    cast_date,
+    cast_datetime,
+    cast_integer,
+    cast_number,
+    cast_string,
+)
 
 from wildlifelicensing.apps.main.excel import is_blank_value
 
@@ -21,72 +26,41 @@ class FieldSchemaError(Exception):
     pass
 
 
+class InvalidDateType(ValueError):
+    pass
+
+
 def parse_datetime_day_first(value):
-    """
-    use the dateutil.parse() to parse a date/datetime with the date first (dd/mm/yyyy) (not month first mm/dd/yyyy)
-    in case of ambiguity
-    :param value:
-    :return:
-    """
-    # there's a 'bug' in dateutil.parser.parse (2.5.3). If you are using
-    # dayfirst=True. It will parse YYYY-MM-DD as YYYY-DD-MM !!
-    # https://github.com/dateutil/dateutil/issues/268
     dayfirst = not YYYY_MM_DD_REGEX.match(value)
     return date_parse(value, dayfirst=dayfirst)
 
 
-class DayFirstDateType(types.DateType):
-    """
-    Extend the jsontableschema DateType which use the mm/dd/yyyy date model for the 'any' format
-    to use dd/mm/yyyy.
-    """
-
-    def cast_any(self, value, fmt=None):
-        if isinstance(value, self.python_type):
-            return value
-        try:
+def cast_dayfirst_date(format, value, **options):
+    try:
+        if isinstance(value, str):
             return parse_datetime_day_first(value).date()
-        except (TypeError, ValueError) as e:
-            raise_with_traceback(InvalidDateType(e))
+        return cast_date(format, value, **options)
+    except Exception as e:
+        raise_with_traceback(InvalidDateType(e))
 
 
-class DayFirstDateTimeType(types.DateTimeType):
-    """
-    Extend the jsontableschema DateType which use the mm/dd/yyyy date model for the 'any' format
-    to use dd/mm/yyyy
-    """
-
-    def cast_any(self, value, fmt=None):
-        if isinstance(value, self.python_type):
-            return value
-        try:
+def cast_dayfirst_datetime(format, value, **options):
+    try:
+        if isinstance(value, str):
             return parse_datetime_day_first(value)
-        except (TypeError, ValueError) as e:
-            raise_with_traceback(InvalidDateType(e))
+        return cast_datetime(format, value, **options)
+    except Exception as e:
+        raise_with_traceback(InvalidDateType(e))
 
 
-class NotBlankStringType(types.StringType):
-    """
-    The default StringType accepts empty string when required = True
-    """
-
+def cast_not_blank_string(format, value, **options):
     null_values = ["null", "none", "nil", "nan", "-", ""]
+    if value in null_values:
+        raise_with_traceback(ValueError("Blank value not allowed"))
+    return cast_string(format, value, **options)
 
 
 class WLSchema:
-    """
-    The utility class for the wildlife licensing data within a schema field
-    Use to tag a filed to be a species field
-    {
-      name: "...."
-      constraints: ....
-      wl: {
-                type: "species"
-                speciesType: 'fauna'|'flora'|'all'
-          }
-    }
-    """
-
     SPECIES_TYPE_NAME = "species"
     SPECIES_TYPE_FLORA_NAME = "flora"
     SPECIES_TYPE_FAUNA_NAME = "fauna"
@@ -94,7 +68,6 @@ class WLSchema:
     def __init__(self, data):
         self.data = data or {}
 
-    # implement some dict like methods
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
@@ -117,39 +90,30 @@ class WLSchema:
 
 
 class SchemaField:
-    """
-    Utility class for a field in a schema.
-    It uses the schema types of
-    https://github.com/frictionlessdata/jsontableschema-py#types
-    for validation.
-    """
-
-    # For most of the type we use the jsontableschema ones
-    BASE_TYPE_MAP = SchemaModel._type_map()
-    # except for anything date.
-    BASE_TYPE_MAP["date"] = DayFirstDateType
-    BASE_TYPE_MAP["datetime"] = DayFirstDateTimeType
-    # and string
-    BASE_TYPE_MAP["string"] = NotBlankStringType
-
+    # Map type names to casting functions
+    BASE_TYPE_MAP = {
+        "date": cast_dayfirst_date,
+        "datetime": cast_dayfirst_datetime,
+        "string": cast_not_blank_string,
+        "integer": cast_integer,
+        "number": cast_number,
+    }
     WL_TYPE_MAP = {}
 
     def __init__(self, data):
         self.data = data
         self.name = self.data.get("name")
-        # We want to throw an exception if there is no name
         if not self.name:
             raise FieldSchemaError(f"A field without a name: {json.dumps(data)}")
-        # wl specific
         self.wl = WLSchema(self.data.get("wl"))
-        # set the type: wl type as precedence
-        type_class = self.WL_TYPE_MAP.get(self.wl.type) or self.BASE_TYPE_MAP.get(
+        # wl type as precedence
+        type_func = self.WL_TYPE_MAP.get(self.wl.type) or self.BASE_TYPE_MAP.get(
             self.data.get("type")
         )
-        self.type = type_class(self.data)
+        print(f"Field {self.name} type: {self.wl.type} -> {type_func}")
+        self.type_func = type_func
         self.constraints = SchemaConstraints(self.data.get("constraints", {}))
 
-    # implement some dict like methods
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
@@ -180,41 +144,49 @@ class SchemaField:
         return result
 
     def cast(self, value):
-        """
-        Returns a native Python object of the expected format. Will throw an exception
-        if the value doesn't complies with any constraints. See for details:
-        https://github.com/frictionlessdata/jsontableschema-py#types
-        This method is mainly a helper for the validation_error
-        :param value:
-        :return:
-        """
-        if isinstance(value, str) and not isinstance(value, str):
-            # the StringType accepts only unicode
-            value = value
-        elif isinstance(value, int):
-            value = f"{value}"
-        return self.type.cast(value)
+        if self.type_func is None:
+            raise FieldSchemaError(f"No type function for field {self.name}")
+
+        # Skip blank values (let required constraint handle them)
+        if is_blank_value(value):
+            return value
+
+        # Try to cast first
+        casted = self.type_func(None, value)
+
+        # Enforce constraints
+        constraints = self.constraints
+        if self.data.get("type") in ("number", "integer"):
+            # Only check constraints if casted is a number
+            if not isinstance(casted, (int, float, Decimal)):
+                raise ValueError(f"Value {value} could not be converted to a number")
+            if constraints.get("minimum") is not None and casted < constraints.get(
+                "minimum"
+            ):
+                raise ValueError(
+                    f"Value {casted} is less than minimum {constraints.get('minimum')}"
+                )
+            if constraints.get("maximum") is not None and casted > constraints.get(
+                "maximum"
+            ):
+                raise ValueError(
+                    f"Value {casted} is greater than maximum {constraints.get('maximum')}"
+                )
+        if constraints.enum is not None and casted not in constraints.enum:
+            raise ValueError(f"Value {casted} is not in enum {constraints.enum}")
+        return casted
 
     def validate(self, value):
         return self.validation_error(value)
 
     def validation_error(self, value):
-        """
-        Return an error message if the value is not valid according to the schema.
-        It relies on exception thrown by the 'cast1 method of Type method.
-        :param value:
-        :return: None if value is valid or an error message string
-        """
         error = None
-        # override the integer validation. The default message is a bit cryptic if there's an error casting a string
-        # like '1.2' into an int.
-        if isinstance(self.type, types.IntegerType):
+        # Integer validation
+        if self.data.get("type") == "integer":
             if not is_blank_value(value):
                 not_integer = False
                 try:
                     casted = self.cast(value)
-                    # there's also the case where the case where a float 1.2 is successfully casted in 1
-                    # (ex: int(1.2) = 1)
                     if str(casted) != str(value):
                         not_integer = True
                 except Exception:
@@ -222,25 +194,24 @@ class SchemaField:
                 if not_integer:
                     return f'The field "{self.name}" must be a whole number.'
 
-        if isinstance(self.type, types.NumberType):
+        # Number validation
+        if self.data.get("type") == "number":
             if not is_blank_value(value):
-                not_number = False
                 try:
                     casted = self.cast(value)
-                    # there's also the case where the case where a float 1.2 is successfully casted in 1
-                    # (ex: int(1.2) = 1)
-                    if str(casted) != str(value):
-                        not_number = True
-                except Exception:
-                    not_number = True
-                if not_number:
-                    return f'The field "{self.name}" must be a number.'
+                except Exception as e:
+                    error = f"{e}"
+                    if error.find("enum array") and self.constraints.enum:
+                        values = [str(v) for v in self.constraints.enum]
+                        error = f"The value must be one the following: {values}"
+                    elif "decimal.ConversionSyntax" in str(e):
+                        error = f'The field "{self.name}" must be a number.'
+                    return error
 
         try:
             self.cast(value)
         except Exception as e:
             error = f"{e}"
-            # Override the default enum exception message to include all possible values
             if error.find("enum array") and self.constraints.enum:
                 values = [str(v) for v in self.constraints.enum]
                 error = f"The value must be one the following: {values}"
@@ -251,14 +222,9 @@ class SchemaField:
 
 
 class SchemaConstraints:
-    """
-    A helper class for a schema field constraints
-    """
-
     def __init__(self, data):
         self.data = data or {}
 
-    # implement some dict like methods
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
@@ -275,19 +241,11 @@ class SchemaConstraints:
 
 
 class Schema:
-    """
-    A utility class for schema.
-    It uses internally an instance SchemaModel of the frictionless jsontableschema for help.
-    https://github.com/frictionlessdata/jsontableschema-py#model
-    """
-
     def __init__(self, schema):
         self.data = schema
-        self.schema_model = SchemaModel(schema)
-        self.fields = [SchemaField(f) for f in self.schema_model.fields]
+        self.fields = [SchemaField(f) for f in schema.get("fields", [])]
         self.species_fields = self.find_species_fields(self)
 
-    # implement some dict like methods
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
@@ -296,12 +254,6 @@ class Schema:
 
     @staticmethod
     def find_species_fields(schema):
-        """
-        Precedence Rules:
-        1- Look for field of wl.type = 'species'
-        :param schema: a dict descriptor or a Schema instance
-        :return: an array of [SchemaField] or []
-        """
         if not isinstance(schema, Schema):
             schema = Schema(schema)
         return [f for f in schema.fields if f.is_species]
@@ -314,7 +266,7 @@ class Schema:
     def field_names(self):
         return [f.name for f in self.fields]
 
-    def get_field_by_mame(self, name, icase=False):
+    def get_field_by_name(self, name, icase=False):
         if icase and name:
             name = name.lower()
         for f in self.fields:
@@ -324,7 +276,7 @@ class Schema:
         return None
 
     def field_validation_error(self, field_name, value):
-        field = self.get_field_by_mame(field_name)
+        field = self.get_field_by_name(field_name)
         if field is not None:
             return field.validation_error(value)
         else:
@@ -338,10 +290,6 @@ class Schema:
         return self.field_validation_error(field_name, value) is None
 
     def is_lat_long_easting_northing_schema(self):
-        """
-        True if there is a latitude, longitude, easting, northing, and zone field
-        :return:
-        """
         field_names = [name.lower() for name in self.field_names]
         return all(
             [
@@ -354,37 +302,22 @@ class Schema:
         )
 
     def post_validate_lat_long_easting_northing(self, field_validation):
-        """
-        We want conditional requirements: either lat/long or northing/easting.
-        The goal is to remove the requirements on lat/long if we have east/north and vice versa.
-        Rules:
-        If lat and no northing remove northing error and zone error
-        If northing and no latitude remove latitude error.
-        If long and no easting remove easting error and zone error
-        If easting and no longitude remove longitude error.
-        :param field_validation: We expect that the data has been
-        validated at the field level and the argument should be
-        the result of this validation (see validate_row()).
-        Expected format:
-        {field_name: { 'value': value, 'error': None|msg}}
-        :return:
-        """
         if not self.is_lat_long_easting_northing_schema():
             return field_validation
         lat_validation = field_validation.get(
-            self.get_field_by_mame("latitude", icase=True).name, {}
+            self.get_field_by_name("latitude", icase=True).name, {}
         )
         north_validation = field_validation.get(
-            self.get_field_by_mame("northing", icase=True).name, {}
+            self.get_field_by_name("northing", icase=True).name, {}
         )
         long_validation = field_validation.get(
-            self.get_field_by_mame("longitude", icase=True).name, {}
+            self.get_field_by_name("longitude", icase=True).name, {}
         )
         east_validation = field_validation.get(
-            self.get_field_by_mame("easting", icase=True).name, {}
+            self.get_field_by_name("easting", icase=True).name, {}
         )
         zone_validation = field_validation.get(
-            self.get_field_by_mame("zone", icase=True).name, {}
+            self.get_field_by_name("zone", icase=True).name, {}
         )
         if lat_validation.get("value") and long_validation.get("value"):
             if not north_validation.get("value"):
@@ -401,25 +334,41 @@ class Schema:
         return field_validation
 
     def validate_row(self, row):
-        """
-        The row must be a dictionary or a list of key value
-        :param row:
-        :return: return a dictionary with an error added to the field
-        {
-            field_name: {
-                value: value (as given)
-                error: None or error message
-        }
-        """
         row = dict(row)
         result = {}
-        # field validation
         for field_name, value in row.items():
             error = self.field_validation_error(field_name, value)
             result[field_name] = {"value": value, "error": error}
+
         # Special case for lat/long easting/northing
         if self.is_lat_long_easting_northing_schema():
             result = self.post_validate_lat_long_easting_northing(result)
+
+            # --- ADD THIS BLOCK ---
+            # Enforce: must have (latitude AND longitude) OR (zone AND easting AND northing)
+            lat = row.get("LATITUDE")
+            lon = row.get("LONGITUDE")
+            zone = row.get("ZONE")
+            easting = row.get("EASTING")
+            northing = row.get("NORTHING")
+
+            has_latlon = not is_blank_value(lat) and not is_blank_value(lon)
+            has_grid = (
+                not is_blank_value(zone)
+                and not is_blank_value(easting)
+                and not is_blank_value(northing)
+            )
+
+            if not (has_latlon or has_grid):
+                msg = (
+                    "You must provide either both LATITUDE and LONGITUDE, "
+                    "or all of ZONE, EASTING, and NORTHING."
+                )
+                # Attach error to all relevant fields if missing
+                for fname in ["LATITUDE", "LONGITUDE", "ZONE", "EASTING", "NORTHING"]:
+                    if fname in result:
+                        result[fname]["error"] = msg
+
         return result
 
     def rows_validator(self, rows):
@@ -427,11 +376,6 @@ class Schema:
             yield self.validate_row(row)
 
     def get_error_fields(self, row):
-        """
-        Return the field that does not validate
-        :param row: a key value dict or tuple
-        :return: [(field_name, {'value':value, 'error':error_string}]
-        """
         validated_row = self.validate_row(row)
         errors = []
         for field, data in validated_row.items():

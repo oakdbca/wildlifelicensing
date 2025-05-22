@@ -90,21 +90,17 @@ PAYMENT_SYSTEM_PREFIX = config(
     "PAYMENT_SYSTEM_PREFIX", PAYMENT_SYSTEM_ID.replace("S", "0")
 )  # '369'
 
-DEFAULT_PAYMENT_HOST = "http://wildlifelicensing.dbca.wa.gov.au"
+DEFAULT_HOST = "https://wildlifelicensing.dbca.wa.gov.au"
 if EMAIL_INSTANCE.lower() == "dev":
-    DEFAULT_PAYMENT_HOST = "http://wildlifelicensing-dev.dbca.wa.gov.au"
+    DEFAULT_HOST = "https://wildlifelicensing-dev.dbca.wa.gov.au"
 if EMAIL_INSTANCE.lower() == "uat":
-    DEFAULT_PAYMENT_HOST = "http://wildlifelicensing-uat.dbca.wa.gov.au"
+    DEFAULT_HOST = "https://wildlifelicensing-uat.dbca.wa.gov.au"
 #
-PAYMENT_NOTIFICIATON_URL_HOST = config(
-    "PAYMENT_NOTIFICIATON_URL_HOST",
-    default=DEFAULT_PAYMENT_HOST,
+NOTIFICATION_HOST = config(
+    "NOTIFICATION_HOST",
+    default=DEFAULT_HOST,
 )
 
-# next setting is necessary to resolve absolute URL for the emails sent by the tasks running in cron.
-DEFAULT_HOST = config(
-    "DEFAULT_HOST", default="https://wildlifelicensing.dpaw.wa.gov.au"
-)
 # set data_upload_max params, otherwise use django default values
 DATA_UPLOAD_MAX_NUMBER_FIELDS = config(
     "DATA_UPLOAD_MAX_NUMBER_FIELDS", default=250000, cast=int
@@ -112,7 +108,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = config(
 DATA_UPLOAD_MAX_MEMORY_SIZE = config(
     "DATA_UPLOAD_MAX_MEMORY_SIZE", default=10485760, cast=int
 )  # 2.5 MB
-WL_PDF_URL = config("WL_PDF_URL", default="https://wildlifelicensing.dpaw.wa.gov.au")
+
 INVOICE_UNPAID_WARNING = config(
     "INVOICE_UNPAID_WARNING",
     default="Your application cannot be processed until payment is received.",

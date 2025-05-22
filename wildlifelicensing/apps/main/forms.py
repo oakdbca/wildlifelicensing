@@ -24,9 +24,10 @@ class BetterJSONField(forms.JSONField):
     It fixes the double 'stringification', avoid the null text and indents the json (see prepare_value).
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, *, decoder=None, **kwargs):
         kwargs.setdefault("widget", forms.Textarea(attrs={"cols": 80, "rows": 20}))
-        super(forms.JSONField, self).__init__(**kwargs)
+        self.decoder = decoder or json.JSONDecoder
+        super().__init__(**kwargs)
 
     def prepare_value(self, value):
         if value is None:

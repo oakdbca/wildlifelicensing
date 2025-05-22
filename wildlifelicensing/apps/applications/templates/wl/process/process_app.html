@@ -77,13 +77,13 @@
                       {{ applicant.user.first_name }} {{ applicant.user.last_name }}
                       <span class="pull-right">
                         {% if applicant.user.has_identficiation %}
-                          <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{applicant.user.id}}/change/" target="_blank">Show ID</a>
+                          <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{applicant.user.id}}/change/" target="_blank">Show ID<i class="fa fa-external-link" style="padding-left:5px;" aria-hidden="true"></i></a>
                         {% else %}
                           ID Unavailable
                         {% endif %}
                         {% if applicant.user.has_senior_card %}
                           /
-                          <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{applicant.user.id}}/change/" target="_blank">Senior Card</a>
+                          <a href="{{LEDGER_UI_URL}}/ledger/account-management/{{applicant.user.id}}/change/" target="_blank">Senior Card<i class="fa fa-external-link" style="padding-left:5px;" aria-hidden="true"></i></a>
                         {% endif %}
                       </span>
                     </p>
