@@ -29,16 +29,6 @@ class BetterJSONField(forms.JSONField):
         self.decoder = decoder or json.JSONDecoder
         super().__init__(**kwargs)
 
-    def to_python(self, value):
-        if value in self.empty_values:
-            return None
-        if isinstance(value, str):
-            try:
-                return json.loads(value, cls=self.decoder)
-            except ValueError:
-                raise forms.ValidationError("Enter a valid JSON.")
-        return value
-
     def prepare_value(self, value):
         if value is None:
             return ""
