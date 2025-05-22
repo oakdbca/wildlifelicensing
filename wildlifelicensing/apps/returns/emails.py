@@ -2,7 +2,6 @@ import logging
 
 from django.conf import settings
 from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from wildlifelicensing.apps.emails.emails import TemplateEmailBase, host_reverse
@@ -60,7 +59,7 @@ class ReturnAmendmentRequestedEmail(TemplateEmailBase):
 def send_amendment_requested_email(amendment_request, request, application):
     ret = amendment_request.ret
     email = ReturnAmendmentRequestedEmail()
-    url = request.build_absolute_uri(reverse("wl_returns:enter_return", args=[ret.pk]))
+    url = host_reverse("wl_returns:enter_return", args=[ret.pk])
 
     context = {
         "amendment_request": amendment_request,
