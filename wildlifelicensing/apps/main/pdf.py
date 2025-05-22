@@ -736,7 +736,7 @@ def _create_letter_signature():
     return signature_elements
 
 
-def _create_cover_letter(cover_letter_buffer, licence, site_url):
+def _create_cover_letter(cover_letter_buffer, licence):
     cover_letter_frame = Frame(
         LETTER_PAGE_MARGIN,
         LETTER_PAGE_MARGIN,
@@ -921,10 +921,10 @@ def create_licence_pdf_bytes(
     return value
 
 
-def create_cover_letter_pdf_document(filename, licence, site_url):
+def create_cover_letter_pdf_document(filename, licence):
     cover_letter_buffer = BytesIO()
 
-    _create_cover_letter(cover_letter_buffer, licence, site_url)
+    _create_cover_letter(cover_letter_buffer, licence)
 
     document = Document.objects.create(name=filename)
     document.file.save(filename, File(cover_letter_buffer), save=True)
