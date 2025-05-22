@@ -8,7 +8,6 @@ from django.core.files import File
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
-from django.urls import reverse
 from django.views.generic import TemplateView, View
 from pypdf import PdfReader, PdfWriter
 
@@ -104,7 +103,7 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
         )
 
         licence.cover_letter_document = create_cover_letter_pdf_document(
-            cover_letter_filename, licence, request.build_absolute_uri(reverse("home"))
+            cover_letter_filename, licence
         )
 
         licence.save()
@@ -151,7 +150,7 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
             licence_filename,
             licence,
             application,
-            settings.WL_PDF_URL,
+            settings.NOTIFICATION_HOST,
             original_issue_date,
         )
         if attachments:
@@ -451,7 +450,7 @@ class PreviewLicenceView(OfficerRequiredMixin, View):
                     filename,
                     licence,
                     application,
-                    settings.WL_PDF_URL,
+                    settings.NOTIFICATION_HOST,
                     original_issue_date,
                 )
             )
