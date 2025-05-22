@@ -222,19 +222,19 @@ class SchemaField:
                 if not_integer:
                     return f'The field "{self.name}" must be a whole number.'
 
+        # Added this block to make the error message for decimal conversion failures more user friendly
         if isinstance(self.type, types.NumberType):
             if not is_blank_value(value):
-                not_number = False
                 try:
                     casted = self.cast(value)
-                    # there's also the case where the case where a float 1.2 is successfully casted in 1
-                    # (ex: int(1.2) = 1)
-                    if str(casted) != str(value):
-                        not_number = True
-                except Exception:
-                    not_number = True
-                if not_number:
-                    return f'The field "{self.name}" must be a number.'
+                except Exception as e:
+                    error = f"{e}"
+                    if error.find("enum array") and self.constraints.enum:
+                        values = [str(v) for v in self.constraints.enum]
+                        error = f"The value must be one the following: {values}"
+                    elif "decimal.ConversionSyntax" in str(e):
+                        error = f'The field "{self.name}" must be a number.'
+                    return error
 
         try:
             self.cast(value)
