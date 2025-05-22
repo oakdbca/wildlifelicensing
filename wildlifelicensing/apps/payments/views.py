@@ -57,7 +57,7 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
         # Rather than using build_absolute_uri here we are using a pre configured host from the settings
         # as otherwise when an internal user does a proxy application the return_preload_url
         # will be the internal url which will not allow the request due to the sso login mechanism
-        return_preload_url = settings.PAYMENT_NOTIFICIATON_URL_HOST + reverse(
+        return_preload_url = settings.NOTIFICATION_HOST + reverse(
             "wl_payments:ledger-api-payment-success-callback",
             kwargs={"payment_uuid": application.payment_uuid},
         )
