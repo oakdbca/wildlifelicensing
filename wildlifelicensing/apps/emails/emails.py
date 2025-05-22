@@ -24,11 +24,7 @@ def _render(template, context):
 
 
 def host_reverse(name, args=None, kwargs=None):
-    return f"{settings.DEFAULT_HOST}{reverse(name, args=args, kwargs=kwargs)}"
-
-
-def pdf_host_reverse(name, args=None, kwargs=None):
-    return f"{settings.WL_PDF_URL}{reverse(name, args=args, kwargs=kwargs)}"
+    return f"{settings.NOTIFICATION_HOST}{reverse(name, args=args, kwargs=kwargs)}"
 
 
 class TemplateEmailBase:
