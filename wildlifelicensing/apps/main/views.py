@@ -54,9 +54,34 @@ class SearchCustomersView(OfficerRequiredMixin, View):
             )
         )
 
-        users = users.filter(search_term__icontains=search_term).values(
-            "id", "email", "first_name", "last_name", "dob"
-        )[:10]
+        # Filter out users with no name or legal name as otherwise
+        # an invoice can be created with no name which is not a valid invoice
+        users = (
+            users.filter(search_term__icontains=search_term)
+            .filter(
+                Q(
+                    first_name__isnull=False,
+                    first_name__gt="",
+                    last_name__isnull=False,
+                    last_name__gt="",
+                )
+                | Q(
+                    legal_first_name__isnull=False,
+                    legal_first_name__gt="",
+                    legal_last_name__isnull=False,
+                    legal_last_name__gt="",
+                )
+            )
+            .values(
+                "id",
+                "email",
+                "first_name",
+                "last_name",
+                "legal_first_name",
+                "legal_last_name",
+                "dob",
+            )[:10]
+        )
 
         data_transform = []
 
@@ -67,8 +92,10 @@ class SearchCustomersView(OfficerRequiredMixin, View):
             dob_text = ""
             if person["dob"]:
                 dob_text = f", DOB: {person['dob']}"
-            text = f"{person['first_name']} {person['last_name']} (email: {person['email']}{dob_text})"
 
+            text = f"{person['first_name']} {person['last_name']} (email: {person['email']}{dob_text})"
+            if not person["first_name"] and not person["last_name"]:
+                text = f"{person['legal_first_name']} {person['legal_last_name']} (email: {person['email']}{dob_text})"
             data_transform.append(
                 {
                     "id": person["id"],
