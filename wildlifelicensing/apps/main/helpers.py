@@ -46,6 +46,19 @@ def belongs_to(user: EmailUser, group_name: str) -> bool:
     return belongs_to_by_user_id(user.id, group_name)
 
 
+def belongs_to_groups(request, group_names: list) -> bool:
+    if not request.user.is_authenticated:
+        return False
+    if request.user.is_superuser:
+        return True
+
+    for group_name in group_names:
+        if belongs_to_by_user_id(request.user.id, group_name):
+            return True
+
+    return False
+
+
 def is_customer(user):
     """
     Test if the user is a customer
@@ -198,5 +211,5 @@ def is_departmentUser(request):
 
 def is_internal(request):
     return is_departmentUser(request) and (
-        belongs_to(request.user, settings.INTERNAL_GROUPS)
+        belongs_to_groups(request.user, settings.INTERNAL_GROUPS)
     )
