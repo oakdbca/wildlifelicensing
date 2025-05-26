@@ -314,3 +314,26 @@ DROP TABLE wl_main_communicationslogentry_documents_old CASCADE;
 **Step 13: Create system groups from old auth group tables**
 
 ./manage.py create_system_group_permissions
+
+**Step 14: Fix Data Descriptors for ReturnType Model in Django Admin**
+
+Wildlife Licensing datapackage and tableschema changes:
+
+Older versions of the libraries were more lenient and allowed certain invalid data
+descriptors. Now that we have updated to the latest packages all of the data descriptors
+for ReturnType models must be updated via django admin.
+
+New rules: Empty "path": "" is no longer allowed.
+All these entries will have to be removed.
+
+Each resource in the data descriptor must have either a path or data property.
+Since we don't have file paths to provide, we can just add an empty list as the
+data property like so: "data": []
+
+There is also another error in one of the data descriptors:
+
+In the Licence to take fauna for scientific purposes return type, the DATUM field is
+specified as a type 'string' however it has an invalid "format": "fmt:%d/%m/%Y",
+The only valid format entries for string are: "default", "email", "uri" and "binary"
+To solve this one we simply remove the format entry for DATUM field as it seems it was put
+there by accident.
