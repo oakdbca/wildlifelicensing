@@ -159,6 +159,8 @@ class CanPerformAssessmentMixin(BaseAccessMixin):
         user = self.request.user
         if not user.is_authenticated:
             return False
+        if user.is_superuser:
+            return True
         if not is_assessor(user):
             return False
         assessment = self.get_assessment()
