@@ -76,7 +76,7 @@ def is_assessor(user):
     :param user:
     :return:
     """
-    return belongs_to(user, settings.GROUP_NAME_OFFICERS)
+    return belongs_to(user, settings.GROUP_NAME_ASSESSORS)
 
 
 def get_all_officers():
