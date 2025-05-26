@@ -90,6 +90,10 @@ PAYMENT_SYSTEM_PREFIX = config(
     "PAYMENT_SYSTEM_PREFIX", PAYMENT_SYSTEM_ID.replace("S", "0")
 )  # '369'
 
+SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", True, cast=bool)
+CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", True, cast=bool)
+SESSION_COOKIE_AGE = config("SESSION_COOKIE_AGE", 3600, cast=int)  # 1 hour
+
 DEFAULT_HOST = "https://wildlifelicensing.dbca.wa.gov.au"
 if EMAIL_INSTANCE.lower() == "dev":
     DEFAULT_HOST = "https://wildlifelicensing-dev.dbca.wa.gov.au"
