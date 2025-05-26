@@ -131,6 +131,9 @@ class CheckoutApplicationView(LoginRequiredMixin, RedirectView):
 
         create_checkout_session(request, checkout_params)
 
+        request.session["payment_pk"] = application.pk
+        request.session["payment_model"] = "application"
+
         logger.info("Redirecting user to ledgergw payment details page.")
         return redirect(reverse("ledgergw-payment-details"))
 

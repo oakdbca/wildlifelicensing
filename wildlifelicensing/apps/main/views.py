@@ -49,6 +49,10 @@ class SearchCustomersView(OfficerRequiredMixin, View):
                 Value(" "),
                 "last_name",
                 Value(" "),
+                "legal_first_name",
+                Value(" "),
+                "legal_last_name",
+                Value(" "),
                 "email",
                 output_field=CharField(),
             )

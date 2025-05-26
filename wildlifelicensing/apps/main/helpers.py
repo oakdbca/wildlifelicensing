@@ -46,6 +46,19 @@ def belongs_to(user: EmailUser, group_name: str) -> bool:
     return belongs_to_by_user_id(user.id, group_name)
 
 
+def belongs_to_groups(request, group_names: list) -> bool:
+    if not request.user.is_authenticated:
+        return False
+    if request.user.is_superuser:
+        return True
+
+    for group_name in group_names:
+        if belongs_to_by_user_id(request.user.id, group_name):
+            return True
+
+    return False
+
+
 def is_customer(user):
     """
     Test if the user is a customer
@@ -76,7 +89,7 @@ def is_assessor(user):
     :param user:
     :return:
     """
-    return belongs_to(user, settings.GROUP_NAME_OFFICERS)
+    return belongs_to(user, settings.GROUP_NAME_ASSESSORS)
 
 
 def get_all_officers():
@@ -172,3 +185,31 @@ def retrieve_group_members(group_object, app_label="wl_main"):
         return group_object.values_list(
             f"{class_name.lower()}_members__emailuser__id", flat=True
         )
+
+
+def email_in_dbca_domain(email: str) -> bool:
+    return email.split("@")[1] in settings.DEPT_DOMAINS
+
+
+def in_dbca_domain(request):
+    user = request.user
+    if not email_in_dbca_domain(user.email):
+        return False
+
+    if not user.is_staff:
+        # hack to reset department user to is_staff==True, if the user logged in externally
+        # (external departmentUser login defaults to is_staff=False)
+        user.is_staff = True
+        user.save()
+
+    return True
+
+
+def is_departmentUser(request):
+    return request.user.is_authenticated and in_dbca_domain(request)
+
+
+def is_internal(request):
+    return is_departmentUser(request) and (
+        belongs_to_groups(request, settings.INTERNAL_GROUPS)
+    )
