@@ -178,6 +178,12 @@ BRANCH_NAME = config("BRANCH_NAME", default="Tourism and Concessions Branch")
 GROUP_NAME_OFFICERS = "Officers"
 GROUP_NAME_ASSESSORS = "Assessors"
 
+INTERNAL_GROUPS = [
+    GROUP_NAME_OFFICERS,
+    GROUP_NAME_ASSESSORS,
+]
+
+
 # ---------- Cache keys ----------
 CACHE_TIMEOUT_5_SECONDS = 5
 CACHE_TIMEOUT_10_SECONDS = 10
