@@ -149,7 +149,7 @@ This is due to a hack that was used to alter foreign keys without losing data (b
 altering the field in the same migration). Apologies that there are so many of these. It wasn't realised at
 the time that it would create this much manual work.
 
-(Unfortunately the name of constraints may vary as they may have been abbreviated by a different version of postgres so you will have to check their names manually with psql)
+(Unfortunately the name of constraints may vary as they may have been abbreviated by a different version of django/postgres so you will have to check their names manually with psql)
 
 1. wl_main_wildlifelicence:
 
@@ -193,7 +193,7 @@ DROP CONSTRAINT wl_applications_a_hard_copy_id_8c41f362_fk_accounts_document_id;
 - Delete any constraints to accounts_emailuser since those field are now linked to
   the unmanaged model EmailUserRO:
 
-One way to do this would be to drop the accounts_emailuser table from the wildlife licensing
+The fastest way to do this would be to drop the accounts_emailuser table from the wildlife licensing
 database and cascade constraints.
 
 DROP TABLE accounts_emailuser CASCADE;
