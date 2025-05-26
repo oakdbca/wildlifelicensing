@@ -143,8 +143,13 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = (
 )
 
 MIDDLEWARE_CLASSES += [
+    "wildlifelicensing.middleware.FirstTimeNagScreenMiddleware",
+    "wildlifelicensing.middleware.PaymentSessionMiddleware",
+    "wildlifelicensing.middleware.RevisionOverrideMiddleware",
+    "wildlifelicensing.middleware.CacheControlMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
+
 MIDDLEWARE = MIDDLEWARE_CLASSES
 MIDDLEWARE_CLASSES = None
 
