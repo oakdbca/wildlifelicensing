@@ -323,11 +323,12 @@ Older versions of the libraries were more lenient and allowed certain invalid da
 descriptors. Now that we have updated to the latest packages all of the data descriptors
 for ReturnType models must be updated via django admin.
 
-New rules: Empty "path": "" is no longer allowed.
-All these entries will have to be removed.
+New rules:
 
-Each resource in the data descriptor must have either a path or data property.
-Since we don't have file paths to provide, we can just add an empty list as the
+- Empty "path": "" is no longer allowed.
+- Each resource in the data descriptor must have either a path or data property.
+
+Since we don't have file paths to provide, we can just replace any empty path properties with an empty list as the
 data property like so: "data": []
 
 There is also another error in one of the data descriptors:
