@@ -211,5 +211,5 @@ def is_departmentUser(request):
 
 def is_internal(request):
     return is_departmentUser(request) and (
-        belongs_to_groups(request.user, settings.INTERNAL_GROUPS)
+        belongs_to_groups(request, settings.INTERNAL_GROUPS)
     )
