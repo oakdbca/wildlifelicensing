@@ -35,7 +35,6 @@ class FirstTimeNagScreenMiddleware:
         if (
             request.user.first_name
             and request.user.last_name
-            and request.user.residential_address_id
             # Don't require internal users to fill in phone numbers
             and is_internal(request)
             or (request.user.phone_number or request.user.mobile_number)
