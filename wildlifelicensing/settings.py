@@ -199,7 +199,7 @@ CACHE_TIMEOUT_24_HOURS = 60 * 60 * 24
 CACHE_TIMEOUT_NEVER = None
 
 CACHE_KEY_SUPERUSER_IDS = "superuser-ids"
-C1ACHE_KEY_USER_BELONGS_TO_GROUP = "user-{user_id}-belongs-to-{group_name}"
+CACHE_KEY_USER_BELONGS_TO_GROUP = "user-{user_id}-belongs-to-{group_name}"
 
 if DEBUG:
     LOGGING = {
