@@ -199,7 +199,7 @@ CACHE_TIMEOUT_24_HOURS = 60 * 60 * 24
 CACHE_TIMEOUT_NEVER = None
 
 CACHE_KEY_SUPERUSER_IDS = "superuser-ids"
-CACHE_KEY_USER_BELONGS_TO_GROUP = "user-{user_id}-belongs-to-{group_name}"
+C1ACHE_KEY_USER_BELONGS_TO_GROUP = "user-{user_id}-belongs-to-{group_name}"
 
 if DEBUG:
     LOGGING = {
@@ -266,3 +266,6 @@ DEFAULT_FORM_DATETIME_FORMAT = "%d/%m/%Y %H:%M:%S"
 DEFAULT_FORM_DATE_FORMAT = "%d/%m/%Y"
 
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+
+NOMOS_BLOB_URL = env('NOMOS_BLOB_URL')
+KINGDOM = [1,2,5,6]
