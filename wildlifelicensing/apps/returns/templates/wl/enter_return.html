@@ -24,7 +24,11 @@
 
     require(["{% static 'wl/js/return_table.js' %}"], function (returnTable) {
         returnTable.initTables();
-        // disable form submit by 'enter' key $(document).on("keypress", ":input:not(textarea)", function(event) { if (event.keyCode == 13) { event.preventDefault(); } }); });
+        // disable form submit by 'enter' key
+        $(document).on("keypress", ":input:not(textarea)", function(event) {
+            if (event.keyCode == 13) { event.preventDefault(); }
+        });
+    });
 
 {% endblock %}
 
