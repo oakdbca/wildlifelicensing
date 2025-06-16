@@ -15,6 +15,7 @@ from wildlifelicensing.apps.main.models import (
     Address,
     CommunicationsLogEntry,
     Document,
+    NomosTaxonomy,
     Profile,
     UserAddress,
 )
@@ -153,3 +154,9 @@ class CommunicationsLogEntrySerializer(serializers.ModelSerializer):
 
     def get_documents(self, obj):
         return [(str(document), document.file.url) for document in obj.documents.all()]
+
+
+class NomosTaxonomySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NomosTaxonomy
+        fields = "__all__"
