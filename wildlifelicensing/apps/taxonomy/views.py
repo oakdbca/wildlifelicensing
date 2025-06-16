@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.generic import View
 
@@ -18,6 +19,9 @@ class SpeciesNamesJSON(View):
                 content_type="application/json",
             )
         serializer = NomosTaxonomySerializer(
-            NomosTaxonomy.objects.filter(name__icontains=search), many=True
+            NomosTaxonomy.objects.filter(name__icontains=search)[
+                : settings.NOMOS_TAXONOMY_SEARCH_RESULTS_LIMIT
+            ],
+            many=True,
         )
         return JsonResponse(serializer.data, safe=False)
