@@ -32,14 +32,14 @@ class Command(BaseCommand):
         local_file = "nomos_fauna.json"
 
         try:
-            NOMOS_KINGDON_IDS = {int(k) for k in settings.NOMOS_KINGDON_IDS_LIST}
+            NOMOS_KINGDOM_IDS = {int(k) for k in settings.NOMOS_KINGDOM_IDS_LIST}
         except ValueError as e:
             err_msg = f"Invalid NOMOS kingdom IDs: {e}"
             logger.error(err_msg)
             errors.append(err_msg)
             return
 
-        logger.info("NOMOS_KINGDON_IDS: %s", NOMOS_KINGDON_IDS)
+        logger.info("NOMOS_KINGDOM_IDS: %s", NOMOS_KINGDOM_IDS)
 
         if test_mode and os.path.exists(local_file):
             logger.info("Test mode: Loading taxon data from %s", local_file)
@@ -79,7 +79,7 @@ class Command(BaseCommand):
 
         count = 0
         for taxon in taxon_json:
-            if taxon.get("kingdom_id") in NOMOS_KINGDON_IDS:
+            if taxon.get("kingdom_id") in NOMOS_KINGDOM_IDS:
                 vernaculars = taxon.get("vernaculars") or []
                 vernacular_str = (
                     " (" + ", ".join(v.get("name", "") for v in vernaculars) + ")"
