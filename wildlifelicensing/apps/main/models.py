@@ -759,3 +759,14 @@ class Product(models.Model):
     @property
     def free_of_charge(self):
         return self.price == Decimal("0.00")
+
+
+class NomosTaxonomy(models.Model):
+    # This will include the canoncial name and any vernacular names in brackets
+    name = models.CharField(max_length=250, unique=True, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "NOMOS Taxonomies"
