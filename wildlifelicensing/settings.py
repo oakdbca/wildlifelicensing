@@ -260,8 +260,10 @@ DEFAULT_FORM_DATE_FORMAT = "%d/%m/%Y"
 
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
 
-NOMOS_BLOB_URL = config("NOMOS_BLOB_URL")
-NOMOS_KINGDOM_IDS_LIST = config("NOMOS_KINGDOM_IDS_LIST", default="1,2,5,6", cast=Csv())
+NOMOS_BLOB_URL = config("NOMOS_BLOB_URL", default="")
+NOMOS_KINGDOM_IDS_LIST = config(
+    "NOMOS_KINGDOM_IDS_LIST", default="1,2,5,6", cast=Csv(int)
+)
 NOMOS_TAXONOMY_SEARCH_RESULTS_LIMIT = config(
     "NOMOS_TAXONOMY_SEARCH_RESULTS_LIMIT", default=20, cast=int
 )
