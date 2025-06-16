@@ -5,10 +5,17 @@ from django.utils.safestring import mark_safe
 
 from reversion.admin import VersionAdmin
 
-from wildlifelicensing.apps.main.models import WildlifeLicenceCategory, WildlifeLicenceType, Condition, \
-    DefaultCondition, Region, Variant, VariantGroup
-from wildlifelicensing.apps.main.forms import BetterJSONField
-
+from wildlifelicensing.apps.main.models import (
+    Condition,
+    DefaultCondition,
+    NomosTaxonomy,
+    Product,
+    Region,
+    Variant,
+    VariantGroup,
+    WildlifeLicenceCategory,
+    WildlifeLicenceType,
+)
 from wildlifelicensing.apps.payments import utils as payment_utils
 
 
@@ -173,4 +180,28 @@ class ConditionAdmin(VersionAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    make_obsolete.short_description = 'Mark selected conditions as obsolete'
+    make_obsolete.short_description = "Mark selected conditions as obsolete"
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    model = Product
+    list_display = ("title", "partner_sku", "price")
+    ordering = ("id",)
+
+
+@admin.register(NomosTaxonomy)
+class NomosTaxonomyAdmin(admin.ModelAdmin):
+    model = NomosTaxonomy
+    list_display = ("name",)
+    search_fields = ("name",)
+    ordering = ("name",)
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
