@@ -71,6 +71,7 @@ STATICFILES_DIRS.append(
 CRON_CLASSES = [
     # 'wildlifelicensing.apps.main.cron.CheckLicenceRenewalsCronJob',
     # 'wildlifelicensing.apps.returns.cron.CheckOverdueReturnsCronJob',
+    "wildlifelicensing.apps.main.cron.FetchNomosFaunaCronJob",
     "appmonitor_client.cron.CronJobAppMonitorClient",
 ]
 
