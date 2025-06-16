@@ -2,6 +2,9 @@ from django.core.serializers.json import DjangoJSONEncoder  # to handle the date
 from django.db.models.fields.files import FieldFile
 from django_countries.fields import Country
 from django.utils.encoding import smart_text
+
+from rest_framework import serializers
+
 import six
 
 
@@ -21,3 +24,8 @@ class WildlifeLicensingJSONEncoder(DjangoJSONEncoder):
                 # workaround for django __proxy__ objects
                 result = six.text_type(o)
             return result
+
+class NomosTaxonomySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NomosTaxonomy
+        fields = "__all__"
