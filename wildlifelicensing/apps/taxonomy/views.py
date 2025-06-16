@@ -1,6 +1,6 @@
 import logging
 
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views.generic import View
 
 from wildlifelicensing.apps.main.models import NomosTaxonomy
@@ -13,11 +13,11 @@ class SpeciesNamesJSON(View):
     def get(self, request, *args, **kwargs):
         search = request.GET.get("search", None)
         if not search:
-            return HttpResponse(
+            return JsonResponse(
                 [],
                 content_type="application/json",
             )
         serializer = NomosTaxonomySerializer(
             NomosTaxonomy.objects.filter(name__icontains=search), many=True
         )
-        return HttpResponse(serializer.data, content_type="application/json")
+        return JsonResponse(serializer.data, safe=False)
