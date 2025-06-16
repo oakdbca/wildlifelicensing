@@ -9,7 +9,7 @@ from django.utils.html import strip_tags
 
 from wildlifelicensing.apps.main.models import Document
 
-logger = logging.getLogger("log")
+logger = logging.getLogger(__name__)
 
 MAX_SUBJECT_LENGTH = 76
 
