@@ -31,13 +31,15 @@ class Command(BaseCommand):
         taxon_json = None
         local_file = "nomos_fauna.json"
 
-        try:
-            NOMOS_KINGDOM_IDS = {int(k) for k in settings.NOMOS_KINGDOM_IDS_LIST}
-        except ValueError as e:
-            err_msg = f"Invalid NOMOS kingdom IDs: {e}"
+        NOMOS_BLOB_URL = settings.NOMOS_BLOB_URL
+
+        if not NOMOS_BLOB_URL:
+            err_msg = "The NOMOS_BLOB_URL environment variable is not set."
             logger.error(err_msg)
             errors.append(err_msg)
             return
+
+        NOMOS_KINGDOM_IDS = set(settings.NOMOS_KINGDOM_IDS_LIST)
 
         logger.info("NOMOS_KINGDOM_IDS: %s", NOMOS_KINGDOM_IDS)
 
@@ -53,9 +55,7 @@ class Command(BaseCommand):
                 "Accept-Encoding": "gzip, deflate",
             }
             try:
-                response = requests.get(
-                    url=settings.NOMOS_BLOB_URL, headers=headers, timeout=60
-                )
+                response = requests.get(url=NOMOS_BLOB_URL, headers=headers, timeout=60)
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 err_msg = f"Failed to connect to NOMOS BLOB URL: {e}"
