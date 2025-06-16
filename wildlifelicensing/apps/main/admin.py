@@ -7,6 +7,7 @@ from reversion.admin import VersionAdmin
 from wildlifelicensing.apps.main.models import (
     Condition,
     DefaultCondition,
+    NomosTaxonomy,
     Product,
     Region,
     Variant,
@@ -204,3 +205,20 @@ class ProductAdmin(admin.ModelAdmin):
     model = Product
     list_display = ("title", "partner_sku", "price")
     ordering = ("id",)
+
+
+@admin.register(NomosTaxonomy)
+class NomosTaxonomyAdmin(admin.ModelAdmin):
+    model = NomosTaxonomy
+    list_display = ("name",)
+    search_fields = ("name",)
+    ordering = ("name",)
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
