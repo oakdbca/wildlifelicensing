@@ -27,3 +27,15 @@ class CheckLicenceRenewalsCronJob(CronJobBase):
             if send_licence_renewal_email_notification(licence):
                 licence.renewal_sent = True
                 licence.save()
+
+
+class FetchNomosFaunaCronJob(CronJobBase):
+    RUN_AT_TIMES = ["00:30"]
+
+    schedule = Schedule(run_at_times=RUN_AT_TIMES)
+    code = "main.fetch_nomos_fauna"
+
+    def do(self):
+        from django.core.management import call_command
+
+        call_command("fetch_nomos_fauna")
