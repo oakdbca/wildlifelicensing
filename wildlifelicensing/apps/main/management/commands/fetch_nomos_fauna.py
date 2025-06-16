@@ -31,15 +31,13 @@ class Command(BaseCommand):
         taxon_json = None
         local_file = "nomos_fauna.json"
 
-        NOMOS_BLOB_URL = settings.NOMOS_BLOB_URL
-
-        if not NOMOS_BLOB_URL:
-            err_msg = "The NOMOS_BLOB_URL environment variable is not set."
+        try:
+            NOMOS_KINGDOM_IDS = {int(k) for k in settings.NOMOS_KINGDOM_IDS_LIST}
+        except ValueError as e:
+            err_msg = f"Invalid NOMOS kingdom IDs: {e}"
             logger.error(err_msg)
             errors.append(err_msg)
             return
-
-        NOMOS_KINGDOM_IDS = set(settings.NOMOS_KINGDOM_IDS_LIST)
 
         logger.info("NOMOS_KINGDOM_IDS: %s", NOMOS_KINGDOM_IDS)
 
