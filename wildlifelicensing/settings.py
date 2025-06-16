@@ -55,9 +55,10 @@ STATIC_ROOT=os.path.join(BASE_DIR, 'staticfiles_wl')
 STATICFILES_DIRS.append(os.path.join(os.path.join(BASE_DIR, 'wildlifelicensing', 'static')))
 
 CRON_CLASSES = [
-    #'wildlifelicensing.apps.main.cron.CheckLicenceRenewalsCronJob',
-    #'wildlifelicensing.apps.returns.cron.CheckOverdueReturnsCronJob',
-    'appmonitor_client.cron.CronJobAppMonitorClient',
+    # 'wildlifelicensing.apps.main.cron.CheckLicenceRenewalsCronJob',
+    # 'wildlifelicensing.apps.returns.cron.CheckOverdueReturnsCronJob',
+    "wildlifelicensing.apps.main.cron.FetchNomosFaunaCronJob",
+    "appmonitor_client.cron.CronJobAppMonitorClient",
 ]
 
 
