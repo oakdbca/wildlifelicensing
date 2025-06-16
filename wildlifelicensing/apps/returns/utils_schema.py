@@ -110,7 +110,6 @@ class SchemaField:
         type_func = self.WL_TYPE_MAP.get(self.wl.type) or self.BASE_TYPE_MAP.get(
             self.data.get("type")
         )
-        print(f"Field {self.name} type: {self.wl.type} -> {type_func}")
         self.type_func = type_func
         self.constraints = SchemaConstraints(self.data.get("constraints", {}))
 
