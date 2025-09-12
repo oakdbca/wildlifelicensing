@@ -21,7 +21,7 @@ django-reset-migrations==0.3.1
 django-reversion-compare==0.15
 django-reversion==5.1.0
 django-widget-tweaks==1.5.0
-django~=5.2.4
+django~=5.2.6
 djangorestframework-csv==3.0.2
 djangorestframework-datatables==0.7.2
 djangorestframework-gis==1.1
@@ -40,7 +40,7 @@ openpyxl==3.1.5
 phonenumbers==8.12.15
 psycopg2-binary==2.9.10
 pycountry==17.1.8
-pypdf==5.5.0
+pypdf==6.0.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 reportlab==4.3.1
