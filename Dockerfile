@@ -1,20 +1,15 @@
 # syntax = docker/dockerfile:1.4
 
-# You can pin this to a patched/tagged Ubuntu image or a digest at build time:
-#   docker build --build-arg UBUNTU_IMAGE=ubuntu@sha256:<digest> .
-# or
-#   docker build --build-arg UBUNTU_IMAGE=ubuntu:24.04.x -t myimage:tag .
-# Default uses the LTS 24.04 tag (override with --build-arg to pin).
 ARG UBUNTU_IMAGE=ubuntu:24.04
+
 # --- Builder: install OS build deps, create venv, install python deps ---
 FROM ${UBUNTU_IMAGE} AS builder
 
 LABEL org.opencontainers.image.source="https://github.com/dbca-wa/wildlifelicensing"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    TZ=Australia/Perth
-# Build-time default values (safe placeholders) so Django management commands run during build
-ENV PRODUCTION_EMAIL=False \
+    TZ=Australia/Perth \
+    PRODUCTION_EMAIL=False \
     SECRET_KEY="ThisisNotRealKey" \
     NOTIFICATION_EMAIL="asi@dbca.wa.gov.au" \
     NON_PROD_EMAIL="asi@dbca.wa.gov.au" \
@@ -103,5 +98,4 @@ ENV PATH=/app/venv/bin:$PATH
 EXPOSE 8080
 HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget","-q","-O","-","http://localhost:8080/"]
 
-# Use interpreter form to avoid exec-bit surprises in container platforms
 CMD ["/bin/bash","/startup.sh"]
