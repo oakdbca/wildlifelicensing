@@ -1,13 +1,20 @@
-# syntax = docker/dockerfile:1.2
+# syntax = docker/dockerfile:1.4
 
-FROM ubuntu:24.04 AS builder_base_wildlifelicensing
+# You can pin this to a patched/tagged Ubuntu image or a digest at build time:
+#   docker build --build-arg UBUNTU_IMAGE=ubuntu@sha256:<digest> .
+# or
+#   docker build --build-arg UBUNTU_IMAGE=ubuntu:24.04.x -t myimage:tag .
+# Default uses the LTS 24.04 tag (override with --build-arg to pin).
+ARG UBUNTU_IMAGE=ubuntu:24.04
+# --- Builder: install OS build deps, create venv, install python deps ---
+FROM ${UBUNTU_IMAGE} AS builder
 
-LABEL maintainer="asi@dbca.wa.gov.au"
 LABEL org.opencontainers.image.source="https://github.com/dbca-wa/wildlifelicensing"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    TZ=Australia/Perth \
-    PRODUCTION_EMAIL=False \
+    TZ=Australia/Perth
+# Build-time default values (safe placeholders) so Django management commands run during build
+ENV PRODUCTION_EMAIL=False \
     SECRET_KEY="ThisisNotRealKey" \
     NOTIFICATION_EMAIL="asi@dbca.wa.gov.au" \
     NON_PROD_EMAIL="asi@dbca.wa.gov.au" \
@@ -15,88 +22,86 @@ ENV DEBIAN_FRONTEND=noninteractive \
     OSCAR_SHOP_NAME="Parks & Wildlife" \
     BPAY_ALLOWED=False
 
-FROM builder_base_wildlifelicensing AS apt_packages_wildlifelicensing
+# Use Australian mirrors for apt
+RUN sed -i 's|archive.ubuntu.com|au.archive.ubuntu.com|g' /etc/apt/sources.list || true
 
-# Use Australian Mirrors
-RUN sed 's/archive.ubuntu.com/au.archive.ubuntu.com/g' /etc/apt/sources.list > /etc/apt/sourcesau.list && \
-    mv /etc/apt/sourcesau.list /etc/apt/sources.list
-
+# Install build-time packages. Keep this stage self-contained.
 RUN --mount=type=cache,target=/var/cache/apt apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
-    binutils \
+    build-essential \
     ca-certificates \
-    cron  \
-    gcc  \
-    gdal-bin \
+    curl \
     git \
-    gunicorn \
-    gunicorn \
-    htop \
-    imagemagick \
-    libmagic-dev \
+    gcc \
+    gdal-bin \
     libpq-dev \
-    libproj-dev \
-    libreoffice \
-    mtr \
-    patch \
-    postgresql-client \
-    python3-dev \
-    python3-gevent \
+    libxml2-dev \
+    libxslt1-dev \
+    python3.12-venv \
     python3-pip \
-    python3-setuptools \
-    python3-venv \
-    rsyslog \
-    software-properties-common \
-    ssh \
-    sudo \
+    python3-dev \
+    patch \
     tzdata \
-    vim \
     wget && \
-    rm -rf /var/lib/apt/lists/* && \
-    update-ca-certificates
+    rm -rf /var/lib/apt/lists/*
 
-FROM apt_packages_wildlifelicensing AS configure_wildlifelicensing
-
-COPY startup.sh /
-
-RUN chmod 755 /startup.sh && \
-    chmod +s /startup.sh && \
-    groupadd -g 5000 oim && \
-    useradd -g 5000 -u 5000 oim -s /bin/bash -d /app && \
-    usermod -a -G sudo oim && \
-    echo "oim  ALL=(ALL)  NOPASSWD: /startup.sh" > /etc/sudoers.d/oim && \
-    mkdir /app && \
-    chown -R oim.oim /app && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-    wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh && \
-    chmod 755 /tmp/default_script_installer.sh && \
-    /tmp/default_script_installer.sh && \
-    rm -rf /tmp/*
-
-FROM configure_wildlifelicensing AS python_dependencies_wildlifelicensing
+# Create app user early so files can be chown'd during copy
+RUN groupadd -g 5000 oim && useradd -g 5000 -u 5000 -s /bin/bash -d /app oim && mkdir -p /app && chown oim:oim /app
 
 WORKDIR /app
 USER oim
-ENV VIRTUAL_ENV_PATH=/app/venv
-ENV PATH=$VIRTUAL_ENV_PATH/bin:$PATH
 
+# Copy only what's needed for pip install (keep .git out)
 COPY --chown=oim:oim requirements.txt gunicorn.ini.py manage.py python-cron ./
-COPY --chown=oim:oim .git ./.git
 COPY --chown=oim:oim wildlifelicensing ./wildlifelicensing
+COPY --chown=oim:oim startup.sh /
 
-RUN python3.12 -m venv $VIRTUAL_ENV_PATH
-RUN $VIRTUAL_ENV_PATH/bin/pip3 install --upgrade pip && \
-    $VIRTUAL_ENV_PATH/bin/pip3 install --no-cache-dir -r requirements.txt && \
-    rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
+# Create venv and install python deps as the unprivileged user
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH=$VIRTUAL_ENV/bin:$PATH
+RUN python3.12 -m venv $VIRTUAL_ENV && \
+    $VIRTUAL_ENV/bin/pip install --upgrade pip setuptools wheel && \
+    $VIRTUAL_ENV/bin/pip install --no-cache-dir -r requirements.txt
 
-FROM python_dependencies_wildlifelicensing AS collectstatic_wildlifelicensing
-
+# Collect static (still in builder stage)
 RUN touch /app/.env
-RUN $VIRTUAL_ENV_PATH/bin/python manage.py collectstatic --noinput
+RUN $VIRTUAL_ENV/bin/python manage.py collectstatic --noinput
 
-FROM collectstatic_wildlifelicensing AS launch_wildlifelicensing
+# --- Runtime: minimal image with only runtime deps and application artifacts ---
+FROM ${UBUNTU_IMAGE} AS runtime
+
+ENV TZ=Australia/Perth
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Install only minimal runtime packages required by wheels in venv
+# Upgrade packages to pick up distro security fixes (note: this increases image size)
+RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y \
+    ca-certificates \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user to run the app
+RUN groupadd -g 5000 oim && useradd -g 5000 -u 5000 -s /bin/bash -d /app oim && mkdir -p /app && chown oim:oim /app
+
+USER oim
+WORKDIR /app
+
+# Copy only runtime artifacts from builder
+COPY --from=builder --chown=oim:oim /app/venv /app/venv
+COPY --from=builder --chown=oim:oim /app/wildlifelicensing /app/wildlifelicensing
+COPY --from=builder --chown=oim:oim /app/gunicorn.ini.py /app/gunicorn.ini.py
+COPY --from=builder --chown=oim:oim /app/manage.py /app/manage.py
+COPY --from=builder --chown=oim:oim /app/.env /app/.env
+
+# Copy startup script and ensure executable
+COPY --from=builder --chown=oim:oim /startup.sh /startup.sh
+RUN chmod 0755 /startup.sh || true
+
+ENV PATH=/app/venv/bin:$PATH
 
 EXPOSE 8080
-HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget", "-q", "-O", "-", "http://localhost:8080/"]
-CMD ["/startup.sh"]
+HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget","-q","-O","-","http://localhost:8080/"]
+
+# Use interpreter form to avoid exec-bit surprises in container platforms
+CMD ["/bin/bash","/startup.sh"]
