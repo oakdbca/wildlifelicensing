@@ -3,7 +3,6 @@ import re
 from decimal import Decimal
 
 from dateutil.parser import parse as date_parse
-from future.utils import raise_with_traceback
 from openpyxl import Workbook
 from openpyxl.cell import WriteOnlyCell
 from openpyxl.styles import Font
@@ -41,7 +40,7 @@ def cast_dayfirst_date(format, value, **options):
             return parse_datetime_day_first(value).date()
         return cast_date(format, value, **options)
     except Exception as e:
-        raise_with_traceback(InvalidDateType(e))
+        raise InvalidDateType(e) from e
 
 
 def cast_dayfirst_datetime(format, value, **options):
@@ -50,13 +49,13 @@ def cast_dayfirst_datetime(format, value, **options):
             return parse_datetime_day_first(value)
         return cast_datetime(format, value, **options)
     except Exception as e:
-        raise_with_traceback(InvalidDateType(e))
+        raise InvalidDateType(e) from e
 
 
 def cast_not_blank_string(format, value, **options):
     null_values = ["null", "none", "nil", "nan", "-", ""]
     if value in null_values:
-        raise_with_traceback(ValueError("Blank value not allowed"))
+        raise ValueError("Blank value not allowed")
     return cast_string(format, value, **options)
 
 
