@@ -235,3 +235,16 @@ h2 {
 .treeview a {
     text-decoration: none;
 }
+
+.btn-primary {
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #286090 !important;
+    border-color: #204d74 !important;
+    color: #fff !important;
+}
