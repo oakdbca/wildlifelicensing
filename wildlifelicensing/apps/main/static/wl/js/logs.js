@@ -4,6 +4,29 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
     // constants
     var DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm:ss';
 
+    // helpers to initialize Bootstrap 5 tooltips/popovers (vanilla API) while keeping jQuery usage
+    function initTooltips() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (el) {
+            if (!bootstrap.Tooltip.getInstance(el)) {
+                new bootstrap.Tooltip(el);
+            }
+        });
+    }
+
+    function initPopoversWithin($container) {
+        // $container may be a jQuery object or an element
+        var container = $container && $container.length ? $container[0] : $container;
+        var popTriggers = container ? container.querySelectorAll('[data-bs-toggle="popover"]') : document.querySelectorAll('[data-bs-toggle="popover"]');
+        popTriggers = [].slice.call(popTriggers || []);
+        popTriggers.forEach(function (el) {
+            if (!bootstrap.Popover.getInstance(el)) {
+                // keep default options - specific ones are provided where popovers are created
+                new bootstrap.Popover(el);
+            }
+        });
+    }
+
     function initCommunicationLog(options) {
         // default options
         options = _.defaults(options || {}, {
@@ -46,15 +69,31 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                 placement: 'right',
                 trigger: "manual",
                 html: true
+            }).each(function () {
+                var el = this;
+                // create Popover instance with provided options
+                if (!bootstrap.Popover.getInstance(el)) {
+                    new bootstrap.Popover(el, {
+                        container: 'body',
+                        title: 'Communication log',
+                        content: $logListContent,
+                        placement: 'right',
+                        trigger: 'manual',
+                        html: true
+                    });
+                }
             }).click(function () {
-                var isVisible = $(this).data()['bs.popover'].tip().hasClass('in');
+                var el = this;
+                var inst = bootstrap.Popover.getInstance(el);
+                var tip = inst && inst._getTipElement ? inst._getTipElement() : null;
+                var isVisible = tip ? tip.classList.contains('show') : false;
 
                 if (!isVisible) {
                     logDataTable.ajax.reload();
-                    $(this).popover('show');
-                    $('[data-bs-toggle="tooltip"]').tooltip();
+                    inst.show();
+                    initTooltips();
                 } else {
-                    $(this).popover('hide');
+                    inst.hide();
                 }
             });
         }
@@ -181,8 +220,8 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                         return result;
                     },
                     'createdCell': function (cell) {
-                        // the call to popover is done in the 'draw' event
-                        $(cell).popover();
+                        // initialise any popover triggers inside this cell when it's created
+                        initPopoversWithin($(cell));
                     }
                 },
                 {
@@ -223,7 +262,8 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
         $table.on('draw.dt', function () {
             var $tablePopover = $table.find('[data-bs-toggle="popover"]');
             if ($tablePopover.length > 0) {
-                $tablePopover.popover();
+                // initialise popovers found inside the table
+                initPopoversWithin($table);
                 // the next line prevents from scrolling up to the top after clicking on the popover.
                 $($tablePopover).on('click', function (e) {
                     e.preventDefault();
@@ -264,14 +304,29 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                 placement: 'right',
                 trigger: "manual",
                 html: true
+            }).each(function () {
+                var el = this;
+                if (!bootstrap.Popover.getInstance(el)) {
+                    new bootstrap.Popover(el, {
+                        container: 'body',
+                        title: 'Action log',
+                        content: $logListContent,
+                        placement: 'right',
+                        trigger: 'manual',
+                        html: true
+                    });
+                }
             }).click(function () {
-                var isVisible = $(this).data()['bs.popover'].tip().hasClass('in');
+                var el = this;
+                var inst = bootstrap.Popover.getInstance(el);
+                var tip = inst && inst._getTipElement ? inst._getTipElement() : null;
+                var isVisible = tip ? tip.classList.contains('show') : false;
                 if (!isVisible) {
                     logDataTable.ajax.reload();
-                    $(this).popover('show');
-                    $('[data-bs-toggle="tooltip"]').tooltip();
+                    inst.show();
+                    initTooltips();
                 } else {
-                    $(this).popover('hide');
+                    inst.hide();
                 }
             });
         }
