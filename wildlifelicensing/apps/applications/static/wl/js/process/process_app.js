@@ -543,7 +543,7 @@ define([
         } else {
             if (assessment.comment) {
                 var $viewComment = $('<p>').addClass('center').addClass('no-margin').append(
-                        $('<a>').text('View Comment').attr('data-toggle', 'popover'));
+                        $('<a>').text('View Comment').attr('data-bs-toggle', 'popover'));
                 $viewComment.popover({container: 'body', content: assessment.comment, html: true});
                 $statusColumn.append($viewComment);
             }
