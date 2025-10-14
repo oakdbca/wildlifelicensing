@@ -14,7 +14,7 @@ define([
 
         applicationPreview.layoutPreviewItems($contentContainer, formStructure, application.data);
 
-        $viewApplicationDetails.popover({container: 'body', content: $contentContainer, html: true});
+    new bootstrap.Popover($viewApplicationDetails[0], {container: 'body', content: $contentContainer, html: true});
     }
 
     function initOtherAssessorsCommentsPopover(assessments) {
@@ -36,7 +36,7 @@ define([
             $contentContainer.append($('<p>').addClass('no-margin').text("No other assessors' comments available"));
         }
 
-        $viewOtherAssessorsComments.popover({container: 'body', content: $contentContainer, html: true});
+    new bootstrap.Popover($viewOtherAssessorsComments[0], {container: 'body', content: $contentContainer, html: true});
     }
 
     function createConditionTableRow(condition, rowClass) {
@@ -91,7 +91,7 @@ define([
                 });
             }
             $status.html('').append('<a>Declined</a>');
-            $status.popover({container: 'body', content: $declinedReasonContainer, html: true});
+            new bootstrap.Popover($status[0], {container: 'body', content: $declinedReasonContainer, html: true});
         }
     }
 

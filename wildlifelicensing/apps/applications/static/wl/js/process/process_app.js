@@ -196,7 +196,8 @@ define([
             $idText = $idRequestForm.find('#id_text');
 
         $requestUpdateButton.click(function () {
-            $requestIDUpdateModal.modal('show');
+            var modal = bootstrap.Modal.getOrCreateInstance($requestIDUpdateModal[0]);
+            modal.show();
         });
 
         $idRequestForm.submit(function (e) {
@@ -213,7 +214,8 @@ define([
                     application.id_check_status = data.id_check_status;
                     determineApplicationApprovable();
 
-                    $requestIDUpdateModal.modal('hide');
+                    var modal = bootstrap.Modal.getInstance($requestIDUpdateModal[0]);
+                    if (modal) { modal.hide(); }
                 }
             });
 

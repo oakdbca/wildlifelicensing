@@ -14,7 +14,8 @@ define([
         });
         // check if popover created yet
         if (popover === undefined) {
-            $showPopover.popover({container: 'body', content: $content.prop('outerHTML'), html: true});
+            // create a Bootstrap 5 Popover instance
+            new bootstrap.Popover($showPopover[0], {container: 'body', content: $content.prop('outerHTML'), html: true});
             $showPopover.removeClass('hidden');
         } else {
             popover.options.content = $content;
@@ -32,7 +33,9 @@ define([
             returnTable.initTables();
             //  Events
             $requestAmendmentBtn.on('click', function () {
-                $requestAmendmentModal.modal('show');
+                // show modal via Bootstrap 5 API
+                var modal = bootstrap.Modal.getOrCreateInstance($requestAmendmentModal[0]);
+                modal.show();
             });
             $requestAmendmentForm.submit(function (e) {
                 $.ajax({
@@ -40,7 +43,8 @@ define([
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     success: function (data) {
-                        $requestAmendmentModal.modal('hide');
+                        var modal = bootstrap.Modal.getInstance($requestAmendmentModal[0]);
+                        if (modal) { modal.hide(); }
                         if (data.hasOwnProperty('amendment_request')) {
                             amendmentRequests.push(data['amendment_request']);
                             prepareAmendmentRequestsPopover($showAmendmentRequests);

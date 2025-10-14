@@ -18,7 +18,7 @@ define([
       application.data
     );
 
-    $viewApplicationDetails.popover({
+    new bootstrap.Popover($viewApplicationDetails[0], {
       container: "body",
       content: $contentContainer,
       html: true,
@@ -100,7 +100,7 @@ define([
       );
     }
 
-    $viewOtherAssessorsComments.popover({
+    new bootstrap.Popover($viewOtherAssessorsComments[0], {
       container: "body",
       content: $contentContainer,
       html: true,

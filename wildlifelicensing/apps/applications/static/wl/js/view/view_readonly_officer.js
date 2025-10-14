@@ -18,7 +18,7 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
             $contentContainer.append($('<p>').addClass('no-margin').text("No assessors' comments available"));
         }
 
-        $viewAssessorsComments.popover({container: 'body', content: $contentContainer, html: true});
+    new bootstrap.Popover($viewAssessorsComments[0], {container: 'body', content: $contentContainer, html: true});
     }
 
     function initDeclineStatus(reason) {
@@ -34,7 +34,7 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
                 });
             }
             $status.html('').append('<a>Declined</a>');
-            $status.popover({container: 'body', content: $declinedReasonContainer, html: true});
+            new bootstrap.Popover($status[0], {container: 'body', content: $declinedReasonContainer, html: true});
         }
     }
 

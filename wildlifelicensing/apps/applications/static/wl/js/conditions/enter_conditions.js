@@ -11,7 +11,7 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
 
         applicationPreview.layoutPreviewItems($contentContainer, formStructure, application.data);
 
-        $viewApplicationDetails.popover({container: 'body', content: $contentContainer, html: true});
+    new bootstrap.Popover($viewApplicationDetails[0], {container: 'body', content: $contentContainer, html: true});
     }
 
     function initAssessments(assessments, csrfToken) {
@@ -106,7 +106,7 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
                     $contentContainer.append($('<p>').append($('<em>').text('No comment')));
                 }
 
-                $viewFeedback.popover({
+                new bootstrap.Popover($viewFeedback[0], {
                     container: 'body',
                     title: 'Conditions / Comments from ' + assessment.assessor_group.name,
                     content: $contentContainer,
@@ -148,7 +148,8 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
         $clone.click(function(e) {
             $createCustomConditionForm.find('h4').text('Create Custom Condition from ' + condition.code);
             $createCustomConditionForm.find('textarea').val(condition.text);
-            $createCustomConditionModal.modal('show');
+            var modal = bootstrap.Modal.getOrCreateInstance($createCustomConditionModal[0]);
+            modal.show();
         });
 
         $action = $('<div>').append($remove).append($('<hr>')).append($clone);
@@ -282,7 +283,8 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
                     } else {
                         createConditionTableRow(data, 'custom');
                         $conditionsEmptyRow.addClass('hidden');
-                        $createCustomConditionModal.modal('hide');
+                        var modal = bootstrap.Modal.getInstance($createCustomConditionModal[0]);
+                        if (modal) { modal.hide(); }
                     }
                 }
             });
@@ -290,6 +292,7 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
             e.preventDefault();
         });
 
+        // Reuse Bootstrap 5 modal hidden event
         $createCustomConditionModal.on('hidden.bs.modal', function(e) {
             $createCustomConditionForm.find('input[type=text], textarea').val('');
             $createCustomConditionForm.find('input[type=checkbox]').attr('checked', false);

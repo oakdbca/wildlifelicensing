@@ -5,7 +5,8 @@ require(['jQuery', 'bootstrap'], function ($) { // bootstrap returns nothing so 
             //the 'has' for icons within a button that triggers a popup
             if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $(e.target).parents('.popover').length === 0
                     && $.contains(document, e.target)) {
-                $(this).popover('hide');
+                var inst = bootstrap.Popover.getInstance(this);
+                if (inst) { inst.hide(); }
             }
         });
     });
