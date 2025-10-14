@@ -194,7 +194,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="backToProcessing" type="button" class="btn btn-sm btn-default">Processing</button>
+                <button id="backToProcessing" type="button" class="btn btn-sm btn-secondary">Processing</button>
                 <button id="save" type="button" class="btn btn-sm btn-info left-buffer-m">Save</button>
                 <button id="issueLicence" type="button" class="btn btn-sm btn-success float-end">Issue Licence</button>
             </div>
@@ -244,7 +244,7 @@
                 <form method="post" action="{% url 'wl_applications:create_condition' application.id %}" id="createConditionForm">
                     {% csrf_token %}
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         <h4 class="modal-title">Create Custom Condition</h4>
                     </div>
                     <div class="modal-body">

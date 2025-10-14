@@ -330,7 +330,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h4 class="modal-title">Identification for {{ user.first_name }} {{ user.last_name }}</h4>
               </div>
               <div class="modal-body center">
@@ -344,7 +344,7 @@
                 </a>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -355,7 +355,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h4 class="modal-title">Senior Card for {{ user.first_name }} {{ user.last_name }}</h4>
               </div>
               <div class="modal-body center">
@@ -369,7 +369,7 @@
                 {% endif %}
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -380,7 +380,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <h4 class="modal-title">Request Photo Identification Upload</h4>
           </div>
           <form id="idRequestForm" method="post" action="{% url 'wl_applications:id_request' %}">
@@ -389,7 +389,7 @@
               {% bootstrap_form id_request_form %}
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-default">Send Request</button>
+              <button type="submit" class="btn btn-secondary">Send Request</button>
             </div>
           </form>
         </div>
@@ -400,7 +400,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <h4 class="modal-title">Request Return Completion</h4>
           </div>
           <form id="returnsRequestForm" method="post" action="{% url 'wl_applications:returns_request' %}">
@@ -409,7 +409,7 @@
               {% bootstrap_form returns_request_form %}
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-default">Send Request</button>
+              <button type="submit" class="btn btn-secondary">Send Request</button>
             </div>
           </form>
         </div>
@@ -420,7 +420,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <h4 class="modal-title">Request Amendments to Application</h4>
           </div>
           <form id="amendmentRequestForm" method="post" action="{% url 'wl_applications:amendment_request' %}">
@@ -431,7 +431,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-default">Send Request</button>
+              <button type="submit" class="btn btn-secondary">Send Request</button>
             </div>
           </form>
         </div>
@@ -441,7 +441,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <h4 class="modal-title">Please provide the reason why this application is declined.</h4>
           </div>
           <form id="declinedDetailsForm" method="post" action="{% url 'wl_applications:process' data.application.id %}">
@@ -452,7 +452,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" name="decline" class="btn btn-default">Decline</button>
+              <button type="submit" name="decline" class="btn btn-secondary">Decline</button>
             </div>
           </form>
         </div>
