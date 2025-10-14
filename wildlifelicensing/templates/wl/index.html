@@ -23,7 +23,7 @@
     {% support_email as support_email %}
     <div class="container">
         <div class="row mt-3">
-            <div class="col-lg-8">
+            <div class="col-lg-8 pe-4">
                 <h2 class="mb-3">Welcome to {{ system_name }}</h2>
                 <p class="fs-7">The Department of Biodiversity, Conservation and Attractions issues licences under the Biodiversity Conservation Act 2016 and the Biodiversity Conservation Regulations 2018 to manage certain interactions with flora and fauna.</p>
                 <p>This web portal currently enables you to apply for, renew, and manage returns for the following licence types online.</p>
@@ -43,13 +43,12 @@
                     <div id="wl-login-container">
                         <div class="card wl-sidebar-card">
                             <div class="card-body">
-                                <h3 class="card-title">Access {{ system_name }}</h3>
+                                <h3 class="card-title fs-3">Access {{ system_name }}</h3>
                                 {% bootstrap_messages %}
-                                <p class="card-text">At the {{ department_name }}, we employ a password-less authentication system, meaning you never need to remember a password. When you need to login to a site, such as {{ system_name }}, simply enter your email and an authentication link will be sent to your registered email address. From there, simply follow the link to complete the login process.</p>
-                                <div class="d-flex justify-content-end"><a href="/ssologin" class="btn btn-sm btn-primary">Login</a></div>
+                                <a href="/ssologin" class="btn btn-sm btn-info">Login to {{ system_name }}</a>
                                 <hr>
-                                <h5 class="card-subtitle mt-3">{{ system_name }} Password-less Logins</h5>
-                                <p class="card-text small">At the Department of Biodiversity, Conservation and Attractions, we employ a password-less authentication system. When you need to login to a site, such as {{ system_name }}, simply enter your email and an authentication link will be sent to your registered email address. From there, simply follow the link to complete the login process.</p>
+                                <h5 class="card-subtitle mt-3 mb-3 fs-5">{{ system_name }} Password-less Logins</h5>
+                                <p class="card-text lh-base">At the Department of Biodiversity, Conservation and Attractions, we employ a password-less authentication system, meaning you never need to remember a password. When you need to login to a site, such as {{ system_name }}, simply enter your email and an authentication code will be sent to your registered email address. From there, enter the code on screen to complete the login process.</p>
                             </div>
                         </div>
                     </div>
