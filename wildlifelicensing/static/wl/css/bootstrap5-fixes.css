@@ -1,0 +1,187 @@
+/* Small Bootstrap 5 compatibility and visual fixes for Wildlife Licensing
+   Loaded after base.css and bootstrap to override mismatches during migration.
+*/
+
+/* Restore a Bootstrap-3-like font stack for visual parity across platforms
+   and set base font-size so 1rem ≈ 14px (87.5% of 16px) */
+html {
+    font-size: 87.5%;
+    /* 16px * 0.875 = 14px */
+}
+
+body,
+input,
+button,
+select,
+textarea {
+    font-size: 1rem;
+    /* equals ~14px now */
+    line-height: 1.45;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", "Segoe UI", "Noto Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure navbar-toggler is hidden on large viewports if JS/markup issues persist */
+@media (min-width: 992px) {
+    .navbar-toggler {
+        display: none !important;
+    }
+}
+
+/* Page title / typography tuning */
+.wl-page h1.display-5,
+.display-5 {
+    font-size: 2.25rem;
+    line-height: 1.2;
+}
+
+.wl-page p.lead {
+    font-size: 1.05rem;
+    color: #222;
+}
+
+/* Sidebar card styling to match purple panel look - tune colours as needed */
+.wl-sidebar-card {
+    background: #3d2dc6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+}
+
+.wl-sidebar-card .card-body {
+    padding: 1rem;
+}
+
+.wl-sidebar-card .card-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.8rem;
+}
+
+.wl-sidebar-card .card-subtitle {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.wl-sidebar-card .btn-info {
+    background-color: #1fa3d8;
+    border-color: #178fb7;
+}
+
+/* Reduce container max-width on very large screens for readability */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1180px;
+    }
+}
+
+/* Navbar spacing and brand alignment tweaks */
+.navbar .nav-link {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-brand img {
+    max-height: 48px;
+    width: auto;
+    margin-right: .5rem;
+    vertical-align: middle;
+}
+
+.navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+/* Banner and header tuning */
+.wl-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.wl-banner img {
+    max-height: 72px;
+    width: auto;
+}
+
+.wl-banner h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    /* slightly smaller than display-5 for balance */
+    line-height: 1.1;
+}
+
+/* Match Bootstrap 3 h2 sizing for visual parity */
+h2 {
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+/* Sidebar card spacing */
+.wl-sidebar-card {
+    margin-top: 0.25rem;
+}
+
+/* Reduce the oversized display-5 used on the homepage */
+.display-5 {
+    font-size: 2rem;
+}
+
+/* Make navbar brand image crisp and constrained to avoid blurring */
+.navbar-brand-img {
+    height: 28px;
+    /* smaller fixed size */
+    width: auto;
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* Muted/grey home link text */
+.brand-text {
+    color: #6c757d;
+    /* bootstrap text-muted */
+    font-weight: 500;
+}
+
+/* Space above main headings on the homepage */
+.wl-page .display-5 {
+    margin-top: 1rem;
+}
+
+/* Reduce extra padding inside the sidebar card to match original compact panel */
+.wl-sidebar-card .card-body {
+    padding: 1rem;
+}
+
+/* Sidebar colour tuning to remove the different blue and set closer to original purple */
+.wl-sidebar-card {
+    background: linear-gradient(180deg, #4b2fb6 0%, #40237a 100%);
+}
+
+/* Match card title/text sizing closer to original */
+.wl-sidebar-card .card-title {
+    font-size: 1.15rem;
+}
+
+.wl-sidebar-card .card-text {
+    font-size: 0.95rem;
+}
+
+/* Primary menu: subtle divider instead of solid green line */
+.container-fluid>nav.navbar {
+    border-bottom: 1px solid #e2e8f0;
+    /* light grey subtle divider */
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* Reduce overall navbar vertical padding to match previous height */
+.navbar .navbar-nav>.nav-item>.nav-link,
+.navbar .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* If navbar has bg-light from BS5, reduce its min-height feel by adjusting toggler and collapse spacing */
+.navbar .navbar-toggler {
+    padding: 0.25rem 0.5rem;
+}

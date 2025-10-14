@@ -1,25 +1,30 @@
 #wl-login-container {
-  margin-top: 20px;
-  padding: 15px;
-  width: 100%;
-  border-radius: 5px;
-  background: #3d2dc6;
+    margin-top: 20px;
+    padding: 0;
+    width: 100%;
+    border-radius: 0;
+    background: transparent;
 }
+
 #wl-login-container .control-label {
-  color: white;
+    color: white;
 }
+
 #wl-login-container #submit-container {
-  text-align: right;
-  margin-top: 10px;
+    text-align: right;
+    margin-top: 10px;
 }
+
 #wl-login-container h3,
 #wl-login-container h4 {
-  margin-top: 0px;
-  color: white;
+    margin-top: 0px;
+    color: white;
 }
+
 #wl-login-container p {
-  color: white;
+    color: white;
 }
+
 #wl-login-container a {
-  color: white;
+    color: white;
 }

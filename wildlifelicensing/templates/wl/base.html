@@ -14,6 +14,7 @@
         <meta name="format-detection" content="telephone=no"/>
             {% bootstrap_css %}
                 <link type="text/css" href="{% static 'wl/css/base.css' %}" rel="stylesheet">
+                <link type="text/css" href="{% static 'wl/css/bootstrap5-fixes.css' %}" rel="stylesheet">
             {% block extra_css %}
             {% endblock %}
             <title>
@@ -42,39 +43,38 @@
             {% endblock %}
         </header>
         {% block menu %}
-            <div class="container-fluid">
-                <nav class="navbar navbar-default">
+            <div class="container-fluid mb-3">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container">
-                        <div class="navbar-header">
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <a class="navbar-brand" href="{% url 'wl_home' %}"><div style="inline"><img src="{% static 'wl/img/dpaw_small.png' %}">Home</div></a>
-                        </div>
-                        <div id="navbar" class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav">
+                        <a class="navbar-brand d-flex align-items-center" href="{% url 'wl_home' %}">
+                            <img src="{% static 'wl/img/dpaw_small.png' %}" alt="DPaW" class="navbar-brand-img">
+                            <span class="ms-2 brand-text">Home</span>
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#wlMainNav" aria-controls="wlMainNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="wlMainNav">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 {% block left_menu_items %}
                                     {% if request.user|is_customer %}
-                                        <li><a href="{% url 'wl_main:contact_us' %}">Contact Us</a></li>
-                                        <li><a href="{% url 'wl_main:further_information' %}">Further Information</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_main:contact_us' %}">Contact Us</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_main:further_information' %}">Further Information</a></li>
                                     {% elif request.user|is_officer %}
-                                        <li><a href="{% url 'wl_dashboard:tables_applications_officer' %}">Applications</a></li>
-                                        <li><a href="{% url 'wl_dashboard:tables_licences_officer' %}">Licences</a></li>
-                                        <li><a href="{% url 'wl_dashboard:tables_returns_officer' %}">Returns</a></li>
-                                        <li><a href="{% url 'wl_customer_management:customer_lookup' %}">Customers</a></li>
-                                        <li><a href="{% url 'wl_reports:reports' %}">Reports</a></li>
-                                        <li><a href="{% url 'wl_dashboard:tables_officer_onbehalf' %}">Proxy Applications / Returns</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_dashboard:tables_applications_officer' %}">Applications</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_dashboard:tables_licences_officer' %}">Licences</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_dashboard:tables_returns_officer' %}">Returns</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_customer_management:customer_lookup' %}">Customers</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_reports:reports' %}">Reports</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_dashboard:tables_officer_onbehalf' %}">Proxy Applications / Returns</a></li>
                                     {% else %}
-                                        <li><a href="{% url 'wl_dashboard:tables_assessor' %}">Applications</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'wl_dashboard:tables_assessor' %}">Applications</a></li>
                                     {% endif %}
                                 {% endblock %}
                             </ul>
-                            <ul class="nav navbar-nav navbar-right">
+                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                                 {% if request.user.is_authenticated %}
-                                    <li>
-                                        <a>
-                                        Welcome
-                                        <strong>
+                                    <li class="nav-item d-flex align-items-center">
+                                        <span class="nav-link">Welcome <strong>
                                             {% if request.user.first_name %}
                                                 {{ request.user.get_short_name }}
                                             {% elif request.user.last_name %}
@@ -82,31 +82,27 @@
                                             {% else %}
                                                 {{ request.user.email }}
                                             {% endif %}
-                                        </strong>
-                                        </a>
+                                        </strong></span>
                                     </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                            Options
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu">
+                                    <li class="nav-item dropdown">
+                                        <a href="#" class="nav-link dropdown-toggle" id="wlOptionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">Options</a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="wlOptionsDropdown">
                                             {% if request.user|is_customer %}
-                                                <li><a href="/ledger-ui/accounts">Manage Account</a></li>
-                                                <li><a href="{% url 'wl_main:list_profiles' %}">Manage Profiles</a></li>
-                                                <li role="separator" class="divider"></li>
+                                                <li><a class="dropdown-item" href="/ledger-ui/accounts">Manage Account</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'wl_main:list_profiles' %}">Manage Profiles</a></li>
+                                                <li><hr class="dropdown-divider"></li>
                                             {% endif %}
                                             {% if request.user|is_officer %}
-                                                <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                                                <li role="separator" class="divider"></li>
+                                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                                                <li><hr class="dropdown-divider"></li>
                                             {% endif %}
                                             {% if request.user|is_officer %}
-                                                <li><a href="{{ LEDGER_UI_URL }}/reports?system_id={{ PAYMENT_SYSTEM_PREFIX }} ">Financial Reports</a></li>
-                                                <li><a href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/payment-totals?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Payment Totals</a></li>
-                                                <li><a href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/failed-transactions?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Failed Refunds {% if ledger_totals.total_failed > 0 %}<span class="badge bg-danger">{{ ledger_totals.total_failed }}</span>{% endif %}</li>
-                                                <li role="separator" class="divider"></li>
+                                                <li><a class="dropdown-item" href="{{ LEDGER_UI_URL }}/reports?system_id={{ PAYMENT_SYSTEM_PREFIX }} ">Financial Reports</a></li>
+                                                <li><a class="dropdown-item" href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/payment-totals?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Payment Totals</a></li>
+                                                <li><a class="dropdown-item" href="{{ LEDGER_UI_URL }}/ledger/payments/oracle/failed-transactions?system_id={{ PAYMENT_SYSTEM_PREFIX }}">Failed Refunds {% if ledger_totals.total_failed > 0 %}<span class="badge bg-danger">{{ ledger_totals.total_failed }}</span>{% endif %}</a></li>
+                                                <li><hr class="dropdown-divider"></li>
                                             {% endif %}
-                                            <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'logout' %}?next=/">Logout</a></li>
                                         </ul>
                                     </li>
                                 {% endif %}
