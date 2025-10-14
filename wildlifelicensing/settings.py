@@ -149,7 +149,9 @@ DEP_POSTAL = config(
     "DEP_POSTAL",
     default="Locked Bag 104, Bentley Delivery Centre, Western Australia 6983",
 )
-DEP_NAME = config("DEP_NAME", default="Department of Parks and Wildlife")
+DEP_NAME = config(
+    "DEP_NAME", default="Department of Biodiversity, Conservation and Attractions"
+)
 DEP_NAME_SHORT = config("DEP_NAME_SHORT", default="DBCA")
 DEP_POSTAL_ADDRESS_LINE_1 = config("DEP_POSTAL_ADDRESS_LINE_1", default="Locked Bag 30")
 DEP_POSTAL_ADDRESS_LINE_2 = config(
