@@ -26,7 +26,7 @@ REPORTS_EMAIL = config("REPORTS_EMAIL", default=ADMINS[0])
 ROOT_URLCONF = "wildlifelicensing.urls"
 SITE_ID = 1
 INSTALLED_APPS += [
-    "bootstrap3",
+    "django_bootstrap5",
     "webtemplate_dbca",
     "reversion",
     "ledger_api_client",
@@ -48,20 +48,6 @@ if DEPRECATED:
     # used to override payment_details.html template in ledger
     TEMPLATES[0]["DIRS"].insert(0, os.path.join(BASE_DIR, "templates"))
 TEMPLATES[0]["DIRS"].append(os.path.join(BASE_DIR, "wildlifelicensing", "templates"))
-
-del BOOTSTRAP3["css_url"]
-# BOOTSTRAP3 = {
-#    'jquery_url': '//static.dpaw.wa.gov.au/static/libs/jquery/2.2.1/jquery.min.js',
-#    'base_url': '//static.dpaw.wa.gov.au/static/libs/twitter-bootstrap/3.3.6/',
-#    'css_url': None,
-#    'theme_url': None,
-#    'javascript_url': None,
-#    'javascript_in_head': False,
-#    'include_jquery': False,
-#    'required_css_class': 'required-form-field',
-#    'success_css_class': '',
-#    'set_placeholder': False,
-# }
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_wl")
 STATICFILES_DIRS.append(
