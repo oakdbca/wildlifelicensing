@@ -128,7 +128,7 @@ define([
       $action = $("<div>").append($remove);
 
       var $moveUp = $("<a>").append(
-        $("<span>").addClass("glyphicon").addClass("glyphicon-chevron-up")
+        $("<span>").addClass("fa").addClass("fa-chevron-up")
       );
       $moveUp.click(function (e) {
         if (!$row.prev().hasClass("default")) {
@@ -137,7 +137,7 @@ define([
       });
 
       var $moveDown = $("<a>").append(
-        $("<span>").addClass("glyphicon").addClass("glyphicon-chevron-down")
+        $("<span>").addClass("fa").addClass("fa-chevron-down")
       );
       $moveDown.click(function (e) {
         $row.insertAfter($row.next());

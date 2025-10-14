@@ -42,13 +42,13 @@ define(['jQuery'], function ($) {
 
         levels: 2,
 
-        expandIcon: 'glyphicon glyphicon-plus',
-        collapseIcon: 'glyphicon glyphicon-minus',
-        emptyIcon: 'glyphicon',
+        expandIcon: 'fa fa-plus',
+        collapseIcon: 'fa fa-minus',
+        emptyIcon: 'fa',
         nodeIcon: '',
         selectedIcon: '',
-        checkedIcon: 'glyphicon glyphicon-check',
-        uncheckedIcon: 'glyphicon glyphicon-unchecked',
+        checkedIcon: 'fa fa-check',
+        uncheckedIcon: 'fa fa-square-o',
 
         color: undefined, // '#000000',
         backColor: undefined, // '#FFFFFF',

@@ -68,7 +68,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading">
                   Application Overview
-                  <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end"><span class="glyphicon"></span></a>
+                  <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end"><span class="fa"></span></a>
                 </div>
                 <div id="applicationOverviewBody" class="panel-body panel-collapse in">
                   <label>Applicant</label>
@@ -147,7 +147,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading">
                   Application Lodgements
-                  <a data-bs-toggle="collapse" href="#lodgedVersionsBody" class="float-end"><span class="glyphicon"></span></a>
+                  <a data-bs-toggle="collapse" href="#lodgedVersionsBody" class="float-end"><span class="fa"></span></a>
                 </div>
                 <div id="lodgedVersionsBody" class="panel-body panel-collapse in">
                   <table id="lodgedVersions" class="table small-table">
@@ -170,7 +170,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     Previous Licence
-                    <a data-bs-toggle="collapse" href="#previousApplicationBody" class="float-end"><span class="glyphicon"></span></a>
+                    <a data-bs-toggle="collapse" href="#previousApplicationBody" class="float-end"><span class="fa"></span></a>
                   </div>
                   <div id="previousApplicationBody" class="panel-body panel-collapse in">
                     <div>
@@ -209,7 +209,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading">
                   Processing Checklist
-                  <a data-bs-toggle="collapse" href="#processingChecklistBody" class="float-end"><span class="glyphicon"></span></a>
+                  <a data-bs-toggle="collapse" href="#processingChecklistBody" class="float-end"><span class="fa"></span></a>
                 </div>
                 <div id="processingChecklistBody" class="panel-body panel-collapse in">
                   <div id="idCheck" class="processing-action-group">
@@ -218,7 +218,7 @@
                       <span class="float-end status">{{ data.application.id_check_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
-                        <span class="glyphicon glyphicon-ok ok-tick"></span>
+                        <span class="fa fa-check ok-tick"></span>
                       </span>
                     </div>
                     <div class="action-buttons-group">
@@ -233,7 +233,7 @@
                       <span class="float-end status">{{ data.application.returns_check_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
-                        <span class="glyphicon glyphicon-ok ok-tick"></span>
+                        <span class="fa fa-check ok-tick"></span>
                       </span>
                     </div>
                     <div class="action-buttons-group">
@@ -248,7 +248,7 @@
                       <span class="float-end status">{{ data.application.character_check_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
-                        <span class="glyphicon glyphicon-ok ok-tick"></span>
+                        <span class="fa fa-check ok-tick"></span>
                       </span>
                     </div>
                     <div class="action-buttons-group">
@@ -256,7 +256,7 @@
                     </div>
                     <a id="showCharacterChecklist" class="small-text" data-bs-toggle="popover" data-bs-placement="right" title="Character Checklist">Character Checklist</a>
                     {% if data.application.applicant_profile.user.character_flagged %}
-                      <a id="dodgyUser" class="float-end" data-bs-toggle="tooltip" data-bs-placement="right" title="User has previously been flagged as having questionable character. {{ data.application.applicant_profile.user.character_comments }}"><span class="glyphicon glyphicon-user"></span></a>
+                      <a id="dodgyUser" class="float-end" data-bs-toggle="tooltip" data-bs-placement="right" title="User has previously been flagged as having questionable character. {{ data.application.applicant_profile.user.character_comments }}"><span class="fa fa-user"></span></a>
                     {% endif %}
                   </div>
                   <hr />
@@ -266,7 +266,7 @@
                       <span class="float-end status">{{ data.application.review_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
-                        <span class="glyphicon glyphicon-ok ok-tick"></span>
+                        <span class="fa fa-check ok-tick"></span>
                       </span>
                     </div>
                     <div class="action-buttons-group">
@@ -279,7 +279,7 @@
                   <div class="processing-action-group">
                     <div>
                       <label>Assessment</label>
-                      <span class="glyphicon glyphicon-ok float-end ok-tick hidden"></span>
+                      <span class="fa fa-check float-end ok-tick hidden"></span>
                     </div>
                     <div>
                       <div class="form-group">

@@ -209,12 +209,12 @@ define(['jQuery', 'handlebars.runtime', 'parsley', 'bootstrap', 'bootstrap-datet
         }
 
         $collapsible.on('hide.bs.collapse', function () {
-            $topLinkSpan.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $topLinkSpan.removeClass('fa-chevron-down').addClass('fa-chevron-up');
             if($bottomLink.length) {
                 $bottomLink.hide();
             }
         }).on('show.bs.collapse', function() {
-            $topLinkSpan.removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            $topLinkSpan.removeClass('fa-chevron-up').addClass('fa-chevron-down');
         }).on('shown.bs.collapse', function() {
             if($bottomLink.length) {
                 $bottomLink.show();

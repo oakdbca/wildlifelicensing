@@ -15,8 +15,8 @@ define(['jQuery', 'js/wl.bootstrap-treeview'], function ($) {
                 levels: 1,
                 showBorder: false,
                 enableLinks: true,
-                expandIcon: 'glyphicon glyphicon-triangle-right',
-                collapseIcon: 'glyphicon glyphicon-triangle-bottom',
+                expandIcon: 'fa fa-caret-right',
+                collapseIcon: 'fa fa-caret-down',
                 nodeIcon: '',
                 highlightSelected: false,
                 onhoverColor: '#FFFFFF'

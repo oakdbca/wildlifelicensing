@@ -154,12 +154,12 @@ define(['jQuery', 'lodash', 'js/entry/application_preview', 'select2'], function
         $action = $('<div>').append($remove).append($('<hr>')).append($clone);
         $row.append($('<td>').css('vertical-align', 'middle').html($action));
 
-        var $moveUp = $('<a>').append($('<span>').addClass('glyphicon').addClass('glyphicon-chevron-up'));
+        var $moveUp = $('<a>').append($('<span>').addClass('fa').addClass('fa-chevron-up'));
         $moveUp.click(function(e) {
             $row.insertBefore($row.prev());
         });
 
-        var $moveDown = $('<a>').append($('<span>').addClass('glyphicon').addClass('glyphicon-chevron-down'));
+        var $moveDown = $('<a>').append($('<span>').addClass('fa').addClass('fa-chevron-down'));
         $moveDown.click(function(e) {
             $row.insertAfter($row.next());
         });

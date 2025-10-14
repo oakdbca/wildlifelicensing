@@ -9,9 +9,9 @@ define(['jQuery', 'js/wl.dataTable'], function($, dataTable) {
                 /*
                 {title: 'Auth Identity', data: 'auth_identity',render:function(data,type,row) {
                     if (data) {
-                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span'
+                        return '<span class="fa fa-check" aria-hidden="true"></span'
                     } else {
-                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span'
+                        return '<span class="fa fa-times" aria-hidden="true"></span'
                     }
                 }},
                 */

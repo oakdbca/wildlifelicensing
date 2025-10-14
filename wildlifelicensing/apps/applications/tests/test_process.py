@@ -237,7 +237,7 @@ class TestStatusLifeCycle(TestCase):
             reverse("wl_applications:process", args=(application.pk,))
         )
 
-        self.assertContains(response, '<span class="glyphicon glyphicon-user"></span>')
+        self.assertContains(response, '<span class="fa fa-user"></span>')
 
         post_data = {"applicationID": application.id, "status": "accepted"}
 

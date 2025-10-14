@@ -84,7 +84,7 @@
                                 <input id="{{ field.auto_id }}" name="{{ field.name }}" type="file" class="form-control"
                                        {% if file_types %}accept="{{ file_types }}"{% endif %}>
                                 {% if field.errors %}
-                                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                                    <span class="fa fa-times form-control-feedback"></span>
                                     <span class='text-danger'>{{ field.errors|join:'<br />' }}</span>
                                 {% endif %}
                             </div>
