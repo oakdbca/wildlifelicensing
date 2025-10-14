@@ -1,4 +1,4 @@
-{% extends 'wl/applications_base.html' %} {% load static %} {% load bootstrap3 %} {% load jsonify %} {% load application_filters %} {% block extra_css %}
+{% extends 'wl/applications_base.html' %} {% load static %} {% load django_bootstrap5 %} {% load jsonify %} {% load application_filters %} {% block extra_css %}
   <link href="//static.dpaw.wa.gov.au/static/libs/select2/3.5.3/select2.min.css" rel="stylesheet" />
   <link href="//static.dpaw.wa.gov.au/static/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css" rel="stylesheet" />
   <link href="//static.dpaw.wa.gov.au/static/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
@@ -45,12 +45,7 @@
   <div class="container bottom-buffer">
     <div class="row">
       <div class="col-md-12">
-        {% for message in messages %}
-          <div class="{{ message|bootstrap_message_classes }} alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button>
-            {{ message|safe }}
-          </div>
-        {% endfor %}
+        {% bootstrap_messages %}
       </div>
     </div>
     <div class="row">

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% load jsonify %}
 
@@ -67,12 +67,7 @@
     <div class="container bottom-buffer">
         <div class="row">
             <div class="col-md-12">
-                {% for message in messages %}
-                    <div class="{{ message|bootstrap_message_classes }} alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button>
-                        {{ message|safe }}
-                    </div>
-                {% endfor %}
+                {% bootstrap_messages %}
             </div>
         </div>
         <div class="row">
