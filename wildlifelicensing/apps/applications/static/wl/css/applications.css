@@ -1,8 +1,4 @@
 /* all application pages */
-.affix-top {
-
-}
-
 @media (min-width: 992px) {
     .affix {
         top: 20px;
@@ -18,10 +14,6 @@
     }
 }
 
-.affix-bottom {
-
-}
-
 hr {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -29,10 +21,7 @@ hr {
 
 a {
     cursor: pointer;
-}intro
-
-/* enter details / preview */
-{% load bootstrap3 %}
+}
 
 #sectionList > ul > .active {
     font-weight: bold;
