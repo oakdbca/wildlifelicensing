@@ -51,13 +51,13 @@
     <div class="row">
       <div class="col-md-3">
         <div class="row">
-          <div class="col-md-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
+            <div class="col-md-12">
+            <div class="card mb-3">
+              <div class="card-header">
                 Application Overview
                 <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end"><span class="glyphicon"></span></a>
               </div>
-              <div id="applicationOverviewBody" class="panel-body panel-collapse in">
+              <div id="applicationOverviewBody" class="card-body collapse show">
                 <label>Applicant</label>
                 {% with applicant=application.applicant_profile %}
                   <p>{{ applicant.user.first_name }} {{ applicant.user.last_name }}</p>
@@ -136,11 +136,11 @@
       <div class="col-md-9">
         <form method="post" id="issueLicenceForm" enctype="multipart/form-data">
           {% csrf_token %} {% if extracted_fields %}
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">Editable application fields (will appear on licence)</h4>
+            <div class="card mb-3">
+              <div class="card-header">
+                <h4 class="card-title">Editable application fields (will appear on licence)</h4>
               </div>
-              <div class="panel-body">
+              <div class="card-body">
                 {% for item in extracted_fields %}
                   {% if not item.children %}
                     <div class="form-group">
