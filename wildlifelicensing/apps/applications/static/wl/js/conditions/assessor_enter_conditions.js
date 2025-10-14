@@ -29,6 +29,7 @@ define([
     var $assignee = $("#assignee");
 
     $assignee.select2({
+      theme: "bootstrap-5",
       data: assessorsList,
       initSelection: function (element, callback) {
         if (assessment.assigned_assessor) {
@@ -181,6 +182,7 @@ define([
       $conditionsForm = $("#conditionsForm");
 
     $searchConditions.select2({
+      theme: "bootstrap-5",
       dropdownCssClass: "conditions-dropdown",
       minimumInputLength: 3,
       ajax: {

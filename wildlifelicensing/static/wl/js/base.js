@@ -27,3 +27,20 @@ require(["jQuery", "bootstrap"], function ($) {
     // no-op for Bootstrap 5 compatibility
   });
 });
+
+// Ensure Select2 uses the bootstrap-5 theme by default for calls that don't
+// explicitly pass a theme. This keeps templates that call `.select2()` without
+// options working after moving to the CDN/theme CSS.
+require(["select2"], function () {
+  if ($.fn && $.fn.select2 && $.fn.select2.defaults) {
+    try {
+      // select2 v4 exposes a defaults object; set theme if not already set
+      if (!$.fn.select2.defaults.get("theme")) {
+        $.fn.select2.defaults.set("theme", "bootstrap-5");
+      }
+    } catch (e) {
+      // some select2 builds might not support defaults API; ignore silently
+      // so we don't break pages if select2 is missing or older.
+    }
+  }
+});

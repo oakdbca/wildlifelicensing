@@ -10,6 +10,7 @@ define(["jQuery", "bootstrap-datetimepicker", "select2"], function ($) {
   function initRegionSelector() {
     var $select = $("#licence-form").find("select");
     $select.select2({
+      theme: 'bootstrap-5',
       placeholder: "Select region(s) or blank for all.",
     });
     $select.removeClass("hidden");

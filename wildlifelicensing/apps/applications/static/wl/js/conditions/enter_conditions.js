@@ -323,6 +323,7 @@ define([
       $addCondition = $("#addCondition");
 
     $searchConditions.select2({
+      theme: "bootstrap-5",
       dropdownCssClass: "conditions-dropdown",
       minimumInputLength: 3,
       ajax: {

@@ -737,6 +737,7 @@ define([
       $currentAssessments = $("#currentAssessments");
 
     $assessor.select2({
+      theme: 'bootstrap-5',
       data: assessorsList,
     });
 

@@ -6,6 +6,7 @@ define(['jQuery', 'select2'], function ($) {
             var $searchCustomer = $('#searchCustomer');
 
             $searchCustomer.select2({
+                theme: 'bootstrap-5',
                 minimumInputLength: 2,
                 ajax: {
                     url: '/search_customers',

@@ -1,8 +1,8 @@
 {% extends 'wl/dash_tables.html' %}
 
 {% block applications_filters %}
-<div class="row mb-2">
   <form class="form" id="applications-filter-form">
+<div class="row mb-2">
     <div class="col-md-3">
       <div class="form-group">
         <label for="applications-filter-licence-type">Licence Type:</label>
@@ -21,8 +21,8 @@
         <select class="form-select" name="assignee" id="applications-filter-assignee"></select>
       </div>
     </div>
-  </form>
 </div>
+  </form>
   <div class="row">
     <div class="col d-flex justify-content-center">
       <a class="btn btn-primary btn-sm" id="reset-applications-filter-button" href="#">Reset filters</a>

@@ -4,8 +4,8 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.10/css/dataTables.bootstrap.css" />
-  <link href="//static.dpaw.wa.gov.au/static/libs/select2/3.5.3/select2.min.css" rel="stylesheet" />
-  <link href="//static.dpaw.wa.gov.au/static/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
   <link href="//static.dpaw.wa.gov.au/static/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="{% static 'wl/css/dashboard.css' %}" />
 {% endblock %}
@@ -25,13 +25,11 @@
         <div class="panel panel-default" id="applications">
           <div class="panel-heading applications" role="tab" id="applications-heading">
             <h4 class="panel-title">
-              <a role="button" data-bs-toggle="collapse" href="#applications-collapse" aria-expanded="true" aria-controls="collapseOne">
                 <h3>
-                  {% block applications_title %}
-                    Applications
-                  {% endblock %}
+                    {% block applications_title %}
+                        Applications
+                    {% endblock %}
                 </h3>
-              </a>
             </h4>
           </div>
           <div id="applications-collapse" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="applications-heading">

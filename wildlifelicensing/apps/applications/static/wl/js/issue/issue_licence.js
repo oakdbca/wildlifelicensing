@@ -72,6 +72,7 @@ define([
       });
 
       $regionSelect.select2({
+        theme: "bootstrap-5",
         placeholder: "Select applicable regions.",
       });
       $regionSelect.removeClass("hidden");
