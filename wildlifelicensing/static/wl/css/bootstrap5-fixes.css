@@ -9,6 +9,11 @@ html {
     /* 16px * 0.875 = 14px */
 }
 
+/* Override BS5 body line-height via CSS variable to ensure Bootstrap components inherit it */
+:root {
+    --bs-body-line-height: 1.428571;
+}
+
 body,
 input,
 button,
@@ -16,10 +21,22 @@ select,
 textarea {
     font-size: 1rem;
     /* equals ~14px now */
-    line-height: 1.45;
+    /* Use Bootstrap 3's base line-height for visual parity (via BS5 variable) */
+    line-height: var(--bs-body-line-height);
     font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", "Segoe UI", "Noto Sans", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Apply the base line-height to common textual elements so paragraphs/lists match BS3 spacing */
+p,
+ul,
+ol,
+dl,
+address,
+blockquote,
+.lead {
+    line-height: 1.428571;
 }
 
 /* Ensure navbar-toggler is hidden on large viewports if JS/markup issues persist */
@@ -67,6 +84,24 @@ textarea {
     border-color: #178fb7;
 }
 
+/* Hover / focus / active states for info buttons (sidebar and global fallback) */
+.wl-sidebar-card .btn-info:hover,
+.wl-sidebar-card .btn-info:focus,
+.wl-sidebar-card .btn-info:active,
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+    background-color: #1591ba;
+    /* slightly darker */
+    border-color: #116f8f;
+    color: #fff;
+}
+
+/* Active/pressed state */
+.btn-info:active:focus {
+    box-shadow: none;
+}
+
 /* Reduce container max-width on very large screens for readability */
 @media (min-width: 1400px) {
     .container {
@@ -106,11 +141,10 @@ textarea {
 }
 
 .wl-banner h1 {
-    margin: 0;
-    font-size: 1.75rem;
-    /* slightly smaller than display-5 for balance */
-    line-height: 1.1;
+    margin-left: 40px;
 }
+
+*/
 
 /* Match Bootstrap 3 h2 sizing for visual parity */
 h2 {
@@ -130,10 +164,7 @@ h2 {
 
 /* Make navbar brand image crisp and constrained to avoid blurring */
 .navbar-brand-img {
-    height: 28px;
-    /* smaller fixed size */
-    width: auto;
-    image-rendering: -webkit-optimize-contrast;
+    /* styles applied earlier (height/image-rendering) remain in the file; empty rule removed */
 }
 
 /* Muted/grey home link text */
@@ -177,8 +208,12 @@ h2 {
 /* Reduce overall navbar vertical padding to match previous height */
 .navbar .navbar-nav>.nav-item>.nav-link,
 .navbar .navbar-brand {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+.nav-link {
+    color: #777777;
 }
 
 /* If navbar has bg-light from BS5, reduce its min-height feel by adjusting toggler and collapse spacing */
