@@ -34,7 +34,7 @@
         {{ licence_type.name }} {% if is_renewal %}(Renewal) {% endif %} {% if is_amendment %}(Amendment) {% endif %}
     </h4>
     {% if customer %}
-        <h4 class="pull-right">Customer: {{ customer.get_full_name }}</h4>
+        <h4 class="float-end">Customer: {{ customer.get_full_name }}</h4>
     {% endif %}
     {% if variants %}
         <h4>
@@ -83,7 +83,7 @@
                   </div>
                 </div>
                 {% endif %}
-                <a class="btn btn-primary pull-right" href="{% url 'wl_applications:check_senior_card' %}">Continue to Next Step</a>
+                <a class="btn btn-primary float-end" href="{% url 'wl_applications:check_senior_card' %}">Continue to Next Step</a>
             </div>
         </div>
     </div>

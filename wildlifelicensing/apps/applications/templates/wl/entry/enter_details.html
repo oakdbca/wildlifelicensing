@@ -74,7 +74,7 @@
 {% block intro_subtitle %}
   <h4 class="inline">{{ licence_type.name }} {% if is_renewal %}(Renewal) {% endif %} {% if is_amendment %}(Amendment) {% endif %}</h4>
   {% if customer %}
-    <h4 class="pull-right">Customer: {{ customer.get_full_name }}</h4>
+    <h4 class="float-end">Customer: {{ customer.get_full_name }}</h4>
   {% endif %}
   {% if variants %}
     <h4><em>({{ variants }})</em></h4>
@@ -137,9 +137,9 @@
               <p class="help-block">Attach a scanned copy of the original application as a Word or PDF document</p>
             </div>
           {% endif %}
-          <button type="submit" class="btn btn-primary pull-right" name="preview">Preview Application</button>
-          <button type="submit" class="btn btn-info pull-right" style="margin-right: 20px;" name="draft_continue">Save Draft and Continue Editing</button>
-          <button type="submit" class="btn btn-info pull-right" style="margin-right: 20px;" name="draft">Save Draft</button>
+          <button type="submit" class="btn btn-primary float-end" name="preview">Preview Application</button>
+          <button type="submit" class="btn btn-info float-end" style="margin-right: 20px;" name="draft_continue">Save Draft and Continue Editing</button>
+          <button type="submit" class="btn btn-info float-end" style="margin-right: 20px;" name="draft">Save Draft</button>
         </form>
       </div>
     </div>

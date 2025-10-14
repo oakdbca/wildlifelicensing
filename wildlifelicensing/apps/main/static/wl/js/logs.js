@@ -52,7 +52,7 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                 if (!isVisible) {
                     logDataTable.ajax.reload();
                     $(this).popover('show');
-                    $('[data-toggle="tooltip"]').tooltip();
+                    $('[data-bs-toggle="tooltip"]').tooltip();
                 } else {
                     $(this).popover('hide');
                 }
@@ -166,10 +166,10 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                             result = '<span>' + truncated + '</span>',
                             popTemplate = _.template('<a href="#" ' +
                                 'role="button" ' +
-                                'data-toggle="popover" ' +
-                                'data-trigger="click" ' +
-                                'data-placement="top auto"' +
-                                'data-html="true" ' +
+                                'data-bs-toggle="popover" ' +
+                                'data-bs-trigger="click" ' +
+                                'data-bs-placement="top auto"' +
+                                'data-bs-html="true" ' +
                                 'data-content="<%= text %>" ' +
                                 '>more</a>');
                         if (_.endsWith(truncated, ellipsis)) {
@@ -221,7 +221,7 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
 
         // activate popover when table is drawn.
         $table.on('draw.dt', function () {
-            var $tablePopover = $table.find('[data-toggle="popover"]');
+            var $tablePopover = $table.find('[data-bs-toggle="popover"]');
             if ($tablePopover.length > 0) {
                 $tablePopover.popover();
                 // the next line prevents from scrolling up to the top after clicking on the popover.
@@ -269,7 +269,7 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
                 if (!isVisible) {
                     logDataTable.ajax.reload();
                     $(this).popover('show');
-                    $('[data-toggle="tooltip"]').tooltip();
+                    $('[data-bs-toggle="tooltip"]').tooltip();
                 } else {
                     $(this).popover('hide');
                 }
@@ -321,7 +321,7 @@ define(['jQuery', 'lodash', 'moment', 'js/wl.dataTable'], function ($, _, moment
 
         // activate popover when table is drawn.
         $table.on('draw.dt', function () {
-            var $tablePopover = $table.find('[data-toggle="popover"]');
+            var $tablePopover = $table.find('[data-bs-toggle="popover"]');
             if ($tablePopover.length > 0) {
                 $tablePopover.popover();
                 // the next line prevents from scrolling up to the top after clicking on the popover.

@@ -61,7 +61,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 Application Overview
-                                <a data-toggle="collapse" href="#applicationOverviewBody" class="pull-right">
+                                <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end">
                                     <span class="glyphicon"></span>
                                 </a>
                             </div>
@@ -106,12 +106,12 @@
                                     </div>
                                 </div>
                                 <p>
-                                    <a id="viewApplicationDetails" data-toggle="popover" data-placement="right">
+                                    <a id="viewApplicationDetails" data-bs-toggle="popover" data-bs-placement="right">
                                         View Application Details
                                     </a>
                                 </p>
                                 <p>
-                                    <a id="viewOtherAssessorsComments" data-toggle="popover" data-placement="right">
+                                    <a id="viewOtherAssessorsComments" data-bs-toggle="popover" data-bs-placement="right">
                                         View Other Assessors' Comments
                                     </a>
                                 </p>
@@ -125,11 +125,11 @@
                     </div>
                 </div>
                 {% include 'wl/logs_panel.html' %}
-                <a href="{% url 'wl_home' %}" type="button" class="btn btn-sm btn-primary pull-right">Close</a>
+                <a href="{% url 'wl_home' %}" type="button" class="btn btn-sm btn-primary float-end">Close</a>
             </div>
             <div class="col-md-9">
                 <h3>Current Conditions</h3>
-                <div class="pull-right">
+                <div class="float-end">
                     <div class="legend default">
                     </div>
                     <strong>Default Condition</strong>

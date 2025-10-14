@@ -71,9 +71,14 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install only minimal runtime packages required by wheels in venv
 # Upgrade packages to pick up distro security fixes (note: this increases image size)
+# Also install python3.12 so the copied venv's shebangs have a valid interpreter.
+# Install GDAL runtime libraries so Django GIS (django.contrib.gis) can import at runtime.
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y \
     ca-certificates \
     tzdata \
+    python3.12 \
+    libgdal34 \
+    gdal-bin \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user to run the app

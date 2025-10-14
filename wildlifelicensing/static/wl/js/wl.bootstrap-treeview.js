@@ -617,9 +617,9 @@ define(['jQuery'], function ($) {
 
             if (node.price !== undefined && node.price !== null) {
                 if(node.price == 0) {
-                    treeItem.append($('<span>').text('No Fee').addClass('label').addClass('label-primary').addClass('pull-right'));
+                    treeItem.append($('<span>').text('No Fee').addClass('label').addClass('label-primary').addClass('float-end'));
                 } else {
-                    treeItem.append($('<span>').text('$' + node.price).addClass('label').addClass('label-warning').addClass('pull-right'));
+                    treeItem.append($('<span>').text('$' + node.price).addClass('label').addClass('label-warning').addClass('float-end'));
                 }
             }
 

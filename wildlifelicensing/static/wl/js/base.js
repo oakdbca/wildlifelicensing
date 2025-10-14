@@ -1,6 +1,6 @@
 require(['jQuery', 'bootstrap'], function ($) { // bootstrap returns nothing so must go last in required modules
     $('body').on('click', function (e) {
-        $('[data-toggle="popover"]').each(function () {
+        $('[data-bs-toggle="popover"]').each(function () {
             //the 'is' for buttons that trigger popups
             //the 'has' for icons within a button that triggers a popup
             if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $(e.target).parents('.popover').length === 0

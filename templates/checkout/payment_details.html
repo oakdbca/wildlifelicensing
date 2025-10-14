@@ -19,10 +19,10 @@
   <div clas="container">
     <!-- Pills -->
     <ul class="nav nav-pills nav-justified">
-      <!-- <li class="active"><a data-toggle="tab" href="#card">Pay now by Card</a></li> -->
+      <!-- <li class="active"><a data-bs-toggle="tab" href="#card">Pay now by Card</a></li> -->
       {% if bpay_allowed %}
         <li>
-          <a data-toggle="tab" href="#bpay">Pay later by BPAY/Cash/Cheque/Money Order</a>
+          <a data-bs-toggle="tab" href="#bpay">Pay later by BPAY/Cash/Cheque/Money Order</a>
         </li>
       {% endif %}
     </ul>
@@ -66,7 +66,7 @@
                             </table>
                         </fieldset>
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Continue" %}</button>
+                            <button type="submit" class="btn btn-large btn-primary float-end">{% trans "Continue" %}</button>
                         </div>
                     </form>
                 {% endif %}
@@ -91,7 +91,7 @@
                     {% endif %}
                     <input type="hidden" name="payment_method" readonly value="card"/>
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Continue" %}</button>
+                        <button type="submit" class="btn btn-large btn-primary float-end">{% trans "Continue" %}</button>
                     </div>
                 </form>
             </div>
@@ -109,7 +109,7 @@
               {% csrf_token %}
               <input type="hidden" name="payment_method" readonly value="bpay" />
               <div class="form-actions">
-                <button type="submit" class="btn btn-large btn-primary pull-right">{% trans 'Continue' %}</button>
+                <button type="submit" class="btn btn-large btn-primary float-end">{% trans 'Continue' %}</button>
               </div>
             </form>
           </div>

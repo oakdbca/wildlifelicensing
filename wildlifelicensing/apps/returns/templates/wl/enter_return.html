@@ -57,7 +57,7 @@
 {% block intro_subtitle %}
     <h4 class="inline">{{ return.licence.licence_type.name }}</h4>
     {% if request.user|is_officer %}
-        <h4 class="pull-right">Customer: {{ return.licence.holder.get_full_name }}</h4>
+        <h4 class="float-end">Customer: {{ return.licence.holder.get_full_name }}</h4>
     {% endif %}
 {% endblock %}
 
@@ -110,11 +110,11 @@
         {% csrf_token %} {% bootstrap_form upload_spreadsheet_form %}
         <a
           href="{% url 'wl_returns:download_return_template' return.return_type.id %}"
-          class="pull-left"
+          class="float-start"
           name="upload"
           >Download Template</a
         >
-        <button type="submit" class="btn btn-primary pull-right" name="upload">
+        <button type="submit" class="btn btn-primary float-end" name="upload">
           Upload File
         </button>
       </form>
@@ -186,12 +186,12 @@
           </div>
         </div>
         {% endfor %}
-        <button type="submit" class="btn btn-primary pull-right" name="lodge">
+        <button type="submit" class="btn btn-primary float-end" name="lodge">
           Lodge
         </button>
         <button
           type="submit"
-          class="btn btn-info pull-right"
+          class="btn btn-info float-end"
           style="margin-right: 20px"
           name="draft_continue"
         >
@@ -199,7 +199,7 @@
         </button>
         <button
           type="submit"
-          class="btn btn-info pull-right"
+          class="btn btn-info float-end"
           style="margin-right: 20px"
           name="draft"
         >
@@ -214,7 +214,7 @@
       <h4>Nil Return</h4>
       <form method="post">
         {% csrf_token %} {% bootstrap_form nil_return_form %}
-        <button type="submit" class="btn btn-primary pull-right" name="nil">
+        <button type="submit" class="btn btn-primary float-end" name="nil">
           Submit Nil Return
         </button>
       </form>

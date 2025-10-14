@@ -13,12 +13,12 @@
       </div>
       <div class="row top-buffer">
         <div class="col-md-3 col-md-offset-7">
-          <button type="submit" class="btn btn-primary pull-right">
+          <button type="submit" class="btn btn-primary float-end">
             {% block confirm_btn_text %}
               Confirm
             {% endblock %}
           </button>
-          <button type="button" class="btn btn-primary pull-right" style="margin-right: 20px;" onclick="window.location='{{ cancel_url }}'">
+          <button type="button" class="btn btn-primary float-end" style="margin-right: 20px;" onclick="window.location='{{ cancel_url }}'">
             {% block cancel_btn_text %}
               Cancel
             {% endblock %}

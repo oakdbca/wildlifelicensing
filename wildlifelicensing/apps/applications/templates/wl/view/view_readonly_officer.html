@@ -69,7 +69,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 Application Overview
-                                <a data-toggle="collapse" href="#applicationOverviewBody" class="pull-right">
+                                <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end">
                                     <span class="glyphicon"></span>
                                 </a>
                             </div>
@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="col-md-7">
                                         <label>Status</label>
-                                        <p><span id="status" data-toggle="popover" data-placement="right">{{ application.processing_status }}</span></p>
+                                        <p><span id="status" data-bs-toggle="popover" data-bs-placement="right">{{ application.processing_status }}</span></p>
                                     </div>
                                 </div>
                                 <label>Currently assigned to</label>
@@ -120,12 +120,12 @@
                                     {{ payment_status }}
                                     {% if payment_status == 'Awaiting Payment' %}
                                         <a href="{% url 'wl_payments:manual_payment' application.id %}?redirect_url={{ request.build_absolute_uri }}"
-                                            class="pull-right">Enter Payment</a>
+                                            class="float-end">Enter Payment</a>
                                     {% endif %}
                                 </p>
                                 <hr>
                                 <p>
-                                    <a id="viewAssessorsComments" data-toggle="popover" data-placement="right">
+                                    <a id="viewAssessorsComments" data-bs-toggle="popover" data-bs-placement="right">
                                         View Assessors' Comments
                                     </a>
                                 </p>

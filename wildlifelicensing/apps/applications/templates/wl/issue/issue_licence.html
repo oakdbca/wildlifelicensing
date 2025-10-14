@@ -55,7 +55,7 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 Application Overview
-                <a data-toggle="collapse" href="#applicationOverviewBody" class="pull-right"><span class="glyphicon"></span></a>
+                <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end"><span class="glyphicon"></span></a>
               </div>
               <div id="applicationOverviewBody" class="panel-body panel-collapse in">
                 <label>Applicant</label>
@@ -101,7 +101,7 @@
                 <label>Payment Status</label>
                 <p class="no-margin">
                   {{ payment_status }} {% if payment_status == 'Awaiting Payment' %}
-                    <a href="{% url 'wl_payments:manual_payment' application.id %}?redirect_url={{ request.build_absolute_uri }}" class="pull-right">Enter Payment</a>
+                    <a href="{% url 'wl_payments:manual_payment' application.id %}?redirect_url={{ request.build_absolute_uri }}" class="float-end">Enter Payment</a>
                   {% endif %}
                 </p>
               </div>
@@ -115,9 +115,9 @@
         {% else %}
           <button id="save" name="save" type="button" class="btn btn-sm btn-info left-buffer-xxxl">Save</button>
         {% endif %} {% if payment_status == 'Awaiting Payment' %}
-          <button id="issue" name="issue" type="button" class="btn btn-sm btn-success pull-right disabled" data-title="Payment must be received before licence can be issued">Issue</button>
+          <button id="issue" name="issue" type="button" class="btn btn-sm btn-success float-end disabled" data-title="Payment must be received before licence can be issued">Issue</button>
         {% else %}
-          <button id="issue" name="issue" type="button" class="btn btn-sm btn-success pull-right">
+          <button id="issue" name="issue" type="button" class="btn btn-sm btn-success float-end">
             {% if application.licence and application.licence.licence_number %}
               Reissue
             {% else %}
@@ -129,7 +129,7 @@
             {% endif %}
           </button>
         {% endif %}
-        <a href="{% url 'wl_applications:preview_licence' application.id %}" id="previewLicence" class="top-buffer pull-right" target="_blank">
+        <a href="{% url 'wl_applications:preview_licence' application.id %}" id="previewLicence" class="top-buffer float-end" target="_blank">
           Preview Licence PDF<img style="padding-left:5px;" height="20px" src="{% static 'wl/img/pdf.png' %}" />
         </a>
       </div>
