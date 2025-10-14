@@ -163,9 +163,6 @@ h2 {
 }
 
 /* Make navbar brand image crisp and constrained to avoid blurring */
-.navbar-brand-img {
-    /* styles applied earlier (height/image-rendering) remain in the file; empty rule removed */
-}
 
 /* Muted/grey home link text */
 .brand-text {
@@ -219,4 +216,22 @@ h2 {
 /* If navbar has bg-light from BS5, reduce its min-height feel by adjusting toggler and collapse spacing */
 .navbar .navbar-toggler {
     padding: 0.25rem 0.5rem;
+}
+
+/* Ensure treeview badges render correctly even if the bg-* class is missing at runtime */
+.treeview .badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    background-color: #6c757d;
+    /* fallback secondary color */
+    border-radius: 1rem;
+    margin-left: 0.5rem;
+}
+
+.treeview a {
+    text-decoration: none;
 }
