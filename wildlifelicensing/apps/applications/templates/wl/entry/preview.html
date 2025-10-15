@@ -73,7 +73,7 @@
   <div id="contentContainer" class="container hidden bottom-buffer">
     <div class="row">
       <div class="col-md-2 col-sm-3">
-        <label class="top-buffer">Selected Profile:</label>
+  <label class="form-label top-buffer">Selected Profile:</label>
         <p>{{ application.applicant_profile.name }}</p>
         <p>
           <em><a data-entry-link="True" href="{% url 'wl_applications:create_select_profile' %}">Change Profile</a></em>
@@ -91,10 +91,16 @@
           <h3>Disclaimer</h3>
           <div id="disclaimers" class="children-anchor-point">
             <div class="form-group">
-              <label><input name="correctnessDisclaimer" type="checkbox" /> I acknowledge that the information provided in the application is true and correct at the time of submission.</label>
+              <div class="form-check">
+                <input class="form-check-input" name="correctnessDisclaimer" type="checkbox" id="correctnessDisclaimer_preview">
+                <label class="form-check-label" for="correctnessDisclaimer_preview">I acknowledge that the information provided in the application is true and correct at the time of submission.</label>
+              </div>
             </div>
             <div class="form-group">
-              <label><input name="furtherInfoDisclaimer" type="checkbox" /> I acknowledge that if further information or details are requested of me, the application assessment period may exceed the standard processing time</label>
+              <div class="form-check">
+                <input class="form-check-input" name="furtherInfoDisclaimer" type="checkbox" id="furtherInfoDisclaimer_preview">
+                <label class="form-check-label" for="furtherInfoDisclaimer_preview">I acknowledge that if further information or details are requested of me, the application assessment period may exceed the standard processing time</label>
+              </div>
             </div>
           </div>
           <div>

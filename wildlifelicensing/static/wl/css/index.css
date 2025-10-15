@@ -6,6 +6,7 @@
     background: transparent;
 }
 
+#wl-login-container .form-label,
 #wl-login-container .control-label {
     color: white;
 }

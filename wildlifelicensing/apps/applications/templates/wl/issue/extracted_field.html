@@ -14,18 +14,18 @@
             {% if group_index %}
                 <input id="{{ option.name }}{{ group_index }}Hidden" name="{{ option.name }}" type="hidden" value="off" {% if field.readonly %}disabled{% endif %}>
             {% endif %}
-            <input name="{{ option.name }}" {% if group_index %} id="{{ option.name }}{{ group_index }}" class="extracted-checkbox"{% endif %}
-                type="checkbox" {% if option.data == 'on' %}checked{% endif %} {% if field.readonly %}disabled{% endif %}>
-            {{ option.label }}
+            <div class="form-check">
+                <input class="form-check-input" name="{{ option.name }}" {% if group_index %} id="{{ option.name }}{{ group_index }}" class="extracted-checkbox"{% endif %}
+                    type="checkbox" {% if option.data == 'on' %}checked{% endif %} {% if field.readonly %}disabled{% endif %}>
+                <label class="form-check-label" for="{{ option.name }}{{ group_index }}">{{ option.label }}</label>
+            </div>
         </div>
     {% endfor %}
 {% elif field.type == 'radiobuttons' %}
     {% for option in field.options %}
-        <div class="radio">
-            <label>
-                <input name="{{ field.name }}" type="radio" value="{{ option.value}}" {% if option.value == field.data %}checked{% endif %} {% if field.readonly %}disabled{% endif %}>
-                {{ option.label }}
-            </label>
+        <div class="form-check">
+            <input class="form-check-input" name="{{ field.name }}" type="radio" id="{{ field.name }}_{{ forloop.counter0 }}" value="{{ option.value}}" {% if option.value == field.data %}checked{% endif %} {% if field.readonly %}disabled{% endif %}>
+            <label class="form-check-label" for="{{ field.name }}_{{ forloop.counter0 }}">{{ option.label }}</label>
         </div>
     {% endfor %}
 {% elif field.type == 'select' %}

@@ -144,13 +144,13 @@
                 {% for item in extracted_fields %}
                   {% if not item.children %}
                     <div class="form-group">
-                      <label class="control-label" for="id_{{ item.name }}">{{ item.label }}</label>
+                      <label class="form-label" for="id_{{ item.name }}">{{ item.label }}</label>
                       {% include 'wl/issue/extracted_field.html' with field=item %} {% if item.help_text %}
                         <p class="help-block">{{ item.help_text }}</p>
                       {% endif %}
                     </div>
                   {% else %}
-                    <label class="control-label" for="id_{{ item.name }}">{{ item.label }}</label>
+                    <label class="form-label" for="id_{{ item.name }}">{{ item.label }}</label>
                     {% if item.help_text %}
                       <p class="help-block">{{ item.help_text }}</p>
                     {% endif %} {% for item_group in item.children %}
@@ -160,7 +160,7 @@
                             <div class="col-md-{{ width }}">
                               <div class="form-group">
                                 {% if forloop.parentloop.first %}
-                                  <label class="control-label">{{ child_item.label }}</label>
+                                  <label class="form-label">{{ child_item.label }}</label>
                                 {% endif %} {% include 'wl/issue/extracted_field.html' with field=child_item group_index=forloop.parentloop.counter %}
                               </div>
                             </div>

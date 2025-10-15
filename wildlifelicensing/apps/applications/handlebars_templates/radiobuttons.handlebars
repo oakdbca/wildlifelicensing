@@ -1,12 +1,11 @@
 <div class="form-group">
-    <label>{{label}}</label>
+    <label class="form-label">{{label}}</label>
     {{#each options}}
-        <div class="radio">
-            <label>
-                <input name="{{../name}}" type="radio" value="{{this.value}}" {{#if ../required}}required{{/if}} {{#isEqual this.value ../value }}checked{{/isEqual}}>
-                {{this.label}}
-            </label>
+        <div class="form-check">
+            <input class="form-check-input" name="{{../name}}" type="radio" id="{{../name}}_{{@index}}_preview" value="{{this.value}}" {{#if ../required}}required{{/if}} {{#isEqual this.value ../value }}checked{{/isEqual}}>
+            <label class="form-check-label" for="{{../name}}_{{@index}}_preview">{{this.label}}</label>
         </div>
+    {{/each}}
     {{/each}}
     {{#if help_text}}
         <p class="help-block">{{{help_text}}}</p>

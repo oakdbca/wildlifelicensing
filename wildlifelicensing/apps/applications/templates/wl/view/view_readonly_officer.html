@@ -74,7 +74,7 @@
                                 </a>
                             </div>
                             <div id="applicationOverviewBody" class="panel-body panel-collapse in">
-                                <label>Applicant</label>
+                                <label class="form-label">Applicant</label>
                                 {% with applicant=application.applicant_profile %}
                                     <p>
                                         {{ applicant.user.first_name }} {{ applicant.user.last_name }}
@@ -99,15 +99,15 @@
                                 {% endwith %}
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <label>Lodged on</label>
+                                        <label class="form-label">Lodged on</label>
                                         <p>{{ application.lodgement_date }}</p>
                                     </div>
                                     <div class="col-md-7">
-                                        <label>Status</label>
+                                        <label class="form-label">Status</label>
                                         <p><span id="status" data-bs-toggle="popover" data-bs-placement="right">{{ application.processing_status }}</span></p>
                                     </div>
                                 </div>
-                                <label>Currently assigned to</label>
+                                <label class="form-label">Currently assigned to</label>
                                 <p>
                                     {% if application.assigned_officer %}
                                         {{ application.assigned_officer.first_name }} {{ application.assigned_officer.last_name }}
@@ -115,7 +115,7 @@
                                         Unassigned
                                     {% endif %}
                                 </p>
-                                <label>Payment Status</label>
+                                <label class="form-label">Payment Status</label>
                                 <p class="no-margin">
                                     {{ payment_status }}
                                     {% if payment_status == 'Awaiting Payment' %}

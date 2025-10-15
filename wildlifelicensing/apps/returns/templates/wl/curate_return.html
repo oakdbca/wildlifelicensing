@@ -93,29 +93,29 @@
               id="applicationOverviewBody"
               class="panel-body panel-collapse in"
             >
-              <label>Customer</label>
+              <label class="form-label">Customer</label>
               {% with customer=return.licence.holder %}
               <p>{{ customer.first_name|title }} {{ customer.last_name|title }}</p>
               {% endwith %}
               <div class="row">
                 <div class="col-md-6">
-                  <label>Lodge No.</label>
+                  <label class="form-label">Lodge No.</label>
                   <p>{{ return.lodgement_number }}</p>
                 </div>
                 <div class="col-md-6">
-                  <label>Lodged on</label>
+                  <label class="form-label">Lodged on</label>
                   <p>{{ return.lodgement_date }}</p>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <label>Status</label>
+                  <label class="form-label">Status</label>
                   <p>
                     {{ return.status }}{% if return.nil_return %} (Nil){% endif %}
                   </p>
                 </div>
                 <div class="col-md-6">
-                  <label>Licence</label>
+                  <label class="form-label">Licence</label>
                   <p>
                     {{ return.licence.licence_number }}-{{return.licence.licence_sequence }}
                   </p>
@@ -133,7 +133,7 @@
             </div>
             <div id="amendments" class="panel-body panel-collapse in">
               <div>
-                <label>Amendments</label>
+                <label class="form-label">Amendments</label>
               </div>
               <div class="action-buttons-group">
                 <button
@@ -224,7 +224,7 @@
       </form>
       {% if return.comments %}
       <div id="comments" class="top-buffer">
-        <label>Submitter Comments</label>
+  <label class="form-label">Submitter Comments</label>
         <p>{{ return.comments }}</p>
       </div>
       {% endif %}

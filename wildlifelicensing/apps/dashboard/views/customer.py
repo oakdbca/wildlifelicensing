@@ -290,9 +290,9 @@ class DataTableLicencesCustomerView(base.DataTableBaseView):
         if instance.end_date is not None:
             expiry_days = (instance.end_date - datetime.date.today()).days
             if instance.end_date < datetime.date.today():
-                return '<span class="label label-danger">Expired</span>'
+                return '<span class="badge bg-danger">Expired</span>'
             elif expiry_days <= 30 and instance.is_renewable:
-                return '<span class="label label-warning">Due for renewal</span>'
+                return '<span class="badge bg-warning text-dark">Due for renewal</span>'
             else:
                 return "Current"
         else:
@@ -441,9 +441,9 @@ class DataTableReturnsCustomerView(base.DataTableBaseView):
         status = instance.status
         if status == "current":
             if is_return_overdue(instance):
-                return '<span class="label label-danger">Overdue</span>'
+                return '<span class="badge bg-danger">Overdue</span>'
             elif is_return_due_soon(instance):
-                return '<span class="label label-warning">Due soon</span>'
+                return '<span class="badge bg-warning text-dark">Due soon</span>'
             else:
                 return "Current"
         else:

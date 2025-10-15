@@ -3,10 +3,10 @@
     <thead>
         <tr>
             {{#each children}}
-                <td><label>{{this.label}}</label></td>
+                <td><label class="form-label">{{this.label}}</label></td>
             {{/each}}
             {{#unless isPreviewMode }}
-                <td><label>Remove</label></td>
+                <td><label class="form-label">Remove</label></td>
             {{/unless}}
         </tr>
     </thead>
