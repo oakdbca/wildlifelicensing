@@ -248,3 +248,57 @@ h2 {
     border-color: #204d74 !important;
     color: #fff !important;
 }
+
+/* Compatibility layer: render legacy .panel markup like Bootstrap 5 cards.
+   This preserves existing templates and JS that still use panel/* classes
+   while delivering a card-like appearance. Gradually we can replace the
+   markup (panel -> card) and remove this block. */
+.panel {
+    display: block;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.panel.panel-default {
+    background-color: #fff;
+}
+
+.panel>.panel-heading,
+.panel-heading {
+    padding: .75rem 1.25rem;
+    /* Give panel headings a card-like muted background to match Bootstrap 5 cards */
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+    color: #212529;
+}
+
+.panel>.panel-body,
+.panel-body {
+    padding: 1rem;
+}
+
+.panel>.panel-footer,
+.panel-footer {
+    padding: .75rem 1.25rem;
+    background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Collapsed panels in legacy markup sometimes use "in"; make sure visible
+   state styling still works. */
+.panel-collapse.in,
+.panel-collapse.show {
+    display: block;
+}
+
+/* Utility: map old wl-panel-heading -> card header look */
+.wl-panel-heading,
+.wl-panel-heading>* {
+    padding: .75rem 1.25rem;
+    font-weight: 500;
+}
