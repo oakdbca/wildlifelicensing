@@ -198,8 +198,30 @@ define([
       $childrenAnchorPoint = $itemContainer.find(".children-anchor-point");
     } else {
       $childrenAnchorPoint = $("<div>");
-      $childrenAnchorPoint.addClass("children-anchor-point");
+      // create as an expanded collapse so child items are visible by default
+      $childrenAnchorPoint.addClass("children-anchor-point collapse show");
       $itemContainer.append($childrenAnchorPoint);
+    }
+
+    // If a children anchor point exists and uses the older BS3 'in' class,
+    // normalize it to Bootstrap 5 'show' so it is visible by default.
+    // Also ensure any collapse instance is shown.
+    if ($childrenAnchorPoint && $childrenAnchorPoint.length) {
+      // operate on the first match to avoid changing other instances
+      $childrenAnchorPoint = $childrenAnchorPoint.first();
+      if ($childrenAnchorPoint.hasClass("collapse")) {
+        $childrenAnchorPoint.removeClass("in").addClass("show");
+        if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
+          try {
+            var inst = bootstrap.Collapse.getOrCreateInstance(
+              $childrenAnchorPoint.get(0)
+            );
+            if (inst && inst.show) inst.show();
+          } catch (e) {
+            // ignore if Collapse API not compatible
+          }
+        }
+      }
     }
 
     return $childrenAnchorPoint;
