@@ -341,7 +341,6 @@ header .wl-banner>a:hover * {
    Bootstrap form-select height and vertical alignment. This covers cases where
    the theme class differs or the Select2 DOM is slightly different. */
 .select2-container .select2-selection--single,
-.select2-container .select2-selection--multiple,
 .select2-container--open .select2-selection--single {
     min-height: 2.25rem !important;
     height: 2.25rem !important;
@@ -358,6 +357,53 @@ header .wl-banner>a:hover * {
 
 .select2-container .select2-selection__arrow {
     height: 100% !important;
+}
+
+/* Fix Select2 text clipping when we force the selection to use flexbox.
+   In some browsers the rendered area can be given a width of 0 (or very
+   small) unless we allow it to flex and explicitly permit it to shrink.
+   Also ensure the arrow doesn't consume available width. These rules are
+   narrowly scoped to the Select2 DOM and use !important only where needed
+   to override upstream theme styles. */
+.select2-container .select2-selection--single .select2-selection__rendered {
+    min-width: 0 !important;
+    /* allow the flex item to shrink correctly */
+    flex: 1 1 auto !important;
+    /* take remaining space */
+    white-space: nowrap !important;
+    /* keep single-line like form-select */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    /* gracefully truncate if too long */
+}
+
+.select2-container .select2-selection__arrow {
+    flex: 0 0 auto !important;
+    /* prevent arrow from growing/shrinking */
+    margin-left: .5rem !important;
+    /* small gap between text and arrow */
+}
+
+/* Multi-selects should allow tokens to wrap and stay within the control. */
+.select2-container .select2-selection--multiple {
+    display: block !important;
+    min-height: 2.25rem !important;
+    padding-top: .25rem !important;
+    padding-bottom: .25rem !important;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: .25rem !important;
+    align-items: center !important;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__choice {
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
 }
 
 /* Target the simple 4-div spinner used inside the DataTables processing card
