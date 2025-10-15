@@ -15,9 +15,10 @@ require.config({
     moment: "//static.dpaw.wa.gov.au/static/libs/moment.js/2.9.0/moment.min",
     parsley: "//static.dpaw.wa.gov.au/static/libs/parsley.js/2.3.5/parsley.min",
     "datatables.net":
-      "//static.dpaw.wa.gov.au/static/libs/datatables/1.10.11/js/jquery.dataTables.min",
+      "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min",
+    // DataTables Bootstrap 5 integration
     "datatables.bootstrap":
-      "//static.dpaw.wa.gov.au/static/libs/datatables/1.10.11/js/dataTables.bootstrap.min",
+      "https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min",
     lodash: "//static.dpaw.wa.gov.au/static/libs/lodash.js/4.5.1/lodash.min",
     "bootstrap.treeView":
       "//static.dpaw.wa.gov.au/static/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min",

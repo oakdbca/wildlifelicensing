@@ -3,7 +3,7 @@
 {% load users %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.10/css/dataTables.bootstrap.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
   <link href="//static.dpaw.wa.gov.au/static/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
@@ -21,19 +21,17 @@
 {% block content %}
   <div class="container" id="dashboard-table-container">
     {% block applications %}
-      <div class="panel-group" id="applications-accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default" id="applications">
-          <div class="panel-heading applications" role="tab" id="applications-heading">
-            <h4 class="panel-title">
-                <h3>
-                    {% block applications_title %}
-                        Applications
-                    {% endblock %}
-                </h3>
-            </h4>
+      <div id="applications-accordion">
+        <div class="card mb-3" id="applications">
+          <div class="card-header applications" id="applications-heading">
+            <h3 class="mb-0">
+              {% block applications_title %}
+                Applications
+              {% endblock %}
+            </h3>
           </div>
-          <div id="applications-collapse" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="applications-heading">
-            <div class="panel-body">
+          <div id="applications-collapse" class="collapse show" role="tabpanel" aria-labelledby="applications-heading">
+            <div class="card-body">
               <div class="row filter-panel pad-bottom-md pad-top-s">
                 <div id="applications-filter-panel">
                   {% block applications_filters %}
@@ -48,21 +46,17 @@
       </div>
     {% endblock %}
     {% block licences %}
-      <div class="panel-group" id="licences-accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default" id="licences">
-          <div class="panel-heading licences" role="tab" id="licences-heading">
-            <h4 class="panel-title">
-              <a role="button" data-bs-toggle="collapse" href="#licences-collapse" aria-expanded="true" aria-controls="collapseOne">
-                <h3>
-                  {% block licences_title %}
-                    Licences
-                  {% endblock %}
-                </h3>
-              </a>
-            </h4>
+      <div id="licences-accordion">
+        <div class="card mb-3" id="licences">
+          <div class="card-header licences" id="licences-heading">
+            <h3 class="mb-0">
+              {% block licences_title %}
+                Licences
+              {% endblock %}
+            </h3>
           </div>
-          <div id="licences-collapse" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="licences-heading">
-            <div class="panel-body">
+          <div id="licences-collapse" class="collapse show" role="tabpanel" aria-labelledby="licences-heading">
+            <div class="card-body">
               <div class="row filter-panel pad-bottom-md pad-top-s">
                 <div id="licences-filter-panel">
                   {% block licences_filters %}
@@ -77,21 +71,17 @@
       </div>
     {% endblock %}
     {% block returns %}
-      <div class="panel-group" id="returns-accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default" id="returns">
-          <div class="panel-heading returns" role="tab" id="returns-heading">
-            <h4 class="panel-title">
-              <a role="button" data-bs-toggle="collapse" href="#returns-collapse" aria-expanded="true" aria-controls="collapseOne">
-                <h3>
-                  {% block returns_title %}
-                    Returns
-                  {% endblock %}
-                </h3>
-              </a>
-            </h4>
+      <div id="returns-accordion">
+        <div class="card mb-3" id="returns">
+          <div class="card-header returns" id="returns-heading">
+            <h3 class="mb-0">
+              {% block returns_title %}
+                Returns
+              {% endblock %}
+            </h3>
           </div>
-          <div id="returns-collapse" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="returns-heading">
-            <div class="panel-body">
+          <div id="returns-collapse" class="collapse show" role="tabpanel" aria-labelledby="returns-heading">
+            <div class="card-body">
               <div class="row filter-panel pad-bottom-md pad-top-s">
                 <div id="returns-filter-panel">
                   {% block returns_filters %}
