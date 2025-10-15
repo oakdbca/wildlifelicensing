@@ -2,22 +2,24 @@
 
 {% block applications_filters %}
   <form class="form" id="applications-filter-form">
-    <div class="col-md-3">
-      <div class="form-group">
-        <label for="applications-filter-licence-type">Licence Type:</label>
-        <select class="form-select" name="licence_type" id="applications-filter-licence-type"></select>
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="applications-filter-licence-type">Licence Type:</label>
+          <select class="form-select" name="licence_type" id="applications-filter-licence-type"></select>
+        </div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <label for="applications-filter-status">Status:</label>
-        <select class="form-select" name="status" id="applications-filter-status"></select>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="applications-filter-status">Status:</label>
+          <select class="form-select" name="status" id="applications-filter-status"></select>
+        </div>
       </div>
     </div>
   </form>
   <div class="row">
-    <div class="col-md-2 col-md-offset-5">
-      <a class="hidden btn btn-primary btn-xs" id="reset-applications-filter-button" href="#">Reset filters</a>
+    <div class="col d-flex justify-content-center">
+      <a class="btn btn-primary btn-sm" id="reset-applications-filter-button" href="#">Reset filters</a>
     </div>
   </div>
 {% endblock %}
