@@ -302,3 +302,16 @@ h2 {
     padding: .75rem 1.25rem;
     font-weight: 500;
 }
+
+/* Ensure form labels are rendered bold across the application.
+   This override is intentionally specific and uses !important to
+   counteract any upstream or later-loaded rules that reduce label
+   weight (including generated templates which may emit plain <label>
+   elements). Prefer adding the .form-label class to template/JS sites
+   where possible; this is a safe CSS fallback. */
+label.form-label,
+.form-label,
+.control-label,
+.form-group label {
+    font-weight: 700 !important;
+}

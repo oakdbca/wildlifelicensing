@@ -92,7 +92,9 @@ define([
       _initCollapsible(itemContainer);
     } else if (item.type === "radiobuttons" || item.type === "select") {
       var isSpecified = false;
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
       $.each(item.options, function (index, option) {
         if (option.value === item.value) {
           itemContainer.append($("<p>").text(option.label));
@@ -108,14 +110,18 @@ define([
         itemContainer.append($("<p>").text(item.label));
       }
     } else if (item.type === "declaration") {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
       itemContainer.append(
         $("<p>").text(
           item.value ? "Declaration checked" : "Declaration not checked"
         )
       );
     } else if (item.type === "file") {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
       if (item.value) {
         var fileLink = $("<a>");
         fileLink.attr("href", item.value);
@@ -126,9 +132,13 @@ define([
         itemContainer.append($("<p>").text("No file attached"));
       }
     } else if (item.type === "label") {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
     } else {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
       if (item.value) {
         itemContainer.append($("<p>").text(item.value));
       } else {

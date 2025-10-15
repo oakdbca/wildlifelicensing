@@ -40,7 +40,9 @@ define([
 
       _initCollapsible(itemContainer);
     } else if (item.type === "radiobuttons" || item.type === "select") {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
       if (
         item.valueCurrent === item.valuePrevious ||
         (item.valuePrevious === undefined && isRepeat)
@@ -89,7 +91,9 @@ define([
         }
       }
     } else if (item.type === "declaration") {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
 
       if (
         item.valueCurrent === item.valuePrevious ||
@@ -126,7 +130,9 @@ define([
       var currentFileLink = $("<a>"),
         previousFileLink = $("<a>");
 
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
 
       if (
         item.valueCurrent === item.valuePrevious ||
@@ -189,9 +195,13 @@ define([
         }
       }
     } else if (item.type == "label") {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
     } else {
-      itemContainer.append($("<label>").text(item.label));
+      itemContainer.append(
+        $("<label>").text(item.label).addClass("form-label")
+      );
 
       if (
         item.valueCurrent === item.valuePrevious ||

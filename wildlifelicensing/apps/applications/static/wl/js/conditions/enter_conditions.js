@@ -176,7 +176,9 @@ define([
           );
         }
 
-        $contentContainer.append($("<label>").text("Assessor's Comment"));
+        $contentContainer.append(
+          $("<label>").text("Assessor's Comment").addClass("form-label")
+        );
 
         if (assessment.comment.length > 0) {
           $contentContainer.append($("<p>").text(assessment.comment));
