@@ -14,8 +14,8 @@
         <meta name="format-detection" content="telephone=no"/>
             {% bootstrap_css %}
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-                <link type="text/css" href="{% static 'wl/css/base.css' %}" rel="stylesheet">
-                <link type="text/css" href="{% static 'wl/css/bootstrap5-fixes.css' %}" rel="stylesheet">
+                <link type="text/css" href="{% static 'wl/css/base.css' %}?v={{ GIT_COMMIT_HASH }}" rel="stylesheet">
+                <link type="text/css" href="{% static 'wl/css/bootstrap5-fixes.css' %}?v={{ GIT_COMMIT_HASH }}" rel="stylesheet">
             {% block extra_css %}
             {% endblock %}
             <title>

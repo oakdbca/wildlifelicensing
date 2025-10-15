@@ -33,6 +33,9 @@ stages:
                 django5_$(tagDate)
               containerRegistry: DockerHub
               repository: dbcawa/wildlifelicensing
+              buildArguments: |
+                GIT_COMMIT_HASH=$(Build.SourceVersion)
+              arguments: --label com.azure.dev.image.build.sourceversion=$(Build.SourceVersion) --label org.opencontainers.image.revision=$(Build.SourceVersion)
             env:
               DOCKER_BUILDKIT: 1
           - task: Docker@2

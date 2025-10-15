@@ -23,4 +23,5 @@ def config(request):
         "PAYMENT_SYSTEM_PREFIX": settings.PAYMENT_SYSTEM_PREFIX,
         "ledger_totals": lt,
         "checkouthash": checkouthash,
+        "GIT_COMMIT_HASH": settings.GIT_COMMIT_HASH,
     }

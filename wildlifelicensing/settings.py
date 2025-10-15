@@ -256,3 +256,6 @@ NOMOS_KINGDOM_IDS_LIST = config(
 NOMOS_TAXONOMY_SEARCH_RESULTS_LIMIT = config(
     "NOMOS_TAXONOMY_SEARCH_RESULTS_LIMIT", default=20, cast=int
 )
+
+# Use git commit hash for purging cache in browser for deployment changes
+GIT_COMMIT_HASH = os.environ.get("GIT_COMMIT", os.environ.get("COMMIT", "unknown"))
