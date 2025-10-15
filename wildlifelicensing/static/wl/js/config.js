@@ -2,8 +2,9 @@ require.config({
   baseUrl: "/static/wl",
   paths: {
     jQuery: "//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.min",
+    // Use the Bootstrap 5 bundle (includes Popper) so JS matches the BS5 markup/CSS
     bootstrap:
-      "//static.dpaw.wa.gov.au/static/libs/twitter-bootstrap/3.3.6/js/bootstrap.min",
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min",
     "bootstrap-datetimepicker":
       "//static.dpaw.wa.gov.au/static/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min",
     // Use Select2 v4 to match the v4 CSS/theme loaded from templates
