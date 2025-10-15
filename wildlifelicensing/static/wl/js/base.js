@@ -26,6 +26,39 @@ require(["jQuery", "bootstrap"], function ($) {
   $("body").on("hidden.bs.popover", function (e) {
     // no-op for Bootstrap 5 compatibility
   });
+
+  // Migration helper: convert legacy Bootstrap 3 collapse markup (panel-collapse.in)
+  // to Bootstrap 5 expected classes (.collapse.show) and ensure toggler elements
+  // have correct `collapsed` class and `aria-expanded` attribute. This prevents
+  // state mismatches where a toggle appears to close but the element re-opens
+  // because the JS interprets the initial state differently.
+  $(function () {
+    // Convert element-level classes
+    $(".panel-collapse.in").each(function () {
+      var $el = $(this);
+      // Add the BS5 classes and remove the legacy 'in'
+      $el.addClass("collapse show").removeClass("in");
+    });
+
+    // Sync toggler controls (href or data-bs-target)
+    $('[data-bs-toggle="collapse"]').each(function () {
+      var $t = $(this);
+      var target =
+        $t.attr("href") || $t.attr("data-bs-target") || $t.attr("data-target");
+      if (!target) return;
+      try {
+        var $targetEl = $(target);
+        if ($targetEl.length) {
+          var isShown = $targetEl.hasClass("show");
+          // toggler should have 'collapsed' when target is not shown
+          $t.toggleClass("collapsed", !isShown);
+          $t.attr("aria-expanded", isShown ? "true" : "false");
+        }
+      } catch (err) {
+        // invalid selector in href (e.g., javascript:void(0)) — ignore
+      }
+    });
+  });
 });
 
 // Ensure Select2 uses the bootstrap-5 theme by default for calls that don't
