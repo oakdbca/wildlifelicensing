@@ -191,6 +191,24 @@ th.action-status {
     background: #FEF9E7;
 }
 
+/* Bootstrap's table styles set td backgrounds to white; make condition row classes
+   apply to the td cells explicitly so the colours show on table rows again. */
+.conditions-table-body tr.default td {
+    background-color: #EBF5FB;
+}
+
+.conditions-table-body tr.assessor td {
+    background-color: #E8F8F5;
+}
+
+.conditions-table-body tr.additional td {
+    background-color: #FDF2E9;
+}
+
+.conditions-table-body tr.custom td {
+    background-color: #FEF9E7;
+}
+
 .legend {
     margin-left: 10px;
     width: 15px;
