@@ -3,6 +3,7 @@ import datetime
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.html import format_html
 
 from wildlifelicensing.apps.applications.models import Application, Assessment
 from wildlifelicensing.apps.main.helpers import is_assessor, is_officer
@@ -114,10 +115,14 @@ class RedirectApplicationInSessionMixin:
         if "application_id" in request.session:
             messages.error(
                 request,
-                "There is currently another application in the process of being entered. Please "
-                "conclude or save this application before creating a new one. If you are seeing this "
-                'message and there is not another application being entered, you may need to <a href="{}">logout'
-                "</a> and log in again.".format(reverse("logout")),
+                format_html(
+                    "There is currently another application in the process of being entered. Please "
+                    "conclude or save this application before creating a new one. If you are seeing this "
+                    "message and there is not another application being entered, you may need to {}",
+                    format_html(
+                        '<a href="{}">logout</a> and log in again.', reverse("logout")
+                    ),
+                ),
             )
             return redirect("wl_home")
 

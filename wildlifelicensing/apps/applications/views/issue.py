@@ -8,6 +8,7 @@ from django.core.files import File
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
+from django.utils.html import format_html
 from django.views.generic import TemplateView, View
 from pypdf import PdfReader, PdfWriter
 
@@ -181,8 +182,11 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
             to = [licence.profile.email]
             messages.success(
                 request,
-                "The licence has now been issued and sent as an email attachment to the "
-                "licencee: {}.".format(licence.profile.email),
+                format_html(
+                    "The licence has now been issued and sent as an email attachment to the "
+                    "licencee: {}.",
+                    licence.profile.email,
+                ),
             )
             send_licence_issued_email(
                 licence,
@@ -196,11 +200,11 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
             # no email
             messages.success(
                 request,
-                "The licence has now been issued and must be posted to the licencee. Click "
-                'this link to show the licence <a href="{}" target="_blank">Licence PDF'
-                '</a><img height="20px" src="{}"></img> and this link to show the cover letter '
-                '<a href="{}" target="_blank">Cover Letter PDF</a><img height="20px" src="{}">'
-                "</img>".format(
+                format_html(
+                    "The licence has now been issued and must be posted to the licencee. "
+                    'Click this link to show the licence <a href="{}" target="_blank">Licence PDF</a>'
+                    '<img height="20px" src="{}"></img> and this link to show the cover letter '
+                    '<a href="{}" target="_blank">Cover Letter PDF</a><img height="20px" src="{}"></img>',
                     licence.licence_document.file.url,
                     static("wl/img/pdf.png"),
                     licence.cover_letter_document.file.url,
