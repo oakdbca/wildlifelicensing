@@ -23,7 +23,7 @@ a {
     cursor: pointer;
 }
 
-#sectionList > ul > .active {
+#sectionList>ul>.active {
     font-weight: bold;
 }
 
@@ -46,14 +46,18 @@ a {
 
 /* processing */
 
-.panel-heading a.collapsed span:before
-{
-    content: "\e113";
+.panel-heading a.collapsed span:before {
+    /* Font Awesome chevron-down for collapsed (so clicking opens) */
+    content: "\f078";
+    font-family: 'FontAwesome';
+    display: inline-block;
 }
 
-.panel-heading a span:before
-{
-    content: "\e114";
+.panel-heading a span:before {
+    /* Font Awesome chevron-up for expanded */
+    content: "\f077";
+    font-family: 'FontAwesome';
+    display: inline-block;
 }
 
 .lodged-version-row {
@@ -196,6 +200,6 @@ th.action-status {
     margin-bottom: 10px;
 }
 
-.applicant-contact .email{
+.applicant-contact .email {
     font-size: 95%;
 }
