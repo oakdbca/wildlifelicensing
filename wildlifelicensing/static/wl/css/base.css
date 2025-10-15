@@ -68,9 +68,48 @@
 
 .wl-breadcrumbs {
     background-color: white;
-    margin-top: -20px;
+    /* preserve the existing offset used to tuck breadcrumbs into the banner;
+       reduced negative offset to add more space above the breadcrumb row */
+    margin-top: -10px;
     margin-bottom: 0px;
     padding-left: 0px;
+    /* make breadcrumbs render as a horizontal list with gaps between items */
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    /* horizontal gap between items */
+    align-items: center;
+    padding: .4rem 0;
+    /* restore vertical spacing around the breadcrumb row */
+}
+
+/* Individual breadcrumb items */
+.wl-breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Add the grey '/' separator between adjacent breadcrumb items */
+.wl-breadcrumbs li+li::before {
+    content: '/';
+    color: #6c757d;
+    /* bootstrap muted grey */
+    padding: 0 .5rem;
+}
+
+/* Styling for breadcrumb links and the active item */
+.wl-breadcrumbs a {
+    text-decoration: none;
+    color: #337ab7;
+}
+
+.wl-breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.wl-breadcrumbs .active {
+    color: #6c757d;
 }
 
 .inline {
@@ -144,6 +183,86 @@ a {
 a:hover {
     color: #23527c;
     text-decoration: underline;
+}
+
+/* Restore Bootstrap nav menu link behaviour: nav links should not show
+   an underline on hover (Bootstrap changes colour instead). These
+   selectors are intentionally specific so they override the global
+   anchor hover rule above for nav items. */
+.navbar .nav-link,
+.nav .nav-link,
+.nav-link {
+    text-decoration: none !important;
+}
+
+.navbar .nav-link:hover,
+.nav .nav-link:hover,
+.nav-link:hover {
+    text-decoration: none !important;
+}
+
+/* Menu links (dropdowns, menu items) should not show an underline on hover
+   to match Bootstrap 5 behavior. This targets dropdown items, menu anchors
+   and common nav/menu structures across the application. */
+.dropdown-item,
+.dropdown-menu a,
+.navbar .dropdown-item,
+.nav .dropdown-item {
+    text-decoration: none !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-menu a:hover,
+.dropdown-menu a:focus {
+    text-decoration: none !important;
+}
+
+/* Buttons are often implemented as anchor elements with .btn classes.
+   Our global anchor hover rule accidentally added underlines to button
+   labels. Remove text-decoration from all button elements except those
+   intentionally styled as link-buttons (.btn-link). */
+.btn:not(.btn-link),
+.btn:not(.btn-link) * {
+    text-decoration: none !important;
+}
+
+.btn:not(.btn-link):hover,
+.btn:not(.btn-link):focus,
+.btn:not(.btn-link):active {
+    text-decoration: none !important;
+}
+
+/* Header/logo link (banner) — ensure the anchor wrapping the logo and
+   heading in the header banner never shows an underline. This targets the
+   header structure rather than a specific URL so it works across environments. */
+header .wl-banner>a,
+header .wl-banner>a *,
+.wl-header .wl-banner>a,
+.wl-header .wl-banner>a * {
+    text-decoration: none !important;
+}
+
+.wl-header .wl-banner>a:hover,
+.wl-header .wl-banner>a:hover *,
+header .wl-banner>a:hover,
+header .wl-banner>a:hover * {
+    text-decoration: none !important;
+}
+
+/* Navbar brand (Home) — prevent underline on the brand link, the brand text
+   and the small image inside it so the Home item never shows text-decoration. */
+.navbar .navbar-brand,
+.navbar .navbar-brand .brand-text,
+.navbar .navbar-brand img {
+    text-decoration: none !important;
+}
+
+.navbar .navbar-brand:hover,
+.navbar .navbar-brand:hover .brand-text,
+.navbar .navbar-brand:hover img {
+    text-decoration: none !important;
+    color: #5e5e5e !important;
 }
 
 /* DataTables customisations: make table links use the brand blue and
@@ -248,4 +367,18 @@ a:hover {
 .dataTables_wrapper .dataTables_processing.card>div>div {
     background-color: #337ab7 !important;
     background: #337ab7 !important;
+}
+
+/* Ensure navbar dropdowns sit flush beneath the navbar (no visible gap).
+   Popper/bundled Bootstrap may add transform/top values; we override them
+   only for dropdowns inside a navbar to avoid affecting other dropdowns. */
+.navbar .dropdown-menu {
+    margin-top: 0 !important;
+    top: 100% !important;
+}
+
+.navbar .dropdown-menu.show {
+    /* Move the dropdown further down so it visually sits below the navbar.
+       Tuned to 10px (previously 12px) — adjust this value if navbar padding or brand height changes. */
+    transform: translateY(10px) !important;
 }
