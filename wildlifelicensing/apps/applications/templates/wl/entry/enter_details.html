@@ -95,7 +95,7 @@
           <div id="amendments-panel">
             <h4>
               <span class="icon fa fa-alert text-warning"></span>
-              <label>Your application requires the following amendment(s) before approval:</label>
+              <label class="form-label">Your application requires the following amendment(s) before approval:</label>
             </h4>
             {% for amendment in amendments %}
               <div class="alert alert-warning">{{ amendment.text }}</div>
@@ -125,7 +125,7 @@
             <h3 id="original-application-document" class="section">Original Application Document</h3>
             <hr />
             <div class="form-group">
-              <label>Application Document</label>
+              <label class="form-label">Application Document</label>
               {% if application.hard_copy %}
                 <p>
                   Currently:

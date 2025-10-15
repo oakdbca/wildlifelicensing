@@ -71,7 +71,7 @@
                   <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end"><span class="fa"></span></a>
                 </div>
                 <div id="applicationOverviewBody" class="panel-body panel-collapse in">
-                  <label>Applicant</label>
+                  <label class="form-label">Applicant</label>
                   {% with applicant=data.application.applicant_profile %}
                     <p>
                       {{ applicant.user.first_name }} {{ applicant.user.last_name }}
@@ -109,7 +109,7 @@
                     {% if proxy %}
                       <div class="row bottom-buffer-xs">
                         <div class="col-md-12">
-                          <label>Proxy</label>
+                          <label class="form-label">Proxy</label>
                           <div>{{ proxy.first_name }} {{ proxy.last_name }}</div>
                         </div>
                       </div>
@@ -117,20 +117,20 @@
                   {% endwith %}
                   <div class="row">
                     <div class="col-md-5">
-                      <label>Lodged on</label>
+                      <label class="form-label">Lodged on</label>
                       <p>{{ data.application.lodgement_date }}</p>
                     </div>
                     <div class="col-md-7">
-                      <label>Status</label>
+                      <label class="form-label">Status</label>
                       <p id="processingStatus">{{ data.application.processing_status }}</p>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label>Currently assigned to</label>
+                    <label class="form-label">Currently assigned to</label>
                     <input type="hidden" id="assignee" class="form-control" />
                     <a id="assignToMe" class="float-end">Assign to me</a>
                   </div>
-                  <label>Payment Status</label>
+                  <label class="form-label">Payment Status</label>
                   <p class="no-margin">
                     {{ data.payment_status }}
                     {% if data.payment_status == 'Awaiting Payment' %}
@@ -174,7 +174,7 @@
                   </div>
                   <div id="previousApplicationBody" class="panel-body panel-collapse in">
                     <div>
-                      <label>Application</label>
+                      <label class="form-label">Application</label>
                       <table id="previousApplication" class="table small-table">
                         <thead>
                           <tr>
@@ -188,7 +188,7 @@
                     </div>
                     {% if data.application.application_type == 'renewal' %}
                       <div>
-                        <label>Returns</label>
+                        <label class="form-label">Returns</label>
                         {% if data.returns_outstanding %}
                           <p>Returns outstanding.</p>
                           <p>
@@ -214,7 +214,7 @@
                 <div id="processingChecklistBody" class="panel-body panel-collapse in">
                   <div id="idCheck" class="processing-action-group">
                     <div>
-                      <label>ID Check</label>
+                      <label class="form-label">ID Check</label>
                       <span class="float-end status">{{ data.application.id_check_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
@@ -229,7 +229,7 @@
                   </div>
                   <div id="returnsCheck" class="processing-action-group">
                     <div>
-                      <label>Returns Check</label>
+                      <label class="form-label">Returns Check</label>
                       <span class="float-end status">{{ data.application.returns_check_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
@@ -244,7 +244,7 @@
                   </div>
                   <div id="characterCheck" class="processing-action-group">
                     <div>
-                      <label>Character Check</label>
+                      <label class="form-label">Character Check</label>
                       <span class="float-end status">{{ data.application.character_check_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
@@ -262,7 +262,7 @@
                   <hr />
                   <div id="review" class="processing-action-group">
                     <div>
-                      <label>Review</label>
+                      <label class="form-label">Review</label>
                       <span class="float-end status">{{ data.application.review_status }}</span>
                       <span class="done float-end hidden">
                         <a>Reset</a>
@@ -278,7 +278,7 @@
                   <hr />
                   <div class="processing-action-group">
                     <div>
-                      <label>Assessment</label>
+                      <label class="form-label">Assessment</label>
                       <span class="fa fa-check float-end ok-tick hidden"></span>
                     </div>
                     <div>
