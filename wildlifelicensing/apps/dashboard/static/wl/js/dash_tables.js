@@ -702,9 +702,9 @@ define([
         setFilters(options.data.query);
       }
       initTables();
-      $applicationsResetFilterButton.removeClass("hidden");
-      $licencesResetFilterButton.removeClass("hidden");
-      $returnsResetFilterButton.removeClass("hidden");
+      $applicationsResetFilterButton.removeClass("d-none");
+      $licencesResetFilterButton.removeClass("d-none");
+      $returnsResetFilterButton.removeClass("d-none");
 
       // apply the bootstrap select2 to the filters.
       $(options.selectors.applicationsFilterForm + " select").select2();

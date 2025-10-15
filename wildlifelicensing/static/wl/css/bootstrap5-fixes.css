@@ -315,3 +315,11 @@ label.form-label,
 .form-group label {
     font-weight: 700 !important;
 }
+
+/* Temporary compatibility shim: restore legacy .hidden utility used across the codebase
+   This allows gradual migration to Bootstrap 5 utilities (d-none) without immediate
+   need to rebuild all precompiled assets. Remove after full migration.
+*/
+.hidden {
+    display: none !important;
+}

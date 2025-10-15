@@ -127,7 +127,7 @@ define([
                         $actionCell.html(
                           $("<p>").text(assessmentCondition.acceptance_status)
                         );
-                        $conditionsEmptyRow.addClass("hidden");
+                        $conditionsEmptyRow.addClass("d-none");
                       }
                     );
                   } else {
@@ -210,7 +210,7 @@ define([
     });
 
     if (showAssessmentsTable) {
-      $assessments.removeClass("hidden");
+      $assessments.removeClass("d-none");
     } else {
       $assessments.after(
         $("<p>").append($("<em>").text("No assessments available"))
@@ -229,7 +229,7 @@ define([
       $row.remove();
 
       if ($conditionsTableBody.find("tr").length == 1) {
-        $conditionsEmptyRow.removeClass("hidden");
+        $conditionsEmptyRow.removeClass("d-none");
       }
 
       $conditionsTableBody.find('input[value="' + condition.id + '"]').remove();
@@ -381,7 +381,7 @@ define([
         )
       ) {
         createConditionTableRow(condition, "additional");
-        $conditionsEmptyRow.addClass("hidden");
+        $conditionsEmptyRow.addClass("d-none");
       } else {
         window.alert("The specified condition has already been entered.");
       }
@@ -412,10 +412,10 @@ define([
         success: function (data) {
           if (typeof data === "string" || data instanceof String) {
             $createConditionError.find("span").text(data);
-            $createConditionError.removeClass("hidden");
+            $createConditionError.removeClass("d-none");
           } else {
             createConditionTableRow(data, "custom");
-            $conditionsEmptyRow.addClass("hidden");
+            $conditionsEmptyRow.addClass("d-none");
             var modal = bootstrap.Modal.getInstance(
               $createCustomConditionModal[0]
             );
@@ -435,7 +435,7 @@ define([
       $createCustomConditionForm
         .find("input[type=checkbox]")
         .attr("checked", false);
-      $createConditionError.addClass("hidden");
+      $createConditionError.addClass("d-none");
     });
   }
 
@@ -471,7 +471,7 @@ define([
       }
 
       if ($conditionsTableBody.find("tr").length > 1) {
-        $conditionsEmptyRow.addClass("hidden");
+        $conditionsEmptyRow.addClass("d-none");
       }
 
       initAdditionalConditions();

@@ -14,7 +14,7 @@ define(["jQuery", "bootstrap-datetimepicker", "select2"], function ($) {
     // reasonable dropdownParent to avoid positioning issues inside layout.
     $selects.each(function () {
       var $s = $(this);
-      $s.removeClass("hidden");
+      $s.removeClass("d-none");
       // If a prior Select2 instance exists (e.g., due to hot-reload), destroy it
       if ($s.hasClass("select2-hidden-accessible")) {
         $s.select2("destroy");

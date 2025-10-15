@@ -110,7 +110,7 @@ define([
       $row.append($("<td>").text(version.date));
 
       if (index === 0) {
-        $compareLink = $("<a>").text("Show").addClass("hidden");
+        $compareLink = $("<a>").text("Show").addClass("d-none");
         $comparingText = $("<p>")
           .css("font-style", "italic")
           .text("Showing")
@@ -123,7 +123,7 @@ define([
           .css("font-style", "italic")
           .text("Comparing")
           .addClass("no-margin")
-          .addClass("hidden");
+          .addClass("d-none");
       }
 
       $actionSpan = $("<span>").append($compareLink).append($comparingText);
@@ -131,8 +131,8 @@ define([
       $compareLink.click(function (e) {
         $(document).trigger("application-version-selected");
         $row.addClass("small-table-selected-row");
-        $compareLink.addClass("hidden");
-        $comparingText.removeClass("hidden");
+        $compareLink.addClass("d-none");
+        $comparingText.removeClass("d-none");
         $previewContainer.empty();
         previewVersions.layoutPreviewItems(
           $previewContainer,
@@ -149,8 +149,8 @@ define([
 
     $(document).on("application-version-selected", function () {
       $table.find("tr").removeClass("small-table-selected-row");
-      $table.find("a").removeClass("hidden");
-      $table.find("p").addClass("hidden");
+      $table.find("a").removeClass("d-none");
+      $table.find("p").addClass("d-none");
     });
   }
 
@@ -176,15 +176,15 @@ define([
       .css("font-style", "italic")
       .text("Comparing")
       .addClass("no-margin")
-      .addClass("hidden");
+      .addClass("d-none");
 
     var $actionSpan = $("<span>").append($compareLink).append($comparingText);
 
     $compareLink.click(function (e) {
       $(document).trigger("application-version-selected");
       $row.addClass("small-table-selected-row");
-      $compareLink.addClass("hidden");
-      $comparingText.removeClass("hidden");
+      $compareLink.addClass("d-none");
+      $comparingText.removeClass("d-none");
       $previewContainer.empty();
       previewVersions.layoutPreviewItems(
         $previewContainer,
@@ -200,8 +200,8 @@ define([
 
     $(document).on("application-version-selected", function () {
       $table.find("tr").removeClass("small-table-selected-row");
-      $compareLink.removeClass("hidden");
-      $comparingText.addClass("hidden");
+      $compareLink.removeClass("d-none");
+      $comparingText.addClass("d-none");
     });
   }
 
@@ -209,7 +209,7 @@ define([
     var $container = $("#idCheck");
 
     if (!application.licence_type.identification_required) {
-      $container.addClass("hidden");
+      $container.addClass("d-none");
       return;
     }
 
@@ -219,9 +219,9 @@ define([
       $status = $container.find(".status");
 
     if (application.id_check_status === "Accepted") {
-      $actionButtonsContainer.addClass("hidden");
-      $status.addClass("hidden");
-      $done.removeClass("hidden");
+      $actionButtonsContainer.addClass("d-none");
+      $status.addClass("d-none");
+      $done.removeClass("d-none");
     }
 
     $resetLink.click(function () {
@@ -234,10 +234,10 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $actionButtonsContainer.removeClass("hidden");
+          $actionButtonsContainer.removeClass("d-none");
           $status.text(data.id_check_status);
-          $status.removeClass("hidden");
-          $done.addClass("hidden");
+          $status.removeClass("d-none");
+          $done.addClass("d-none");
 
           application.id_check_status = data.id_check_status;
           determineApplicationApprovable();
@@ -258,9 +258,9 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $status.addClass("hidden");
-          $done.removeClass("hidden");
-          $actionButtonsContainer.addClass("hidden");
+          $status.addClass("d-none");
+          $done.removeClass("d-none");
+          $actionButtonsContainer.addClass("d-none");
 
           application.id_check_status = data.id_check_status;
           determineApplicationApprovable();
@@ -308,7 +308,7 @@ define([
 
     // for new applications or applications that are licence amendments, no need to check returns
     if (application.application_type !== "renewal") {
-      $container.addClass("hidden");
+      $container.addClass("d-none");
       return;
     }
 
@@ -318,9 +318,9 @@ define([
       $status = $container.find(".status");
 
     if (application.returns_check_status === "Accepted") {
-      $actionButtonsContainer.addClass("hidden");
-      $status.addClass("hidden");
-      $done.removeClass("hidden");
+      $actionButtonsContainer.addClass("d-none");
+      $status.addClass("d-none");
+      $done.removeClass("d-none");
     }
 
     $resetLink.click(function () {
@@ -333,10 +333,10 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $actionButtonsContainer.removeClass("hidden");
+          $actionButtonsContainer.removeClass("d-none");
           $status.text(data.returns_check_status);
-          $status.removeClass("hidden");
-          $done.addClass("hidden");
+          $status.removeClass("d-none");
+          $done.addClass("d-none");
 
           application.returns_check_status = data.returns_check_status;
           determineApplicationApprovable();
@@ -357,9 +357,9 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $status.addClass("hidden");
-          $done.removeClass("hidden");
-          $actionButtonsContainer.addClass("hidden");
+          $status.addClass("d-none");
+          $done.removeClass("d-none");
+          $actionButtonsContainer.addClass("d-none");
 
           application.returns_check_status = data.returns_check_status;
           determineApplicationApprovable();
@@ -421,11 +421,11 @@ define([
       $dodgyUser = $container.find("#dodgyUser");
 
     if (application.character_check_status === "Accepted") {
-      $actionButtonsContainer.addClass("hidden");
-      $status.addClass("hidden");
-      $showCharacterChecklist.addClass("hidden");
-      $dodgyUser.addClass("hidden");
-      $done.removeClass("hidden");
+      $actionButtonsContainer.addClass("d-none");
+      $status.addClass("d-none");
+      $showCharacterChecklist.addClass("d-none");
+      $dodgyUser.addClass("d-none");
+      $done.removeClass("d-none");
     }
 
     $resetLink.click(function () {
@@ -438,15 +438,15 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $actionButtonsContainer.removeClass("hidden");
+          $actionButtonsContainer.removeClass("d-none");
           $status.text(data.character_check_status);
-          $status.removeClass("hidden");
-          $showCharacterChecklist.removeClass("hidden");
+          $status.removeClass("d-none");
+          $showCharacterChecklist.removeClass("d-none");
           if (application.applicant_profile.user.character_flagged) {
-            $dodgyUser.removeClass("hidden");
+            $dodgyUser.removeClass("d-none");
           }
 
-          $done.addClass("hidden");
+          $done.addClass("d-none");
 
           application.character_check_status = data.character_check_status;
           determineApplicationApprovable();
@@ -466,11 +466,11 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $status.addClass("hidden");
-          $done.removeClass("hidden");
-          $actionButtonsContainer.addClass("hidden");
-          $showCharacterChecklist.addClass("hidden");
-          $dodgyUser.addClass("hidden");
+          $status.addClass("d-none");
+          $done.removeClass("d-none");
+          $actionButtonsContainer.addClass("d-none");
+          $showCharacterChecklist.addClass("d-none");
+          $dodgyUser.addClass("d-none");
 
           application.character_check_status = data.character_check_status;
           determineApplicationApprovable();
@@ -517,7 +517,7 @@ define([
           content: $content.prop("outerHTML"),
           html: true,
         });
-        $showPopover.removeClass("hidden");
+        $showPopover.removeClass("d-none");
       } else {
         // update content - Popover instances store options
         inst._config.content = $content.prop("outerHTML");
@@ -545,10 +545,10 @@ define([
     }
 
     if (application.review_status === "Accepted") {
-      $actionButtonsContainer.addClass("hidden");
-      $status.addClass("hidden");
-      $showAmendmentRequests.addClass("hidden");
-      $done.removeClass("hidden");
+      $actionButtonsContainer.addClass("d-none");
+      $status.addClass("d-none");
+      $showAmendmentRequests.addClass("d-none");
+      $done.removeClass("d-none");
     }
 
     $resetLink.click(function () {
@@ -561,13 +561,13 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $actionButtonsContainer.removeClass("hidden");
+          $actionButtonsContainer.removeClass("d-none");
           $status.text(data.review_status);
-          $status.removeClass("hidden");
+          $status.removeClass("d-none");
           if (amendmentRequests.length > 0) {
-            $showAmendmentRequests.removeClass("hidden");
+            $showAmendmentRequests.removeClass("d-none");
           }
-          $done.addClass("hidden");
+          $done.addClass("d-none");
 
           application.review_status = data.review_status;
           determineApplicationApprovable();
@@ -585,10 +585,10 @@ define([
         },
         function (data) {
           $processingStatus.text(data.processing_status);
-          $status.addClass("hidden");
-          $actionButtonsContainer.addClass("hidden");
-          $showAmendmentRequests.addClass("hidden");
-          $done.removeClass("hidden");
+          $status.addClass("d-none");
+          $actionButtonsContainer.addClass("d-none");
+          $showAmendmentRequests.addClass("d-none");
+          $done.removeClass("d-none");
           application.review_status = data.review_status;
           determineApplicationApprovable();
         }
@@ -737,7 +737,7 @@ define([
       $currentAssessments = $("#currentAssessments");
 
     $assessor.select2({
-      theme: 'bootstrap-5',
+      theme: "bootstrap-5",
       data: assessorsList,
     });
 
@@ -745,7 +745,7 @@ define([
       $.each(assessments, function (index, assessment) {
         $currentAssessments.append(createAssessmentRow(assessment));
       });
-      $currentAssessments.parent().removeClass("hidden");
+      $currentAssessments.parent().removeClass("d-none");
     }
 
     $assessor.on("change", function () {
@@ -773,7 +773,7 @@ define([
             }
           }
 
-          $currentAssessments.parent().removeClass("hidden");
+          $currentAssessments.parent().removeClass("d-none");
 
           assessments.push(data.assessment);
           determineApplicationApprovable();

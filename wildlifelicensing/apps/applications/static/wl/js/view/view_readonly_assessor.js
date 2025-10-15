@@ -81,7 +81,7 @@ define([
       $row.remove();
 
       if ($conditionsTableBody.find("tr").length == 1) {
-        $conditionsEmptyRow.removeClass("hidden");
+        $conditionsEmptyRow.removeClass("d-none");
       }
 
       $conditionsTableBody.find('input[value="' + condition.id + '"]').remove();

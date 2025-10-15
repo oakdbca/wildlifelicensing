@@ -25,8 +25,8 @@
                 logListURL: "{% url 'wl_applications:log_list' data.application.id %}",
                 addLogEntryURL: "{% url 'wl_applications:add_log_entry' data.application.id %}"
             });
-            logs.initActionLog({ logListURL: "{% url 'wl_applications:action_list' data.application.id %}", });
-                $('#mainContainer').removeClass('hidden');
+      logs.initActionLog({ logListURL: "{% url 'wl_applications:action_list' data.application.id %}", });
+        $('#mainContainer').removeClass('d-none');
             });
         }
     );
@@ -59,7 +59,7 @@
 {% endblock %}
 
 {% block content %}
-  <div id="mainContainer" class="container hidden">
+  <div id="mainContainer" class="container d-none">
     <div class="row">
       <div class="col-md-3">
         <div id="sidebarPanels" class="bottom-buffer">
@@ -216,7 +216,7 @@
                     <div>
                       <label class="form-label">ID Check</label>
                       <span class="float-end status">{{ data.application.id_check_status }}</span>
-                      <span class="done float-end hidden">
+                      <span class="done float-end d-none">
                         <a>Reset</a>
                         <span class="fa fa-check ok-tick"></span>
                       </span>
@@ -231,7 +231,7 @@
                     <div>
                       <label class="form-label">Returns Check</label>
                       <span class="float-end status">{{ data.application.returns_check_status }}</span>
-                      <span class="done float-end hidden">
+                      <span class="done float-end d-none">
                         <a>Reset</a>
                         <span class="fa fa-check ok-tick"></span>
                       </span>
@@ -246,7 +246,7 @@
                     <div>
                       <label class="form-label">Character Check</label>
                       <span class="float-end status">{{ data.application.character_check_status }}</span>
-                      <span class="done float-end hidden">
+                      <span class="done float-end d-none">
                         <a>Reset</a>
                         <span class="fa fa-check ok-tick"></span>
                       </span>
@@ -264,7 +264,7 @@
                     <div>
                       <label class="form-label">Review</label>
                       <span class="float-end status">{{ data.application.review_status }}</span>
-                      <span class="done float-end hidden">
+                      <span class="done float-end d-none">
                         <a>Reset</a>
                         <span class="fa fa-check ok-tick"></span>
                       </span>
@@ -273,13 +273,13 @@
                       <button type="button" class="btn btn-sm btn-success">Accept</button>
                       <button type="button" class="btn btn-sm btn-warning">Request Amendments</button>
                     </div>
-                    <a id="showAmendmentRequests" class="hidden small-text" data-bs-toggle="popover" data-bs-placement="right" title="Amendment Requests">View all amendment requests</a>
+                    <a id="showAmendmentRequests" class="d-none small-text" data-bs-toggle="popover" data-bs-placement="right" title="Amendment Requests">View all amendment requests</a>
                   </div>
                   <hr />
                   <div class="processing-action-group">
                     <div>
                       <label class="form-label">Assessment</label>
-                      <span class="fa fa-check float-end ok-tick hidden"></span>
+                      <span class="fa fa-check float-end ok-tick d-none"></span>
                     </div>
                     <div>
                       <div class="form-group">
@@ -289,7 +289,7 @@
                         <button type="button" id="sendForAssessment" class="btn btn-sm btn-primary" disabled>Send</button>
                       </div>
                     </div>
-                    <div class="hidden">
+                    <div class="d-none">
                       Current Assessments<table id="currentAssessments" class="table small-table no-margin">
                         <col width="50%" />
                         <col width="50%" />

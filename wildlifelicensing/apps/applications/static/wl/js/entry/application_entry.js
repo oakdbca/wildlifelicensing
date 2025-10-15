@@ -141,7 +141,7 @@ define([
         var groupCount = parseInt(groupInput.val()),
           repeatItem = _layoutItem(child, groupCount, suffix);
 
-        repeatItem.find(".hidden").removeClass("hidden");
+        repeatItem.find(".d-none").removeClass("d-none");
         repeatItemsAnchorPoint.append(repeatItem);
         groupInput.val(groupCount + 1);
       });

@@ -21,7 +21,7 @@ class ReportForm(forms.Form):
     regions = forms.ModelMultipleChoiceField(
         queryset=Region.objects.all(),
         required=False,
-        widget=SelectMultiple(attrs={"class": "hidden"}),
+        widget=SelectMultiple(attrs={"class": "d-none"}),
     )
 
     def __init__(self, *args, **kwargs):

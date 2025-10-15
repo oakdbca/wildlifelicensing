@@ -16,7 +16,7 @@ define(["jQuery", "js/return_table", "bootstrap"], function ($, returnTable) {
         content: $content.prop("outerHTML"),
         html: true,
       });
-      $showPopover.removeClass("hidden");
+      $showPopover.removeClass("d-none");
     } else {
       popover.options.content = $content;
     }
@@ -64,7 +64,7 @@ define(["jQuery", "js/return_table", "bootstrap"], function ($, returnTable) {
       // amendments
       if (amendmentRequests.length > 0) {
         prepareAmendmentRequestsPopover($showAmendmentRequests);
-        $showAmendmentRequests.removeClass("hidden");
+        $showAmendmentRequests.removeClass("d-none");
       }
     },
   };

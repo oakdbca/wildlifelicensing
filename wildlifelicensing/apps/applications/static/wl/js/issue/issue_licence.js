@@ -75,7 +75,7 @@ define([
         theme: "bootstrap-5",
         placeholder: "Select applicable regions.",
       });
-      $regionSelect.removeClass("hidden");
+      $regionSelect.removeClass("d-none");
 
       $(".species").each(function () {
         var speciesTypeArg = "";

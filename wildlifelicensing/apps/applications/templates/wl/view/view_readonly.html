@@ -26,7 +26,7 @@
             {{ application.data|jsonify }}
         );
 
-        $('#mainContainer').removeClass('hidden');
+  $('#mainContainer').removeClass('d-none');
 
         logs.initCommunicationLog({
             logListURL: "{% url 'wl_applications:log_list' application.id %}",
@@ -68,10 +68,10 @@
 {% endblock %}
 
 {% block content %}
-  <div id="mainContainer" class="container hidden">
+  <div id="mainContainer" class="container d-none">
     <div class="row">
       <div class="col-md-3">
-        <nav class="hidden-xs top-buffer">
+  <nav class="hidden-xs top-buffer">
           {% if customer %}
             {% include 'wl/logs_panel.html' %}
           {% else %}

@@ -125,7 +125,7 @@ class IssueLicenceForm(forms.ModelForm):
             "cover_letter_message",
         ]
         widgets = {
-            "regions": SelectMultiple(attrs={"class": "hidden"}),
+            "regions": SelectMultiple(attrs={"class": "d-none"}),
             "purpose": forms.Textarea(attrs={"cols": "40", "rows": "8"}),
             "locations": forms.Textarea(attrs={"cols": "40", "rows": "5"}),
             "additional_information": forms.Textarea(attrs={"cols": "40", "rows": "5"}),
