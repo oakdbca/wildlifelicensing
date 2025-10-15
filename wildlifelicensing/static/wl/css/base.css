@@ -112,6 +112,27 @@
     color: #6c757d;
 }
 
+/* Global horizontal rule styling: use a lighter grey throughout the app
+   so <hr> elements and dropdown dividers match the desired visual tone. */
+hr {
+    /* Slightly darker than before so separators are more visible */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    /* darker grey */
+    height: 0;
+    background: transparent;
+}
+
+/* Ensure Bootstrap dropdown-divider and any hr with that class use the
+   same lighter grey. Loaded after bootstrap so this will override the
+   default border colour. */
+.dropdown-divider,
+hr.dropdown-divider {
+    border-top-color: #ccc;
+}
+
 .inline {
     display: inline;
 }

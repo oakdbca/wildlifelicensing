@@ -15,8 +15,14 @@
 }
 
 hr {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    /* Slightly darker than before so separators are more visible */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    /* darker grey */
+    height: 0;
+    background: transparent;
 }
 
 a {
@@ -137,7 +143,8 @@ a {
 }
 
 .conditions-table-body hr {
-    border-color: #BDC3C7;
+    /* keep conditions table hr consistent with the slightly darker global hr */
+    border-color: #ccc;
 }
 
 th.code {
