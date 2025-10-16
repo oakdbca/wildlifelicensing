@@ -3,7 +3,8 @@ define([
   "lodash",
   "js/entry/application_preview",
   "select2",
-], function ($, _, applicationPreview) {
+  "bootstrap",
+], function ($, _, applicationPreview, bootstrap) {
   var $conditionsForm = $("#conditionsForm"),
     $conditionsTableBody = $("#conditionsBody"),
     $conditionsEmptyRow = $("#conditionsEmptyRow"),

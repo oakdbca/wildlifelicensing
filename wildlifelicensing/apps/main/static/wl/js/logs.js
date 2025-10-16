@@ -1,9 +1,10 @@
-define(["jQuery", "lodash", "moment", "js/wl.dataTable"], function (
-  $,
-  _,
-  moment,
-  dataTable
-) {
+define([
+  "jQuery",
+  "lodash",
+  "moment",
+  "js/wl.dataTable",
+  "bootstrap",
+], function ($, _, moment, dataTable, bootstrap) {
   "use strict";
 
   // constants
