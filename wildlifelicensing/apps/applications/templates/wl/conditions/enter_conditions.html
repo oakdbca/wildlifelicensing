@@ -246,22 +246,22 @@
                 <form method="post" action="{% url 'wl_applications:create_condition' application.id %}" id="createConditionForm">
                     {% csrf_token %}
                     <div class="modal-header">
+                        <h5 class="modal-title">Create Custom Condition</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <h4 class="modal-title">Create Custom Condition</h4>
                     </div>
                     <div class="modal-body">
                         <div id="createConditionError" class="alert alert-danger d-none">
                             <span class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label class="form-label">Condition Code</label>
                             <input type="text" name="code" class="form-control" required maxlength="10"></input>
                          </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label class="form-label">Condition Text</label>
                             <textarea name="text" rows="5" class="form-control" required></textarea>
                          </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label class="form-label">
                                 <input name="addToGeneralList" type="checkbox" />
                                 Add to general condition list

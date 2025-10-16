@@ -330,8 +330,8 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
+                <h5 class="modal-title">Identification for {{ user.first_name }} {{ user.last_name }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <h4 class="modal-title">Identification for {{ user.first_name }} {{ user.last_name }}</h4>
               </div>
               <div class="modal-body center">
                 <a href="/ledger-private/identification/{{ user.id }}/" target="_blank">
@@ -355,8 +355,8 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
+                <h5 class="modal-title">Senior Card for {{ user.first_name }} {{ user.last_name }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <h4 class="modal-title">Senior Card for {{ user.first_name }} {{ user.last_name }}</h4>
               </div>
               <div class="modal-body center">
                 {% if user.senior_card2.url|lower|slice:'-3:' == 'pdf' %}
@@ -380,8 +380,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <h5 class="modal-title">Request Photo Identification Upload</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <h4 class="modal-title">Request Photo Identification Upload</h4>
           </div>
           <form id="idRequestForm" method="post" action="{% url 'wl_applications:id_request' %}">
             {% csrf_token %}
@@ -400,8 +400,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <h5 class="modal-title">Request Return Completion</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <h4 class="modal-title">Request Return Completion</h4>
           </div>
           <form id="returnsRequestForm" method="post" action="{% url 'wl_applications:returns_request' %}">
             {% csrf_token %}
@@ -420,8 +420,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <h5 class="modal-title">Request Amendments to Application</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <h4 class="modal-title">Request Amendments to Application</h4>
           </div>
           <form id="amendmentRequestForm" method="post" action="{% url 'wl_applications:amendment_request' %}">
             {% csrf_token %}
@@ -441,8 +441,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <h5 class="modal-title">Please provide the reason why this application is declined.</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <h4 class="modal-title">Please provide the reason why this application is declined.</h4>
           </div>
           <form id="declinedDetailsForm" method="post" action="{% url 'wl_applications:process' data.application.id %}">
             {% csrf_token %}

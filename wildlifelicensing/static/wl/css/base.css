@@ -121,6 +121,15 @@ hr.dropdown-divider {
 .modal-header {
     background-color: #529b6b;
     color: #fcb13f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.modal-header .modal-title {
+    margin: 0;
+    font-weight: 500;
 }
 
 .modal-body {
