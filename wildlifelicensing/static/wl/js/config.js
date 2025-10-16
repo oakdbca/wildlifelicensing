@@ -42,6 +42,7 @@ require.config({
     },
     bootstrap: {
       deps: ["jQuery"],
+      exports: "bootstrap",
     },
     "bootstrap-datetimepicker": {
       deps: ["jQuery", "bootstrap", "moment"],

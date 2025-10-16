@@ -1,7 +1,5 @@
-div.details-row-buffer {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
+/* details-row-buffer removed in favour of Bootstrap spacing utilities (e.g., my-2) */
+
 
 a.add-link {
     margin-bottom: 10px;

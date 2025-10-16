@@ -51,7 +51,7 @@
               <p>
                 <label class="form-label">Invoice:</label>
                 {% if application.invoice_reference %}
-                <a class="left-buffer" href="{% url 'wl_payments:invoice-pdf' application.invoice_reference %}" target="_blank">
+                <a class="ms-3" href="{% url 'wl_payments:invoice-pdf' application.invoice_reference %}" target="_blank">
                   Download as PDF
                   <img height="20px" src="{% static 'wl/img/pdf.png' %}" />
                 </a>

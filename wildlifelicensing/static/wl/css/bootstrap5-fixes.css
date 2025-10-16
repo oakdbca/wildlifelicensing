@@ -60,10 +60,11 @@ blockquote,
 
 /* Sidebar card styling to match purple panel look - tune colours as needed */
 .wl-sidebar-card {
-    background: #3d2dc6;
+    background: #00418b;
     color: #fff;
     border: none;
     border-radius: 8px;
+    margin-top: 0.25rem;
 }
 
 .wl-sidebar-card .card-body {
@@ -152,11 +153,6 @@ h2 {
     line-height: 1.2;
 }
 
-/* Sidebar card spacing */
-.wl-sidebar-card {
-    margin-top: 0.25rem;
-}
-
 /* Reduce the oversized display-5 used on the homepage */
 .display-5 {
     font-size: 2rem;
@@ -179,11 +175,6 @@ h2 {
 /* Reduce extra padding inside the sidebar card to match original compact panel */
 .wl-sidebar-card .card-body {
     padding: 1rem;
-}
-
-/* Sidebar colour tuning to remove the different blue and set closer to original purple */
-.wl-sidebar-card {
-    background: linear-gradient(180deg, #4b2fb6 0%, #40237a 100%);
 }
 
 /* Match card title/text sizing closer to original */

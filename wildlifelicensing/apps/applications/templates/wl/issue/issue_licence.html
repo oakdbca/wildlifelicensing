@@ -42,7 +42,7 @@
 {% endblock %} {% block intro_subtitle %}
   <h4 class="inline">{{ application.licence_type.name }}</h4>
 {% endblock %} {% block content %}
-  <div class="container bottom-buffer">
+  <div class="container mb-3">
     <div class="row">
       <div class="col-md-12">
         {% bootstrap_messages %}
@@ -111,9 +111,9 @@
         {% include 'wl/logs_panel.html' %}
         <a class="btn btn-sm btn-secondary" href="{% url 'wl_applications:enter_conditions' application.id %}" role="button">Conditions</a>
         {% if payment_status == 'Credit Card Ready' %}
-          <button id="save" name="save" type="button" class="btn btn-sm btn-info left-buffer-m">Save</button>
+          <button id="save" name="save" type="button" class="btn btn-sm btn-info ms-2">Save</button>
         {% else %}
-          <button id="save" name="save" type="button" class="btn btn-sm btn-info left-buffer-xxxl">Save</button>
+          <button id="save" name="save" type="button" class="btn btn-sm btn-info ms-4">Save</button>
         {% endif %} {% if payment_status == 'Awaiting Payment' %}
           <button id="issue" name="issue" type="button" class="btn btn-sm btn-success float-end disabled" data-title="Payment must be received before licence can be issued">Issue</button>
         {% else %}
@@ -129,7 +129,7 @@
             {% endif %}
           </button>
         {% endif %}
-        <a href="{% url 'wl_applications:preview_licence' application.id %}" id="previewLicence" class="top-buffer float-end" target="_blank">
+  <a href="{% url 'wl_applications:preview_licence' application.id %}" id="previewLicence" class="mt-3 float-end" target="_blank">
           Preview Licence PDF<img style="padding-left:5px;" height="20px" src="{% static 'wl/img/pdf.png' %}" />
         </a>
       </div>
@@ -173,7 +173,7 @@
               </div>
             </div>
           {% endif %} {% bootstrap_form issue_licence_form %}
-          <a href="#" id="add_attachment" class="top-buffer">Add attachment</a>
+          <a href="#" id="add_attachment" class="mt-3">Add attachment</a>
         </form>
       </div>
     </div>

@@ -1,4 +1,4 @@
-require(["jQuery", "bootstrap"], function ($) {
+require(["jQuery", "bootstrap"], function ($, bootstrap) {
   // bootstrap returns nothing so must go last in required modules
   $("body").on("click", function (e) {
     $('[data-bs-toggle="popover"]').each(function () {

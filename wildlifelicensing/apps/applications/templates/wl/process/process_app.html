@@ -62,7 +62,7 @@
   <div id="mainContainer" class="container d-none">
     <div class="row">
       <div class="col-md-3">
-        <div id="sidebarPanels" class="bottom-buffer">
+  <div id="sidebarPanels" class="mb-3">
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-default">
@@ -107,7 +107,7 @@
                   {% endwith %}
                   {% with proxy=data.application.proxy_applicant %}
                     {% if proxy %}
-                      <div class="row bottom-buffer-xs">
+                      <div class="row mb-1">
                         <div class="col-md-12">
                           <label class="form-label">Proxy</label>
                           <div>{{ proxy.first_name }} {{ proxy.last_name }}</div>

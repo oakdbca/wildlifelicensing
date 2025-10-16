@@ -9,7 +9,7 @@ define(["jQuery"], function ($) {
 
     $uploadID.on("click", function (e) {
       var $fileNode = $(
-        '<input class="top-buffer d-none" id="id" name="id" type="file" multiple>'
+        '<input class="mt-3 d-none" id="id" name="id" type="file" multiple>'
       );
       e.preventDefault();
       $fileNode.change(function (e) {
@@ -21,7 +21,7 @@ define(["jQuery"], function ($) {
 
     $uploadSenior.on("click", function (e) {
       var $fileNode = $(
-        '<input class="top-buffer d-none" id="senior_card" name="senior_card" type="file" multiple>'
+        '<input class="mt-3 d-none" id="senior_card" name="senior_card" type="file" multiple>'
       );
       e.preventDefault();
       $fileNode.change(function (e) {

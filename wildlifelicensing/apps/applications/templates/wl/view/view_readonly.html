@@ -71,7 +71,7 @@
   <div id="mainContainer" class="container d-none">
     <div class="row">
       <div class="col-md-3">
-  <nav class="hidden-xs top-buffer">
+      <nav class="hidden-xs mt-3">
           {% if customer %}
             {% include 'wl/logs_panel.html' %}
           {% else %}
@@ -83,7 +83,7 @@
                     <p class="no-margin">
                       {{ payment_status }}
                       {% if payment_status == 'Awaiting Payment' %}
-                        <a class="left-buffer float-end" href="{% url 'wl_payments:invoice-pdf' application.invoice_reference %}" target="_blank">
+                        <a class="ms-3 float-end" href="{% url 'wl_payments:invoice-pdf' application.invoice_reference %}" target="_blank">
                           Invoice
                           <img height="20px" src="{% static 'wl/img/pdf.png' %}" />
                         </a>

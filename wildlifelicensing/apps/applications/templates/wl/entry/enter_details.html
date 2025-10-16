@@ -88,7 +88,7 @@
 {% endblock %}
 
 {% block content %}
-  <div id="contentContainer" class="container d-none bottom-buffer">
+  <div id="contentContainer" class="container d-none mb-3">
     {% if amendments %}
       <div class="row">
         <div class="col-sm-2 col-md-10 col-md-offset-2">
@@ -106,12 +106,12 @@
     {% endif %}
     <div class="row">
       <div class="col-md-2 col-sm-3">
-        <label class="top-buffer">Selected Profile:</label>
+  <label class="mt-3">Selected Profile:</label>
         <p>{{ application.applicant_profile.name }}</p>
         <p>
           <em><a href="{% url 'wl_applications:create_select_profile' %}">Change Profile</a></em>
         </p>
-        <nav class="hidden-xs top-buffer">
+  <nav class="hidden-xs mt-3">
           <div id="sectionList">
             <ul class="nav nav-stacked"></ul>
           </div>

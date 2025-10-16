@@ -30,41 +30,10 @@
     color: #fcb13f;
 }
 
-.top-buffer {
-    margin-top: 20px;
-}
-
-.top-buffer-s {
-    margin-top: 10px;
-}
-
-.top-buffer-xs {
-    margin-top: 5px;
-}
-
-.bottom-buffer {
-    margin-bottom: 20px;
-}
-
-.bottom-buffer-xs {
-    margin-bottom: 5px;
-}
-
-.left-buffer-xxxl {
-    margin-left: 40px;
-}
-
-.left-buffer {
-    margin-left: 20px;
-}
-
-.left-buffer-m {
-    margin-left: 15px;
-}
-
-.right-buffer {
-    margin-right: 20px;
-}
+/* spacing utilities replaced by Bootstrap 5 classes (e.g., mt-3, mb-3, ms-3, me-3).
+    The original project used a set of "buffer" utility classes here; they have
+    been intentionally removed so source templates and scripts can use the
+    standard Bootstrap spacing utilities. */
 
 .wl-breadcrumbs {
     background-color: white;

@@ -17,7 +17,7 @@
     </div>
   </div>
 {% endblock %} {% block content %}
-  <div class="container bottom-buffer">
+  <div class="container mb-3">
     <div class="row">
       <div class="col-md-12">
         <h2>Edit Customer Details</h2>
@@ -54,7 +54,7 @@
             {% csrf_token %}
             <div class="btn-toolbar">
               <button type="submit" class="btn btn-primary float-start" name="upload_id" id="upload_id">Upload ID</button>
-              <button type="submit" class="btn btn-danger top-buffer" name="delete_id">Delete</button>
+              <button type="submit" class="btn btn-danger mt-3" name="delete_id">Delete</button>
             </div>
           </form>
         </div>
@@ -85,7 +85,7 @@
               {% csrf_token %}
               <div class="btn-toolbar">
                 <button type="submit" class="btn btn-primary float-start" name="upload_senior_card" id="upload_senior_card">Upload Senior Card</button>
-                <button type="submit" class="btn btn-danger float-start top-buffer" name="delete_senior_card">Delete</button>
+                <button type="submit" class="btn btn-danger float-start mt-3" name="delete_senior_card">Delete</button>
               </div>
             </form>
           </div>

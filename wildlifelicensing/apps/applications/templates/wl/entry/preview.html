@@ -70,15 +70,15 @@
 {% endblock %}
 
 {% block content %}
-  <div id="contentContainer" class="container d-none bottom-buffer">
+  <div id="contentContainer" class="container d-none mb-3">
     <div class="row">
       <div class="col-md-2 col-sm-3">
-  <label class="form-label top-buffer">Selected Profile:</label>
+  <label class="form-label mt-3">Selected Profile:</label>
         <p>{{ application.applicant_profile.name }}</p>
         <p>
           <em><a data-entry-link="True" href="{% url 'wl_applications:create_select_profile' %}">Change Profile</a></em>
         </p>
-        <nav class="hidden-xs top-buffer">
+  <nav class="hidden-xs mt-3">
           <div id="sectionList">
             <ul class="nav nav-stacked"></ul>
           </div>
