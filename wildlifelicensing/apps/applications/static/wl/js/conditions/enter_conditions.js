@@ -4,7 +4,7 @@ define([
   "js/entry/application_preview",
   "select2",
   "bootstrap",
-], function ($, _, applicationPreview, bootstrap) {
+], function ($, _, applicationPreview, select2, bootstrap) {
   var $conditionsForm = $("#conditionsForm"),
     $conditionsTableBody = $("#conditionsBody"),
     $conditionsEmptyRow = $("#conditionsEmptyRow"),
@@ -327,6 +327,7 @@ define([
 
     $searchConditions.select2({
       theme: "bootstrap-5",
+      width: "100%",
       dropdownCssClass: "conditions-dropdown",
       minimumInputLength: 3,
       ajax: {
