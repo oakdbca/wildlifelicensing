@@ -52,6 +52,71 @@ define([
     }
   }
 
+  // Helper: initialize/dispose popover using Bootstrap 5 API when available,
+  // otherwise fall back to jQuery popover() if present. If neither is
+  // available yet (script still loading) retry for a short time before
+  // warning — this helps when scripts load asynchronously (CDNs, requirejs).
+  function bsPopoverInit($el, opts, warnMessage) {
+    var el = $el && $el.length ? $el.get(0) : $el;
+    if (!el) return;
+    opts = opts || {};
+    warnMessage =
+      warnMessage ||
+      "Bootstrap Popover not available; popover not initialised.";
+
+    var tries = 0;
+    var maxTries = 20; // ~2 seconds at 100ms intervals
+
+    function tryInit() {
+      if (typeof bootstrap !== "undefined" && bootstrap.Popover) {
+        try {
+          if (!bootstrap.Popover.getInstance(el)) {
+            new bootstrap.Popover(el, opts);
+          }
+          return;
+        } catch (e) {
+          // fall through to retry/fallback
+        }
+      }
+      // jQuery UI or older plugins may expose popover on the jQuery object
+      try {
+        if ($el && $el.popover) {
+          $el.popover(opts);
+          return;
+        }
+      } catch (e) {
+        // ignore and retry
+      }
+
+      if (tries++ < maxTries) {
+        setTimeout(tryInit, 100);
+      } else {
+        console.warn(warnMessage);
+      }
+    }
+
+    tryInit();
+  }
+
+  function bsPopoverDestroy($el) {
+    var el = $el && $el.length ? $el.get(0) : $el;
+    if (!el) return;
+    if (typeof bootstrap !== "undefined" && bootstrap.Popover) {
+      var inst = bootstrap.Popover.getInstance(el);
+      if (inst) inst.dispose();
+    } else if ($el && $el.popover) {
+      try {
+        $el.popover("dispose");
+      } catch (e) {
+        try {
+          $el.popover("destroy");
+        } catch (e2) {
+          /* ignore */
+        }
+      }
+    }
+  }
+
   var application,
     assessments,
     amendmentRequests,
@@ -513,19 +578,19 @@ define([
     $characterChecklist.append($("<li>").text("Character flag in database"));
     $characterChecklist.append($("<li>").text("Police record check"));
 
-    if (typeof bootstrap !== "undefined" && bootstrap.Popover) {
-      if (!bootstrap.Popover.getInstance($showCharacterChecklist[0])) {
-        new bootstrap.Popover($showCharacterChecklist[0], {
-          container: "body",
-          content: $characterChecklist.prop("outerHTML"),
-          html: true,
-        });
-      }
-    } else {
-      console.warn(
-        "Bootstrap Popover not available; character checklist popover not initialised."
-      );
-    }
+    bsPopoverInit(
+      $showCharacterChecklist,
+      {
+        container: "body",
+        content: $characterChecklist.prop("outerHTML"),
+        html: true,
+      },
+      "Bootstrap Popover not available; character checklist popover not initialised."
+    );
+    // Prevent default anchor navigation which jumps to top of page when href="#"
+    $showCharacterChecklist.click(function (e) {
+      e.preventDefault();
+    });
 
     if (application.applicant_profile.user.character_flagged) {
       bsTooltipInit($dodgyUser, { container: "body" });
@@ -539,23 +604,20 @@ define([
     });
 
     // check if popover instance exists; if not create one; otherwise update content
-    if (typeof bootstrap !== "undefined" && bootstrap.Popover) {
-      var inst = bootstrap.Popover.getInstance($showPopover[0]);
-      if (!inst) {
-        new bootstrap.Popover($showPopover[0], {
-          container: "body",
-          content: $content.prop("outerHTML"),
-          html: true,
-        });
-        $showPopover.removeClass("d-none");
-      } else {
-        // update content - Popover instances store options
-        inst._config.content = $content.prop("outerHTML");
-      }
-    } else {
-      console.warn(
-        "Bootstrap Popover not available; amendment requests popover not initialised."
-      );
+    // Try to initialise or update using the helper which will retry briefly
+    // while scripts load and fall back to jQuery if available.
+    bsPopoverInit(
+      $showPopover,
+      {
+        container: "body",
+        content: $content.prop("outerHTML"),
+        html: true,
+      },
+      "Bootstrap Popover not available; amendment requests popover not initialised."
+    );
+    // ensure visible if content exists
+    if (amendmentRequests.length > 0) {
+      $showPopover.removeClass("d-none");
     }
   }
 
@@ -762,19 +824,15 @@ define([
                 e.preventDefault();
               })
           );
-        if (typeof bootstrap !== "undefined" && bootstrap.Popover) {
-          if (!bootstrap.Popover.getInstance($viewComment[0])) {
-            new bootstrap.Popover($viewComment[0], {
-              container: "body",
-              content: assessment.comment,
-              html: true,
-            });
-          }
-        } else {
-          console.warn(
-            "Bootstrap Popover not available; assessment comment popover not initialised."
-          );
-        }
+        bsPopoverInit(
+          $viewComment,
+          {
+            container: "body",
+            content: assessment.comment,
+            html: true,
+          },
+          "Bootstrap Popover not available; assessment comment popover not initialised."
+        );
         $statusColumn.append($viewComment);
       }
       $statusColumn.append($reassess);
