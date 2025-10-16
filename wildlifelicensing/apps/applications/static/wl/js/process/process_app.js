@@ -369,8 +369,14 @@ define([
       $idText = $idRequestForm.find("#id_text");
 
     $requestUpdateButton.click(function () {
-      var modal = bootstrap.Modal.getOrCreateInstance($requestIDUpdateModal[0]);
-      modal.show();
+      if (typeof bootstrap !== "undefined" && bootstrap.Modal) {
+        var modal = bootstrap.Modal.getOrCreateInstance(
+          $requestIDUpdateModal[0]
+        );
+        modal.show();
+      } else if ($requestIDUpdateModal.modal) {
+        $requestIDUpdateModal.modal("show");
+      }
     });
 
     $idRequestForm.submit(function (e) {
@@ -387,9 +393,13 @@ define([
           application.id_check_status = data.id_check_status;
           determineApplicationApprovable();
 
-          var modal = bootstrap.Modal.getInstance($requestIDUpdateModal[0]);
-          if (modal) {
-            modal.hide();
+          if (typeof bootstrap !== "undefined" && bootstrap.Modal) {
+            var modal = bootstrap.Modal.getInstance($requestIDUpdateModal[0]);
+            if (modal) {
+              modal.hide();
+            }
+          } else if ($requestIDUpdateModal.modal) {
+            $requestIDUpdateModal.modal("hide");
           }
         },
       });
@@ -719,6 +729,10 @@ define([
           determineApplicationApprovable();
 
           if (data.review_status === "Awaiting Amendments") {
+            // ensure amendmentRequests is an array (server may return null/object)
+            if (!Array.isArray(amendmentRequests)) {
+              amendmentRequests = amendmentRequests ? [amendmentRequests] : [];
+            }
             amendmentRequests.push(data.amendment_request);
             prepareAmendmentRequestsPopover($showAmendmentRequests);
           }
