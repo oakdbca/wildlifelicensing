@@ -171,6 +171,17 @@ th.order {
     background-color: #f5f5f5;
 }
 
+/* Tighter separators for the Processing Checklist panel: reduce the
+   vertical spacing of <hr> elements used between processing-action-group
+   sections so the panel appears more compact. This only targets hr inside
+   the processingChecklistBody to avoid changing global hr spacing. */
+#processingChecklistBody hr,
+#processingChecklistBody>hr,
+#processingChecklistBody .processing-action-group+hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 th.action-status {
     width: 15%;
 }
