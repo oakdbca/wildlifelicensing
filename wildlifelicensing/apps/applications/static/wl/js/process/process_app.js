@@ -36,7 +36,19 @@ define([
       var inst = bootstrap.Tooltip.getInstance(el);
       if (inst) inst.dispose();
     } else if ($el && $el.tooltip) {
-      $el.tooltip("destroy");
+      // Some environments include a jQuery tooltip plugin that uses "destroy",
+      // while Bootstrap 5's jQuery bridge expects "dispose". Try dispose first,
+      // then fall back to destroy for older plugins. Wrap in try/catch to avoid
+      // throwing if the method isn't supported.
+      try {
+        $el.tooltip("dispose");
+      } catch (e) {
+        try {
+          $el.tooltip("destroy");
+        } catch (e2) {
+          // ignore
+        }
+      }
     }
   }
 

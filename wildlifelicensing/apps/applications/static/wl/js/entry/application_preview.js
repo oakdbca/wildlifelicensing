@@ -36,7 +36,15 @@ define([
         var inst = bootstrap.Tooltip.getInstance(el);
         if (inst) inst.dispose();
       } else if ($el && $el.tooltip) {
-        $el.tooltip("destroy");
+        try {
+          $el.tooltip("dispose");
+        } catch (e) {
+          try {
+            $el.tooltip("destroy");
+          } catch (e2) {
+            // ignore
+          }
+        }
       }
     }
 
