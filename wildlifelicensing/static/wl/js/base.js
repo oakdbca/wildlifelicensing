@@ -58,6 +58,30 @@ require(["jQuery", "bootstrap"], function ($, bootstrap) {
         // invalid selector in href (e.g., javascript:void(0)) — ignore
       }
     });
+
+    // Prevent anchors used as UI controls from jumping to the top of the page.
+    // Many templates use <a href="#" role="button"> or anchors with
+    // data-bs-toggle/data-toggle to act as buttons. Intercept clicks on
+    // exact '#' (and javascript:void(0)) targets and prevent default when
+    // the anchor is clearly being used as a control. This preserves real
+    // fragment navigation (e.g., href="#some-id") while stopping the
+    // undesired scroll-to-top behaviour.
+    $(document).on(
+      "click",
+      'a[href="#"], a[href="javascript:void(0)"]',
+      function (e) {
+        var $a = $(this);
+        var isControl =
+          $a.attr("role") === "button" ||
+          typeof $a.attr("data-bs-toggle") !== "undefined" ||
+          typeof $a.attr("data-toggle") !== "undefined" ||
+          typeof $a.attr("data-bs-target") !== "undefined" ||
+          typeof $a.attr("data-target") !== "undefined";
+        if (isControl) {
+          e.preventDefault();
+        }
+      }
+    );
   });
 });
 
