@@ -123,7 +123,12 @@ define([
         $("<label>").text(item.label).addClass("form-label")
       );
       if (item.value) {
-        var fileLink = $("<a>");
+        var fileLink = $("<a>")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          });
         fileLink.attr("href", item.value);
         fileLink.attr("target", "_blank");
         fileLink.text(item.value.substr(item.value.lastIndexOf("/") + 1));
@@ -300,7 +305,12 @@ define([
     },
     initialiseSidebarMenu: function (sidebarMenuSelector) {
       $(".section").each(function (index, value) {
-        var link = $("<a>");
+        var link = $("<a>")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          });
         link.attr("href", "#" + $(this).attr("id"));
         link.text($(this).text());
         $("#sectionList ul").append($("<li>").append(link));

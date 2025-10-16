@@ -125,10 +125,10 @@
                       <p id="processingStatus">{{ data.application.processing_status }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                    <div class="form-group">
                     <label class="form-label">Currently assigned to</label>
                     <input type="hidden" id="assignee" class="form-control" />
-                    <a id="assignToMe" class="float-end">Assign to me</a>
+                    <a id="assignToMe" href="#" role="button" class="float-end">Assign to me</a>
                   </div>
                   <label class="form-label">Payment Status</label>
                   <p class="no-margin">
@@ -254,9 +254,9 @@
                     <div class="action-buttons-group">
                       <button type="button" class="btn btn-sm btn-success">Accept</button>
                     </div>
-                    <a id="showCharacterChecklist" class="small-text" data-bs-toggle="popover" data-bs-placement="right" title="Character Checklist">Character Checklist</a>
+                    <a id="showCharacterChecklist" href="#" role="button" class="small-text" data-bs-toggle="popover" data-bs-placement="right" title="Character Checklist">Character Checklist</a>
                     {% if data.application.applicant_profile.user.character_flagged %}
-                      <a id="dodgyUser" class="float-end" data-bs-toggle="tooltip" data-bs-placement="right" title="User has previously been flagged as having questionable character. {{ data.application.applicant_profile.user.character_comments }}"><span class="fa fa-user"></span></a>
+                      <a id="dodgyUser" href="#" role="button" class="float-end" data-bs-toggle="tooltip" data-bs-placement="right" title="User has previously been flagged as having questionable character. {{ data.application.applicant_profile.user.character_comments }}"><span class="fa fa-user"></span></a>
                     {% endif %}
                   </div>
                   <hr />
@@ -273,7 +273,7 @@
                       <button type="button" class="btn btn-sm btn-success">Accept</button>
                       <button type="button" class="btn btn-sm btn-warning">Request Amendments</button>
                     </div>
-                    <a id="showAmendmentRequests" class="d-none small-text" data-bs-toggle="popover" data-bs-placement="right" title="Amendment Requests">View all amendment requests</a>
+                    <a id="showAmendmentRequests" href="#" role="button" class="d-none small-text" data-bs-toggle="popover" data-bs-placement="right" title="Amendment Requests">View all amendment requests</a>
                   </div>
                   <hr />
                   <div class="processing-action-group">

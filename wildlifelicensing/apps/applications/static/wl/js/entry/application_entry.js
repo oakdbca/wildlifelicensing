@@ -127,7 +127,13 @@ define([
       $childrenAnchorPoint.append(repeatItemsAnchorPoint);
 
       var addGroupDiv = $("<div>").addClass("add-group");
-      var addGroupLink = $("<a>").text("Add " + child.label, itemData);
+      var addGroupLink = $("<a>")
+        .text("Add " + child.label, itemData)
+        .attr("href", "#")
+        .attr("role", "button")
+        .click(function (e) {
+          e.preventDefault();
+        });
 
       var groupInput = $("<input>")
         .attr("name", child.name + suffix + "-" + repetition)
@@ -348,7 +354,12 @@ define([
     },
     initialiseSidebarMenu: function (sidebarMenuSelector) {
       $(".section").each(function (index, value) {
-        var link = $("<a>");
+        var link = $("<a>")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          });
         link.attr("href", "#" + $(this).attr("id"));
         link.text($(this).text());
         $("#sectionList ul").append($("<li>").append(link));

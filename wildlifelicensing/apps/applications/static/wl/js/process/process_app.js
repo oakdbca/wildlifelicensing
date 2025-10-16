@@ -110,7 +110,14 @@ define([
       $row.append($("<td>").text(version.date));
 
       if (index === 0) {
-        $compareLink = $("<a>").text("Show").addClass("d-none");
+        $compareLink = $("<a>")
+          .text("Show")
+          .addClass("d-none")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          });
         $comparingText = $("<p>")
           .css("font-style", "italic")
           .text("Showing")
@@ -118,7 +125,13 @@ define([
 
         $row.addClass("small-table-selected-row");
       } else {
-        $compareLink = $("<a>").text("Compare");
+        $compareLink = $("<a>")
+          .text("Compare")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          });
         $comparingText = $("<p>")
           .css("font-style", "italic")
           .text("Comparing")
@@ -170,7 +183,12 @@ define([
       $("<td>").text(application.previous_application.lodgement_date)
     );
 
-    var $compareLink = $("<a>Compare</a>");
+    var $compareLink = $("<a>Compare</a>")
+      .attr("href", "#")
+      .attr("role", "button")
+      .click(function (e) {
+        e.preventDefault();
+      });
 
     var $comparingText = $("<p>")
       .css("font-style", "italic")
@@ -654,11 +672,27 @@ define([
       $remind = $("<p>")
         .addClass("center")
         .addClass("no-margin")
-        .append($("<a>").text("Remind")),
+        .append(
+          $("<a>")
+            .text("Remind")
+            .attr("href", "#")
+            .attr("role", "button")
+            .click(function (e) {
+              e.preventDefault();
+            })
+        ),
       $reassess = $("<p>")
         .addClass("center")
         .addClass("no-margin")
-        .append($("<a>").text("Reassess"));
+        .append(
+          $("<a>")
+            .text("Reassess")
+            .attr("href", "#")
+            .attr("role", "button")
+            .click(function (e) {
+              e.preventDefault();
+            })
+        );
 
     $row.append("<td>" + assessment.assessor_group.name + "</td>");
 
@@ -707,7 +741,14 @@ define([
           .addClass("center")
           .addClass("no-margin")
           .append(
-            $("<a>").text("View Comment").attr("data-bs-toggle", "popover")
+            $("<a>")
+              .text("View Comment")
+              .attr("data-bs-toggle", "popover")
+              .attr("href", "#")
+              .attr("role", "button")
+              .click(function (e) {
+                e.preventDefault();
+              })
           );
         if (typeof bootstrap !== "undefined" && bootstrap.Popover) {
           if (!bootstrap.Popover.getInstance($viewComment[0])) {

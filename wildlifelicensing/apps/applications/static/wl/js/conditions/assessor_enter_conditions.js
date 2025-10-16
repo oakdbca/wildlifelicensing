@@ -61,6 +61,7 @@ define([
     });
 
     $("#assignToMe").click(function () {
+      e.preventDefault(); // Prevent default action for the link
       $.post(
         "/applications/assign-assessor/",
         {
@@ -114,8 +115,9 @@ define([
     $row.append($("<td>").html(condition.code));
     $row.append($("<td>").html(condition.text));
 
-    var $remove = $("<a>Remove</a>");
+    var $remove = $("<a>Remove</a>").attr("href", "#").attr("role", "button");
     $remove.click(function (e) {
+      e.preventDefault(); // Prevent default action for the link
       $row.remove();
 
       if ($conditionsTableBody.find("tr").length == 1) {
@@ -128,19 +130,23 @@ define([
     if (!readonly) {
       $action = $("<div>").append($remove);
 
-      var $moveUp = $("<a>").append(
-        $("<span>").addClass("fa").addClass("fa-chevron-up")
-      );
+      var $moveUp = $("<a>")
+        .attr("href", "#")
+        .attr("role", "button")
+        .append($("<span>").addClass("fa").addClass("fa-chevron-up"));
       $moveUp.click(function (e) {
+        e.preventDefault(); // Prevent default action for the link
         if (!$row.prev().hasClass("default")) {
           $row.insertBefore($row.prev());
         }
       });
 
-      var $moveDown = $("<a>").append(
-        $("<span>").addClass("fa").addClass("fa-chevron-down")
-      );
+      var $moveDown = $("<a>")
+        .attr("href", "#")
+        .attr("role", "button")
+        .append($("<span>").addClass("fa").addClass("fa-chevron-down"));
       $moveDown.click(function (e) {
+        e.preventDefault(); // Prevent default action for the link
         $row.insertAfter($row.next());
       });
 

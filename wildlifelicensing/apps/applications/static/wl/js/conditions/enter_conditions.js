@@ -48,7 +48,14 @@ define([
             .addClass("center")
             .addClass("no-margin")
             .append(
-              $("<a>").text("View Feedback").attr("data-bs-toggle", "popover")
+              $("<a>")
+                .text("View Feedback")
+                .attr("data-bs-toggle", "popover")
+                .attr("href", "#")
+                .attr("role", "button")
+                .click(function (e) {
+                  e.preventDefault();
+                })
             );
 
         $contentContainer.append(

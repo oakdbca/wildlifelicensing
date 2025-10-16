@@ -127,8 +127,18 @@ define([
         );
       }
     } else if (item.type === "file") {
-      var currentFileLink = $("<a>"),
-        previousFileLink = $("<a>");
+      var currentFileLink = $("<a>")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          }),
+        previousFileLink = $("<a>")
+          .attr("href", "#")
+          .attr("role", "button")
+          .click(function (e) {
+            e.preventDefault();
+          });
 
       itemContainer.append(
         $("<label>").text(item.label).addClass("form-label")
