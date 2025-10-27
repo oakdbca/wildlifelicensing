@@ -70,7 +70,7 @@
                   Application Overview
                   <a data-bs-toggle="collapse" href="#applicationOverviewBody" class="float-end"><span class="fa"></span></a>
                 </div>
-                <div id="applicationOverviewBody" class="panel-body panel-collapse in">
+                <div id="applicationOverviewBody" class="panel-body panel-collapse show">
                   <label class="form-label">Applicant</label>
                   {% with applicant=data.application.applicant_profile %}
                     <p>
@@ -88,7 +88,7 @@
                       </span>
                     </p>
                     <div>{{ applicant.postal_address.search_text }}</div>
-                    <div class="applicant-contact">
+                    <div class="applicant-contact border-bottom mb-3 mt-3 pb-3">
                       <div>
                         <span class="fa fa-envelope"></span>
                         <span class="email">{{ applicant.email }}</span>
@@ -115,7 +115,7 @@
                       </div>
                     {% endif %}
                   {% endwith %}
-                  <div class="row">
+                  <div class="row border-bottom mb-3">
                     <div class="col-md-5">
                       <label class="form-label">Lodged on</label>
                       <p>{{ data.application.lodgement_date }}</p>
@@ -125,9 +125,9 @@
                       <p id="processingStatus">{{ data.application.processing_status }}</p>
                     </div>
                   </div>
-                    <div class="form-group">
+                    <div class="row border-bottom mb-3 pb-2">
                     <label class="form-label">Currently assigned to</label>
-                    <input type="hidden" id="assignee" class="form-control" />
+                    <input type="text" id="assignee" style="width: 100%;"/>
                     <a id="assignToMe" href="#" role="button" class="float-end">Assign to me</a>
                   </div>
                   <label class="form-label">Payment Status</label>
