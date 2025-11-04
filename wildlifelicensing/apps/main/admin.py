@@ -9,7 +9,6 @@ from wildlifelicensing.apps.main.models import (
     Condition,
     DefaultCondition,
     NomosTaxonomy,
-    Product,
     Region,
     Variant,
     VariantGroup,
@@ -181,13 +180,6 @@ class ConditionAdmin(VersionAdmin):
         return False
 
     make_obsolete.short_description = "Mark selected conditions as obsolete"
-
-
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    model = Product
-    list_display = ("title", "partner_sku", "price")
-    ordering = ("id",)
 
 
 @admin.register(NomosTaxonomy)
