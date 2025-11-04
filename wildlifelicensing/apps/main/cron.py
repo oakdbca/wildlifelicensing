@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+from django.conf import settings
 from django_cron import CronJobBase, Schedule
 
 from wildlifelicensing.apps.main.models import WildlifeLicence
@@ -30,7 +31,7 @@ class CheckLicenceRenewalsCronJob(CronJobBase):
 
 
 class FetchNomosFaunaCronJob(CronJobBase):
-    RUN_AT_TIMES = ["00:00"]
+    RUN_AT_TIMES = [settings.NOMOS_FETCH_FAUNA_CRON_TIME_OF_DAY]
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
     code = "main.fetch_nomos_fauna"
