@@ -15,6 +15,7 @@ from wildlifelicensing.apps.main.models import (
     WildlifeLicenceCategory,
     WildlifeLicenceType,
 )
+from wildlifelicensing.apps.main.forms import BetterJSONField
 from wildlifelicensing.apps.payments import utils as payment_utils
 
 
