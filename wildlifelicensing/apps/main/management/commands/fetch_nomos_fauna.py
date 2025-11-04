@@ -32,7 +32,7 @@ class Command(BaseCommand):
         local_file = "nomos_fauna.json"
 
         try:
-            NOMOS_KINGDON_IDS = {int(k) for k in settings.NOMOS_KINGDON_IDS_LIST}
+            NOMOS_KINGDON_IDS = {int(k) for k in settings.NOMOS_KINGDOM_IDS_LIST}
         except ValueError as e:
             err_msg = f"Invalid NOMOS kingdom IDs: {e}"
             logger.error(err_msg)
@@ -87,7 +87,10 @@ class Command(BaseCommand):
                     else ""
                 )
                 fauna_taxon.append(
-                    NomosTaxonomy(name=taxon.get("canonical_name", "") + vernacular_str)
+                    NomosTaxonomy(
+                        name=taxon.get("canonical_name", "") + vernacular_str,
+                        taxon_name_id=taxon.get("taxon_name_id"),
+                    )
                 )
                 updates.append(taxon.get("taxon_name_id"))
                 count += 1
@@ -97,11 +100,42 @@ class Command(BaseCommand):
         logger.info("%d Taxon Records fetched in total.", count)
 
         try:
-            NomosTaxonomy.objects.bulk_create(
-                fauna_taxon,
-                ignore_conflicts=True,  # Ignore duplicate entries
-                batch_size=5000,
+            # Use taxon_name_id as the unique key for de-duplication
+            existing_ids = set(
+                NomosTaxonomy.objects.values_list("taxon_name_id", flat=True)
             )
+
+            # Create only those not already present
+            new_fauna_taxon = [
+                f for f in fauna_taxon if f.taxon_name_id not in existing_ids
+            ]
+
+            if new_fauna_taxon:
+                NomosTaxonomy.objects.bulk_create(
+                    new_fauna_taxon,
+                    batch_size=5000,
+                )
+
+            # Optionally, update names for existing IDs if they have changed
+            # Note: Django 1.11 has no bulk_update; perform targeted updates
+            to_update = [
+                f for f in fauna_taxon if f.taxon_name_id in existing_ids
+            ]
+            updates_performed = 0
+            for f in to_update:
+                # Update only when the stored name differs
+                try:
+                    obj = NomosTaxonomy.objects.get(taxon_name_id=f.taxon_name_id)
+                    if obj.name != f.name:
+                        obj.name = f.name
+                        obj.save(update_fields=["name"])  # small, targeted update
+                        updates_performed += 1
+                except NomosTaxonomy.DoesNotExist:
+                    # Shouldn't happen due to existing_ids check, but ignore safely
+                    pass
+
+            if updates_performed:
+                logger.info("Updated %d existing taxonomy names.", updates_performed)
         except Exception as e:
             err_msg = f"Failed to save fauna taxonomy: {e}"
             logger.error(err_msg)

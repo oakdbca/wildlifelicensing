@@ -270,7 +270,9 @@ class UserAction(models.Model):
 @python_2_unicode_compatible
 class NomosTaxonomy(models.Model):
     # This will include the canoncial name and any vernacular names in brackets
-    name = models.CharField(max_length=250, unique=True, null=False, blank=False)
+    name = models.CharField(max_length=250, unique=False, null=False, blank=False)
+    # Unique identifier from NOMOS for a taxon name
+    taxon_name_id = models.IntegerField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
