@@ -7,6 +7,8 @@ from rest_framework import serializers
 
 import six
 
+from wildlifelicensing.apps.main.models import NomosTaxonomy
+
 
 class WildlifeLicensingJSONEncoder(DjangoJSONEncoder):
     """
