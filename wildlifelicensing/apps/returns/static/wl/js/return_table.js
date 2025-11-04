@@ -8,7 +8,7 @@ define([
     "use strict";
 
     function querySpecies(speciesType, search, callback) {
-        var url = '/taxonomy/species_name',
+        var url = '/wl_taxonomy/species_name',
             params = {},
             promise;
         if (speciesType) {

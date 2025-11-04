@@ -10,9 +10,6 @@ from django.conf import settings
 from ledger.accounts.models import RevisionedMixin, EmailUser, Document, Profile
 from ledger.licence.models import LicenceType, Licence
 
-from wildlifelicensing.apps.payments import utils as payment_utils
-
-
 @python_2_unicode_compatible
 class Condition(RevisionedMixin):
     text = models.TextField()
@@ -58,6 +55,8 @@ class WildlifeLicenceType(LicenceType):
     help_text = models.TextField(blank=True)
 
     def clean(self):
+        from wildlifelicensing.apps.payments import utils as payment_utils
+
         """
         Pre save validation:
         - A payment product and all its variants must exist before creating a LicenceType.
@@ -266,3 +265,17 @@ class UserAction(models.Model):
 
     class Meta:
         abstract = True
+
+
+@python_2_unicode_compatible
+class NomosTaxonomy(models.Model):
+    # This will include the canoncial name and any vernacular names in brackets
+    name = models.CharField(max_length=250, unique=False, null=False, blank=False)
+    # Unique identifier from NOMOS for a taxon name
+    taxon_name_id = models.IntegerField(unique=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "NOMOS Taxonomies"
