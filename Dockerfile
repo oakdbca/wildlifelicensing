@@ -37,7 +37,8 @@ RUN apt-get install --no-install-recommends -y postgresql-client mtr htop \
 RUN apt-get install --no-install-recommends -y python3-gevent \
     software-properties-common imagemagick gunicorn tzdata
 
-RUN add-apt-repository ppa:deadsnakes/ppa
+#RUN add-apt-repository ppa:deadsnakes/ppa
+RUN add-apt-repository ppa:fkrull/deadsnakes
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y python3.7 python3.7-dev
 RUN apt-get install --no-install-recommends -y python3.7 python3.7-dev python3.7-distutils
