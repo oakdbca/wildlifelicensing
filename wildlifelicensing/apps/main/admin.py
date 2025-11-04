@@ -186,8 +186,8 @@ class ConditionAdmin(VersionAdmin):
 @admin.register(NomosTaxonomy)
 class NomosTaxonomyAdmin(admin.ModelAdmin):
     model = NomosTaxonomy
-    list_display = ("name",)
-    search_fields = ("name",)
+    list_display = ("taxon_name_id", "name",)
+    search_fields = ("taxon_name_id", "name",)
     ordering = ("name",)
 
     def has_add_permission(self, request):
