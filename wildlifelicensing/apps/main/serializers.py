@@ -30,4 +30,4 @@ class WildlifeLicensingJSONEncoder(DjangoJSONEncoder):
 class NomosTaxonomySerializer(serializers.ModelSerializer):
     class Meta:
         model = NomosTaxonomy
-        fields = "__all__"
+        fields = ["name"]
