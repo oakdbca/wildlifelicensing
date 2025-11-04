@@ -87,7 +87,7 @@ RUN chmod 777 /app/tmp/
 COPY cron /etc/cron.d/dockercron
 COPY startup.sh /
 # Cron start
-RUN service rsyslog start
+# RUN service rsyslog start
 RUN chmod 0644 /etc/cron.d/dockercron
 RUN crontab /etc/cron.d/dockercron
 RUN touch /var/log/cron.log
