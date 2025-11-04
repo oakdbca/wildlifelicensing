@@ -267,6 +267,7 @@ class UserAction(models.Model):
         abstract = True
 
 
+@python_2_unicode_compatible
 class NomosTaxonomy(models.Model):
     # This will include the canoncial name and any vernacular names in brackets
     name = models.CharField(max_length=250, unique=True, null=False, blank=False)
