@@ -165,7 +165,7 @@ define(['jQuery', 'handlebars.runtime', 'parsley', 'bootstrap', 'bootstrap-datet
                 minLength: 3,
                 items: 'all',
                 source: function (query, process) {
-                    return $.get('/taxonomy/species_name?search=' + query + species_type_arg, function (data) {
+                    return $.get('/wl_taxonomy/species_name?search=' + query + species_type_arg, function (data) {
                         return process(data);
                     });
                 }
