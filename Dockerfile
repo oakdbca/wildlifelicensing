@@ -3,7 +3,7 @@ FROM ubuntu:22.04 as builder_base_wls
 MAINTAINER asi@dbca.wa.gov.au
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Australia/Perth
-ENV PRODUCTION_EMAIL=False
+ENV PRODUCTION_EMAIL=True
 ENV SECRET_KEY="ThisisNotRealKey"
 ENV NOTIFICATION_EMAIL=""
 ENV NON_PROD_EMAIL=''
@@ -12,6 +12,7 @@ ENV SITE_PREFIX='wildlifelicencing-uat'
 ENV SITE_DOMAIN='dbca.wa.gov.au'
 ENV OSCAR_SHOP_NAME='Parks & Wildlife'
 ENV BPAY_ALLOWED=False
+ENV SECRET_KEY="ThisisNotRealKey"
 
 # Install Python libs from base environment.
 RUN apt-get clean
