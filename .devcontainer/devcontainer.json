@@ -5,7 +5,6 @@
 	"image": "dbcawa/docker_app_dev:wildlifelicensing_legacy_dev_latest",
 	"remoteUser": "container",
 	"workspaceFolder": "/data/data/projects/wildlifelicensing",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/data/data/projects/wildlifelicensing,type=bind",
 	"mounts": ["type=bind,source=/data/,target=/data/",
 	           "type=bind,source=/data/data/containerhome/,target=/home/container/"
 	          ],	
