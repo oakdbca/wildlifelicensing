@@ -61,7 +61,7 @@ define([
                     minLength: 3,
                     items: 'all',
                     source: function (query, process) {
-                        return $.get('/taxonomy/species_name?search=' + query + speciesTypeArg, function (data) {
+                        return $.get('/wl_taxonomy/species_name?search=' + query + speciesTypeArg, function (data) {
                             return process(data);
                         });
                     }

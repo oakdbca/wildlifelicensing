@@ -39,7 +39,7 @@ stages:
         command: buildAndPush
         dockerfile: '$(Build.SourcesDirectory)/dockerdev/Dockerfile'
         tags: | 
-              wildlifelicensing_dev_latest
-              wildlifelicensing_dev_$(tagDate)              
+              wildlifelicensing_legacy_dev_latest
+              wildlifelicensing_legacy_dev_$(tagDate)              
         containerRegistry: DockerHub
         repository: dbcawa/docker_app_dev       

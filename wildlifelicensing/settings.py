@@ -55,15 +55,11 @@ STATIC_ROOT=os.path.join(BASE_DIR, 'staticfiles_wl')
 STATICFILES_DIRS.append(os.path.join(os.path.join(BASE_DIR, 'wildlifelicensing', 'static')))
 
 CRON_CLASSES = [
-    #'wildlifelicensing.apps.main.cron.CheckLicenceRenewalsCronJob',
-    #'wildlifelicensing.apps.returns.cron.CheckOverdueReturnsCronJob',
-    'appmonitor_client.cron.CronJobAppMonitorClient',
+    # 'wildlifelicensing.apps.main.cron.CheckLicenceRenewalsCronJob',
+    # 'wildlifelicensing.apps.returns.cron.CheckOverdueReturnsCronJob',
+    "wildlifelicensing.apps.main.cron.FetchNomosFaunaCronJob",
+    "appmonitor_client.cron.CronJobAppMonitorClient",
 ]
-
-
-HERBIE_SPECIES_WFS_URL = env('HERBIE_SPECIES_WFS_URL',
-                             'https://kmi.dpaw.wa.gov.au/geoserver/ows?service=wfs&version=1.1.0&'
-                             'request=GetFeature&typeNames=public:herbie_hbvspecies_public&outputFormat=application/json')
 
 WL_PAYMENT_SYSTEM_ID = env('WL_PAYMENT_SYSTEM_ID', 'S369')
 if not VALID_SYSTEMS:
@@ -89,3 +85,11 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'wildlifelicensing', 'cache'),
     }
 }
+
+NOMOS_BLOB_URL = env("NOMOS_BLOB_URL")
+if not NOMOS_BLOB_URL:
+    raise ImproperlyConfigured("NOMOS_BLOB_URL setting is not configured.")
+
+NOMOS_KINGDOM_IDS_LIST = env("NOMOS_KINGDOM_IDS_LIST", default=[1,2,5,6])
+NOMOS_MAXIMUM_SEARCH_RESULTS = env("NOMOS_MAXIMUM_SEARCH_RESULTS", default=30)
+NOMOS_FETCH_FAUNA_CRON_TIME_OF_DAY = env("NOMOS_FETCH_FAUNA_CRON_TIME_OF_DAY", default="00:00")
