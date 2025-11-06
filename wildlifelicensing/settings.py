@@ -37,19 +37,8 @@ if DEPRECATED:
     TEMPLATES[0]['DIRS'].insert(0, os.path.join(BASE_DIR, 'templates'))
 TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'wildlifelicensing', 'templates'))
 
-del BOOTSTRAP3['css_url']
-#BOOTSTRAP3 = {
-#    'jquery_url': '//static.dpaw.wa.gov.au/static/libs/jquery/2.2.1/jquery.min.js',
-#    'base_url': '//static.dpaw.wa.gov.au/static/libs/twitter-bootstrap/3.3.6/',
-#    'css_url': None,
-#    'theme_url': None,
-#    'javascript_url': None,
-#    'javascript_in_head': False,
-#    'include_jquery': False,
-#    'required_css_class': 'required-form-field',
-#    'success_css_class': '',
-#    'set_placeholder': False,
-#}
+if "css_url" in BOOTSTRAP3:
+    del BOOTSTRAP3['css_url']
 
 STATIC_ROOT=os.path.join(BASE_DIR, 'staticfiles_wl')
 STATICFILES_DIRS.append(os.path.join(os.path.join(BASE_DIR, 'wildlifelicensing', 'static')))
@@ -87,9 +76,6 @@ CACHES = {
 }
 
 NOMOS_BLOB_URL = env("NOMOS_BLOB_URL")
-if not NOMOS_BLOB_URL:
-    raise ImproperlyConfigured("NOMOS_BLOB_URL setting is not configured.")
-
 NOMOS_KINGDOM_IDS_LIST = env("NOMOS_KINGDOM_IDS_LIST", default=[1,2,5,6])
 NOMOS_MAXIMUM_SEARCH_RESULTS = env("NOMOS_MAXIMUM_SEARCH_RESULTS", default=30)
 NOMOS_FETCH_FAUNA_CRON_TIME_OF_DAY = env("NOMOS_FETCH_FAUNA_CRON_TIME_OF_DAY", default="00:00")
