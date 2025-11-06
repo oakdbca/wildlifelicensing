@@ -6,12 +6,21 @@ import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from django.core.mail import mail_admins
+
 from wildlifelicensing.apps.main.models import NomosTaxonomy
 
 logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
+    def report_error(self, message):
+        logger.error(message)
+        mail_admins(
+            subject="Error in fetch_nomos_fauna command",
+            message=message,
+            fail_silently=True,
+        )
     help = "Fetch nomos data"
 
     def add_arguments(self, parser):
@@ -20,6 +29,7 @@ class Command(BaseCommand):
             action="store_true",
             help="This flag makes testing much faster by saving the results nomos json to a file for reuse.",
         )
+
 
     def handle(self, *args, **options):
         logger.info("Running command %s", __name__)
@@ -34,12 +44,14 @@ class Command(BaseCommand):
         try:
             NOMOS_KINGDON_IDS = {int(k) for k in settings.NOMOS_KINGDOM_IDS_LIST}
         except ValueError as e:
-            err_msg = f"Invalid NOMOS kingdom IDs: {e}"
-            logger.error(err_msg)
-            errors.append(err_msg)
+            self.report_error(f"Invalid NOMOS kingdom IDs: {e}")
             return
 
         logger.info("NOMOS_KINGDON_IDS: %s", NOMOS_KINGDON_IDS)
+
+        if not hasattr(settings, "NOMOS_BLOB_URL") or not settings.NOMOS_BLOB_URL:
+            self.report_error("NOMOS_BLOB_URL setting is not configured.")
+            return
 
         if test_mode and os.path.exists(local_file):
             logger.info("Test mode: Loading taxon data from %s", local_file)
@@ -58,18 +70,14 @@ class Command(BaseCommand):
                 )
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
-                err_msg = f"Failed to connect to NOMOS BLOB URL: {e}"
-                logger.error(err_msg)
-                errors.append(err_msg)
+                self.report_error(f"Failed to connect to NOMOS BLOB URL: {e}")
                 return
 
             logger.info("Done Fetching NOMOS data")
             try:
                 taxon_json = response.json()
             except Exception as e:
-                err_msg = f"Failed to decode JSON: {e}"
-                logger.error(err_msg)
-                errors.append(err_msg)
+                self.report_error(f"Failed to decode JSON: {e}")
                 return
 
             if test_mode:
@@ -137,9 +145,7 @@ class Command(BaseCommand):
             if updates_performed:
                 logger.info("Updated %d existing taxonomy names.", updates_performed)
         except Exception as e:
-            err_msg = f"Failed to save fauna taxonomy: {e}"
-            logger.error(err_msg)
-            errors.append(err_msg)
+            self.report_error(f"Failed to save fauna taxonomy: {e}")
             return
 
         total = NomosTaxonomy.objects.count()
