@@ -8,3 +8,4 @@ class MainConfig(AppConfig):
 
     def ready(self):
         import wildlifelicensing.apps.main.signals  # noqa
+        import wildlifelicensing.admin  # noqa - Ensure EmailUserAdmin is registered
