@@ -13,5 +13,5 @@
 		   "--hostname","wildlifelicensing-dev"
 		   ],
 	"forwardPorts": [9041,9042,9043,9044,9045,9046,9047,9048,9049],
-	"initializeCommand" : "${localEnv:HOME}/docker-scripts-dev/windows_vbox/postgres_docker_load.sh"
+	"initializeCommand" : "${localEnv:HOME}/docker-scripts-dev/windows_vbox/postgres_docker_load_2404_16.sh && ${localEnv:HOME}/docker-scripts-dev/windows_vbox/ledger_docker_load.sh "
 }
