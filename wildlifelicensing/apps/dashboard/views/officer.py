@@ -7,6 +7,7 @@ from django.http.response import HttpResponse
 from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 
+from wildlifelicensing import settings
 from wildlifelicensing.apps.applications.models import Application
 from wildlifelicensing.apps.dashboard.views import base
 from wildlifelicensing.apps.dashboard.views.customer import (
@@ -365,7 +366,12 @@ class DataTableApplicationsOfficerView(
                 "wl_payments:invoice-pdf",
                 kwargs={"invoice_reference": obj.invoice_reference},
             )
-            action += r'<br \><a target="_blank" href="{}"> View Payment</a>'.format(
+            action += r'<br \><a target="_blank" href="{}"> View Invoice</a>'.format(
+                url
+            )
+
+            url = settings.LEDGER_UI_URL + f"/ledger/payments/oracle/payments?invoice_no={obj.invoice_reference}"
+            action += r'<br \><a target="_blank" href="{}"> View Payment in Ledger</a>'.format(
                 url
             )
 
