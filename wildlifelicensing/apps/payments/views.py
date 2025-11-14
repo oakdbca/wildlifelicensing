@@ -16,6 +16,7 @@ from django.views.generic.base import RedirectView, View
 from ledger_api_client.ledger_models import Invoice
 from ledger_api_client.utils import create_basket_session, create_checkout_session
 from rest_framework import status
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
@@ -220,6 +221,7 @@ class PaymentsReportView(LoginRequiredMixin, View):
 
 class PaymentSuccessView(APIView):
     throttle_classes = [AnonRateThrottle]
+    renderer_classes = [JSONRenderer]
 
     def get(self, request, payment_uuid, format=None):
         logger.info("Wildlife Licensing SuccessView get method called.")
