@@ -114,6 +114,9 @@
           </div>
         </div>
         {% include 'wl/logs_panel.html' %}
+        <div class="alert alert-warning" style="margin-top: 10px;">
+          <strong>Warning:</strong> Email notifications for issued licences have been disabled. Officers will need to contact licencees manually after issuing a licence.
+        </div>
         <a class="btn btn-sm btn-default" href="{% url 'wl_applications:enter_conditions' application.id %}" role="button">Conditions</a>
         {% if payment_status == 'Credit Card Ready' %}
           <button id="save" name="save" type="button" class="btn btn-sm btn-info left-buffer-m">Save</button>

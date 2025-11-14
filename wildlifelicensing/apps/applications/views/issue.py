@@ -181,17 +181,18 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
             to = [licence.profile.email]
             messages.success(
                 request,
-                "The licence has now been issued and sent as an email attachment to the "
-                "licencee: {}.".format(licence.profile.email),
+                "The licence has now been issued. Note: The email notification has been disabled. "
+                "Please contact the licencee manually at {}.".format(licence.profile.email),
             )
-            send_licence_issued_email(
-                licence,
-                application,
-                request,
-                to=to,
-                bcc=ccs,
-                additional_attachments=attachments,
-            )
+            # Email sending disabled as per user request
+            # send_licence_issued_email(
+            #     licence,
+            #     application,
+            #     request,
+            #     to=to,
+            #     bcc=ccs,
+            #     additional_attachments=attachments,
+            # )
         else:
             # no email
             messages.success(
@@ -207,14 +208,15 @@ class IssueLicenceView(OfficerRequiredMixin, TemplateView):
                     static("wl/img/pdf.png"),
                 ),
             )
-            if ccs:
-                send_licence_issued_email(
-                    licence,
-                    application,
-                    request,
-                    to=ccs,
-                    additional_attachments=attachments,
-                )
+            # Email sending disabled as per user request
+            # if ccs:
+            #     send_licence_issued_email(
+            #         licence,
+            #         application,
+            #         request,
+            #         to=ccs,
+            #         additional_attachments=attachments,
+            #     )
 
         application.log_user_action(
             ApplicationUserAction.ACTION_ISSUE_LICENCE_.format(licence), request
