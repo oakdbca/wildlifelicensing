@@ -107,6 +107,12 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = config(
     "DATA_UPLOAD_MAX_MEMORY_SIZE", default=10485760, cast=int
 )  # 2.5 MB
 
+# Increase the maximum allowed URL length for DataTables with many columns
+# DataTables can generate URLs exceeding 2048 chars with column configurations
+ALLOWED_REDIRECT_URL_MAX_LENGTH = config(
+    "ALLOWED_REDIRECT_URL_MAX_LENGTH", default=4096, cast=int
+)
+
 INVOICE_UNPAID_WARNING = config(
     "INVOICE_UNPAID_WARNING",
     default="Your application cannot be processed until payment is received.",
