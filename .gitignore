@@ -1,5 +1,6 @@
 .settings/
 .env
+.venv/
 venv/
 venv2/
 node_modules/
