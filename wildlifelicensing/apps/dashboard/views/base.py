@@ -100,8 +100,11 @@ def render_payment(application, redirect_url):
     result = f"{PAYMENT_STATUSES[status]}"
     if status == PAYMENT_STATUS_AWAITING:
         # Strip query parameters to prevent URL from exceeding 2048 chars and causing DisallowedRedirect
-        # User will be redirected to the base page after payment, which is acceptable UX
-        clean_redirect_url = redirect_url.split('?')[0] if redirect_url else redirect_url
+        # Keep the protocol and domain for proper absolute URL that Ledger requires
+        from urllib.parse import urlparse, urlunparse
+        parsed = urlparse(redirect_url)
+        # Reconstruct URL with scheme, netloc, and path only (no query/fragment)
+        clean_redirect_url = urlunparse((parsed.scheme, parsed.netloc, parsed.path, '', '', ''))
         url = "{}?redirect_url={}".format(
             reverse("wl_payments:manual_payment", args=[application.id]), clean_redirect_url
         )
