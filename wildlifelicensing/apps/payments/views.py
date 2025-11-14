@@ -238,7 +238,7 @@ class PaymentSuccessView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         logger.info(
-            f"payment_uuid: {uuid}, invoice_reference: {invoice_reference}.",
+            f"payment_uuid: {payment_uuid}, invoice_reference: {invoice_reference}.",
         )
 
         try:
