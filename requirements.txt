@@ -39,7 +39,7 @@ openpyxl==3.1.5
 phonenumbers==8.12.15
 psycopg2-binary==2.9.10
 pycountry==17.1.8
-pypdf==6.0.0
+pypdf==6.2.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 reportlab==4.3.1
