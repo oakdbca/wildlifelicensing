@@ -74,6 +74,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y \
     ca-certificates \
     tzdata \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user to run the app
@@ -88,6 +89,7 @@ COPY --from=builder --chown=oim:oim /app/wildlifelicensing /app/wildlifelicensin
 COPY --from=builder --chown=oim:oim /app/gunicorn.ini.py /app/gunicorn.ini.py
 COPY --from=builder --chown=oim:oim /app/manage.py /app/manage.py
 COPY --from=builder --chown=oim:oim /app/.env /app/.env
+COPY --from=builder --chown=oim:oim /app/wildlifelicensing/staticfiles_wl /app/wildlifelicensing/staticfiles_wl
 
 # Copy startup script and ensure executable
 COPY --from=builder --chown=oim:oim /startup.sh /startup.sh
