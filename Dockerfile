@@ -75,6 +75,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     ca-certificates \
     tzdata \
     wget \
+    python3.12 \
+    python3.12-venv \
     && rm -rf /var/lib/apt/lists/*
 
 # Install standard utility scripts (installs /bin/scheduler.py, etc.)
