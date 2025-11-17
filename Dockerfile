@@ -109,6 +109,7 @@ COPY --from=builder --chown=oim:oim /app/gunicorn.ini.py /app/gunicorn.ini.py
 COPY --from=builder --chown=oim:oim /app/manage.py /app/manage.py
 COPY --from=builder --chown=oim:oim /app/.env /app/.env
 COPY --from=builder --chown=oim:oim /app/staticfiles_wl /app/staticfiles_wl
+COPY --from=builder --chown=oim:oim /app/python-cron /app/python-cron
 
 # Copy startup script and ensure executable
 COPY --from=builder --chown=oim:oim /startup.sh /startup.sh
