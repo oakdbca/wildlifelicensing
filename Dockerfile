@@ -79,7 +79,7 @@ ENV PRODUCTION_EMAIL=False \
     BPAY_ALLOWED=False
 
 # Install only minimal runtime packages required by wheels in venv
-# Upgrade packages to pick up distro security fixes (note: this increases image size)
+# Upgrade OpenSSL stack explicitly so scanners see patched packages
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y \
     ca-certificates \
     tzdata \
@@ -88,7 +88,11 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     python3.12-venv \
     gdal-bin \
     libgdal-dev \
-    && rm -rf /var/lib/apt/lists/*
+    openssl \
+    libssl3 \
+ && apt-get install --only-upgrade -y openssl libssl3 ca-certificates \
+ && update-ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
 # Install standard utility scripts (installs /bin/scheduler.py, etc.)
 RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh && \
