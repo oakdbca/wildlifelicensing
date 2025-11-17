@@ -86,6 +86,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     wget \
     python3.12 \
     python3.12-venv \
+    gdal-bin \
+    libgdal-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install standard utility scripts (installs /bin/scheduler.py, etc.)
