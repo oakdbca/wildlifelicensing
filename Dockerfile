@@ -77,6 +77,12 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     wget \
     && rm -rf /var/lib/apt/lists/*
 
+# Install standard utility scripts (installs /bin/scheduler.py, etc.)
+RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh && \
+    chmod 755 /tmp/default_script_installer.sh && \
+    /tmp/default_script_installer.sh && \
+    rm -rf /tmp/*
+
 # Create non-root user to run the app
 RUN groupadd -g 5000 oim && useradd -g 5000 -u 5000 -s /bin/bash -d /app oim && mkdir -p /app && chown oim:oim /app
 
@@ -89,7 +95,7 @@ COPY --from=builder --chown=oim:oim /app/wildlifelicensing /app/wildlifelicensin
 COPY --from=builder --chown=oim:oim /app/gunicorn.ini.py /app/gunicorn.ini.py
 COPY --from=builder --chown=oim:oim /app/manage.py /app/manage.py
 COPY --from=builder --chown=oim:oim /app/.env /app/.env
-COPY --from=builder --chown=oim:oim /app/wildlifelicensing/staticfiles_wl /app/wildlifelicensing/staticfiles_wl
+COPY --from=builder --chown=oim:oim /app/staticfiles_wl /app/staticfiles_wl
 
 # Copy startup script and ensure executable
 COPY --from=builder --chown=oim:oim /startup.sh /startup.sh
