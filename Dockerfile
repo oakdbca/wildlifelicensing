@@ -69,6 +69,15 @@ FROM ${UBUNTU_IMAGE} AS runtime
 ENV TZ=Australia/Perth
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# Set runtime environment defaults (can be overridden at container start)
+ENV PRODUCTION_EMAIL=False \
+    SECRET_KEY="ThisisNotRealKey" \
+    NOTIFICATION_EMAIL="asi@dbca.wa.gov.au" \
+    NON_PROD_EMAIL="asi@dbca.wa.gov.au" \
+    EMAIL_INSTANCE="UAT" \
+    OSCAR_SHOP_NAME="Parks & Wildlife" \
+    BPAY_ALLOWED=False
+
 # Install only minimal runtime packages required by wheels in venv
 # Upgrade packages to pick up distro security fixes (note: this increases image size)
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y \
