@@ -99,6 +99,8 @@ RUN chmod 755 /startup.sh
 # IPYTHONDIR - Will allow shell_plus (in Docker) to remember history between sessions
 RUN export IPYTHONDIR=/app/logs/.ipython/
 
+RUN apt purge -y linux-libc-dev
+
 EXPOSE 8080
 HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget", "-q", "-O", "-", "http://localhost:8080/"]
 CMD ["/startup.sh"]
